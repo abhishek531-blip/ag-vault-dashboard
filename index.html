@@ -371,53 +371,39 @@ function parseCSV(csv){
   });
 
   const parsed = [];
+  const seen = new Set();
   for(const row of rows){
     const ticker = (row[0]||"").replace(/[^A-Z]/g,"");
-    if(KNOWN_TICKERS.includes(ticker)){
-      const clean = s => parseFloat((s||"0").replace(/[$,%]/g,"").replace(/[()]/g,"")) || 0;
-      // Columns: Ticker | Fund(short) | Description | Plan$ | Invested | Current | P&L$ | P&L% | % of Port
-      // But layout may vary — find numeric columns
-      const nums = row.map(c => clean(c)).filter(n => n !== 0);
-      // Find plan, invested, current by position in row
-      let plan=0, inv=0, cur=0, pl=0, plPct=0, wt=0;
-      // Try to extract from known column positions
-      for(let i=1;i<row.length;i++){
-        const v = clean(row[i]);
-        const s = (row[i]||"").trim();
-        if(s.startsWith("$")){
-          const n = clean(s);
-          if(n > 10000) plan = n;
-          else if(!inv && n > 100) inv = n;
-          else if(!cur && n > 100) cur = n;
-          else if(Math.abs(n) < inv && !pl) pl = n;
-        }
-        if(s.includes("%") && !s.startsWith("$")){
-          const n = parseFloat(s.replace(/[%+]/g,""));
-          if(!plPct && Math.abs(n) < 100) plPct = n;
-          else if(plPct && Math.abs(n) < 100) wt = n;
-        }
-      }
-      // Fallback: match by column index from known CSV structure
-      if(!plan){
-        plan = clean(row[5]||row[4]||"0");
-        inv = clean(row[6]||row[5]||"0");
-        cur = clean(row[7]||row[6]||"0");
-        pl = clean(row[8]||row[7]||"0");
-        plPct = clean(row[9]||row[8]||"0");
-        wt = clean(row[10]||row[9]||"0");
-      }
-      if(inv > 0 && cur > 0){
-        parsed.push({
-          tk:ticker,
-          name:row[2]||row[1]||ticker,
-          sleeve:SLEEVE_MAP[ticker]||"sat",
-          sub:SUB_THEME_MAP[ticker]||"Other",
-          plan, inv, cur,
-          pl: pl || (cur - inv),
-          ret: plPct || ((cur-inv)/inv*100),
-          wt
-        });
-      }
+    if(!KNOWN_TICKERS.includes(ticker)) continue;
+    // Skip DCA schedule rows: contain checkmark marks or col2 is small int (tranche count)
+    const rowJoined = row.join(",");
+    if(rowJoined.includes("✓") || rowJoined.includes("✗") || rowJoined.includes("✔")) continue;
+    const col2 = (row[2]||"").trim();
+    if(/^\d+$/.test(col2) && parseInt(col2) <= 20) continue;
+    // Skip duplicate tickers - only keep first (holdings) occurrence
+    if(seen.has(ticker)) continue;
+    seen.add(ticker);
+    const clean = s => parseFloat((s||"0").replace(/[\$,%]/g,"").replace(/[()]/g,"")) || 0;
+    // CSV columns: Ticker(0) | ShortName(1) | Description(2) | Plan(3) | Invested(4) | Current(5) | PnL(6) | PnLPct(7) | Weight(8)
+    const plan = clean(row[3]);
+    const inv = clean(row[4]);
+    const cur = clean(row[5]);
+    const pl = clean(row[6]);
+    const plPctRaw = (row[7]||"").trim();
+    const plPct = parseFloat(plPctRaw.replace(/[%+]/g,"")) || 0;
+    const wtRaw = (row[8]||"").trim();
+    const wt = parseFloat(wtRaw.replace(/[%+]/g,"")) || 0;
+    if(inv > 0 && cur > 0){
+      parsed.push({
+        tk:ticker,
+        name:row[2]||row[1]||ticker,
+        sleeve:SLEEVE_MAP[ticker]||"sat",
+        sub:SUB_THEME_MAP[ticker]||"Other",
+        plan, inv, cur,
+        pl: pl || (cur - inv),
+        ret: plPct || ((cur-inv)/inv*100),
+        wt
+      });
     }
   }
   return parsed;

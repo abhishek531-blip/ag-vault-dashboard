@@ -218,7 +218,7 @@ function checkPwd(){
   <!-- Live Refresh Config -->
   <div class="refresh-bar">
     <label>Sheet CSV</label>
-    <input type="text" id="sheetUrl" value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTYfmjAFnTd_DB6fCuSRDwpwDn7ZNt8VCXQDNiugKrnoqbRzqHI_MT0IdY7AE1L1rHkLfdMa88Gb0w-/pub?gid=549328411&single=true&output=csv" />
+    <input type="text" id="sheetUrl" value="https://docs.google.com/spreadsheets/d/1oF9--Qg8IZB-fvNZTamruO9hJIw29n8WOCFkfV4rDJU/export?format=csv&gid=549328411" />
     <button onclick="startLiveRefresh()">Reconnect</button>
     <div class="status"><span id="refreshStatus">Connecting...</span> <span class="countdown" id="countdown"></span></div>
   </div>
@@ -578,7 +578,8 @@ let refreshInterval=null, countdownInterval=null;
 function fetchAndRender(){
   const url=document.getElementById("sheetUrl").value.trim();
   if(!url) return;
-  fetch(url)
+  const sep=url.includes("?")?"\u0026":"?";
+  fetch(url+sep+"_t="+Date.now())
     .then(r=>r.text())
     .then(csv=>{
       const data=parseCSV(csv);

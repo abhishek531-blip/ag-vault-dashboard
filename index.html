@@ -505,7 +505,7 @@ function renderDashboard(data){
 
   // Hero
   const cents = (grandTotal % 1).toFixed(2).slice(1);
-  document.getElementById("heroTotal").innerHTML = `$${Math.floor(grandTotal).toLocaleString()}<span style="color:var(--text-dim);font-size:36px">${cents}</span>`;
+  document.getElementById("heroTotal").innerHTML = `$${Math.floor(grandTotal).toLocaleString("en-US")}<span style="color:var(--text-dim);font-size:36px">${cents}</span>`;
   document.getElementById("heroDelta").innerHTML =
     `<span class="chip up">▲ ${fmtSgn$(totalPL)} unrealised</span>`+
     `<span class="chip" style="background:var(--gold-soft);color:var(--gold)">+$${LIQUID_DAILY.toFixed(2)}/day yield</span>`+
@@ -542,7 +542,7 @@ function renderDashboard(data){
   const sorted = [...holdings].sort((a,b)=>b.wt-a.wt);
   sorted.forEach(h=>{
     const up=h.pl>=0;
-    tb.insertAdjacentHTML("beforeend",`<tr><td><div class="tk">${h.tk}</div><div class="nm">${h.name}</div></td><td><span class="sleeve-tag ${h.sleeve}">${h.sleeve==="core"?"Core":"Thematic"}</span></td><td><span style="font-size:11px;color:var(--text-dim)">${h.sub}</span></td><td class="r mono">$${h.plan.toLocaleString()}</td><td class="r mono">${fmt$(h.inv)}</td><td class="r mono">${fmt$(h.cur)}</td><td class="r"><span class="pill ${up?"up":"down"}">${fmtSgn$(h.pl)}</span></td><td class="r"><span class="pill ${up?"up":"down"}">${fmtP(h.ret)}</span></td><td class="r"><div class="weight"><span class="mono" style="font-size:12px">${h.wt.toFixed(2)}%</span><div class="w-bar"><div class="f" style="width:${h.wt*5}%"></div></div></div></td></tr>`);
+    tb.insertAdjacentHTML("beforeend",`<tr><td><div class="tk">${h.tk}</div><div class="nm">${h.name}</div></td><td><span class="sleeve-tag ${h.sleeve}">${h.sleeve==="core"?"Core":"Thematic"}</span></td><td><span style="font-size:11px;color:var(--text-dim)">${h.sub}</span></td><td class="r mono">$${h.plan.toLocaleString("en-US")}</td><td class="r mono">${fmt$(h.inv)}</td><td class="r mono">${fmt$(h.cur)}</td><td class="r"><span class="pill ${up?"up":"down"}">${fmtSgn$(h.pl)}</span></td><td class="r"><span class="pill ${up?"up":"down"}">${fmtP(h.ret)}</span></td><td class="r"><div class="weight"><span class="mono" style="font-size:12px">${h.wt.toFixed(2)}%</span><div class="w-bar"><div class="f" style="width:${h.wt*5}%"></div></div></div></td></tr>`);
   });
 
   // Top movers

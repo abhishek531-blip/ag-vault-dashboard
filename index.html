@@ -218,7 +218,7 @@ function checkPwd(){
   <!-- Live Refresh Config -->
   <div class="refresh-bar">
     <label>Sheet CSV</label>
-    <input type="text" id="sheetUrl" value="https://docs.google.com/spreadsheets/d/1oF9--Qg8IZB-fvNZTamruO9hJIw29n8WOCFkfV4rDJU/export?format=csv&gid=549328411" />
+    <input type="text" id="sheetUrl" value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTYfmjAFnTd_DB6fCuSRDwpwDn7ZNt8VCXQDNiugKrnoqbRzqHI_MT0IdY7AE1L1rHkLfdMa88Gb0w-/pub?gid=549328411&single=true&output=csv" />
     <button onclick="startLiveRefresh()">Reconnect</button>
     <div class="status"><span id="refreshStatus">Connecting...</span> <span class="countdown" id="countdown"></span></div>
   </div>
@@ -312,7 +312,7 @@ function checkPwd(){
 <script>
 /* ===================== CONFIG ===================== */
 const SHEET_CSV_URL = document.getElementById("sheetUrl").value;
-const REFRESH_MS = 300000; // 5 min
+const REFRESH_MS = 120000; // 5 min
 const LIQUID_BALANCE = 120825.60;
 const LIQUID_RATE = 0.0364;
 const LIQUID_DAILY = LIQUID_BALANCE * LIQUID_RATE / 365;

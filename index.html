@@ -91,6 +91,11 @@
 
   table{width:100%;border-collapse:collapse;font-size:13px}
   th{text-align:left;font-size:10px;font-weight:600;color:var(--text-mute);text-transform:uppercase;letter-spacing:.1em;padding:12px 14px;border-bottom:1px solid var(--line)}
+  th.sortable{cursor:pointer;user-select:none;position:relative;transition:color .2s}
+  th.sortable:hover{color:var(--text)}
+  th.sortable.asc::after,th.sortable.desc::after{margin-left:4px;font-size:9px}
+  th.sortable.asc::after{content:"\25B2"}
+  th.sortable.desc::after{content:"\25BC"}
   th.r,td.r{text-align:right}
   td{padding:14px;border-bottom:1px solid var(--line);color:var(--text)}
   tr:last-child td{border-bottom:none}
@@ -321,7 +326,7 @@ function checkPwd(){
       <div id="moversList" style="display:flex;flex-direction:column;gap:12px"></div>
     </div>
     <div class="card" style="border-color:rgba(94,163,255,.2)">
-      <div class="head"><div><h3>Key News &amp; Signals</h3><div class="h-sub">Impact on your portfolio · April 2026</div></div><div class="right">Updated 11 Apr 2026</div></div>
+      <div class="head"><div><h3>Key News &amp; Signals</h3><div class="h-sub">Impact on your portfolio · April 2026</div></div><div class="right">Updated 14 Apr 2026</div></div>
       <div class="news-grid" id="newsGrid"></div>
     </div>
   </section>
@@ -340,10 +345,20 @@ function checkPwd(){
 
   <!-- Holdings table -->
   <section class="card" style="margin-bottom:24px">
-    <div class="head"><div><h3>All Holdings</h3><div class="h-sub" id="holdingsSub">Live from Master Portfolio · 16 UCITS ETFs</div></div><div class="right">sort: % of port ↓</div></div>
+    <div class="head"><div><h3>All Holdings</h3><div class="h-sub" id="holdingsSub">Live from Master Portfolio · 16 UCITS ETFs</div></div><div class="right" id="sortLabel">sort: % of Port ↓</div></div>
     <div style="overflow-x:auto">
       <table id="holdingsTable">
-        <thead><tr><th>Ticker / Fund</th><th>Sleeve</th><th>Sub-theme</th><th class="r">Plan $</th><th class="r">Invested</th><th class="r">Current</th><th class="r">P&amp;L</th><th class="r">Return</th><th class="r" style="min-width:170px">% of Port</th></tr></thead>
+        <thead><tr>
+          <th class="sortable" data-col="tk">Ticker / Fund</th>
+          <th class="sortable" data-col="sleeve">Sleeve</th>
+          <th class="sortable" data-col="sub">Sub-theme</th>
+          <th class="r sortable" data-col="plan">Plan $</th>
+          <th class="r sortable" data-col="inv">Invested</th>
+          <th class="r sortable" data-col="cur">Current</th>
+          <th class="r sortable" data-col="pl">P&amp;L</th>
+          <th class="r sortable" data-col="ret">Return</th>
+          <th class="r sortable" data-col="wt" style="min-width:170px">% of Port</th>
+        </tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -392,7 +407,7 @@ const SUB_THEME_MAP = {
   JREG:"Global Developed", VHVE:"Global Developed", JPGL:"Multi-Factor", JREM:"Emerging Markets",
   AINF:"AI Infrastructure", MLPS:"MLP & Energy Infra", BRIJ:"Global Infrastructure", RBOT:"Robotics & Automation",
   NCLR:"Nuclear & Uranium", COPX:"Copper", RARE:"Rare Earth", HEAL:"Healthcare Innovation",
-  WCBR:"Cybersecurity", IDBZ:"Emerging Markets", XVTD:"AI Enablers & Picks", KWEB:"China Internet"
+  WCBR:"Cybersecurity", IDBZ:"Brazil", XVTD:"Vietnam", KWEB:"China Internet"
 };
 const SLEEVE_MAP = {
   JREG:"core",VHVE:"core",JPGL:"core",JREM:"core",
@@ -403,15 +418,17 @@ const SLEEVE_MAP = {
 let holdings = [];
 let themes = [];
 let compChartInst = null, allocChartInst = null, themeChartInst = null;
+let sortCol = "wt";
+let sortAsc = false;
 
-/* ===================== NEWS (updated 11 Apr 2026) ===================== */
+/* ===================== NEWS (updated 14 Apr 2026) ===================== */
 const newsItems = [
-  {sentiment:"negative",headline:"Cybersecurity Rout: AI Disruption Fears Hammer WCBR -14.6%",body:"Anthropic\'s Claude Mythos model discovered thousands of zero-day vulnerabilities autonomously on 10 Apr, triggering a sector-wide sell-off. CrowdStrike, Palo Alto and Cloudflare fell 7-14% in a single session. Markets pricing in AI disruption of traditional security platforms, though underlying enterprise demand remains intact.",themes:["WCBR","Cybersecurity","AI Disruption"]},
-  {sentiment:"positive",headline:"Copper Hits $12,900/ton; COPX Returns +162% in 12 Months",body:"AI data-centre build-out driving a copper supercycle. COPX AUM surged to $7.5B (4x in 6 months) on $1.7B net inflows YTD. Your copper position remains a top performer.",themes:["COPX","Copper","AI Infra"]},
-  {sentiment:"positive",headline:"Nuclear Renaissance: NCLR Rides Uranium Bull Market",body:"VanEck\'s NLR returned +91% over 12 months as nuclear gains bipartisan policy support globally. WisdomTree\'s NCLR tracking the same theme for UCITS investors. Cameco and Constellation Energy leading holdings.",themes:["NCLR","Nuclear","Uranium"]},
-  {sentiment:"positive",headline:"Trump-Xi April State Visit Could Ease Tariff Overhang on KWEB",body:"Scheduled April 2026 summit follows Nov tariff cut from 34% to 10%. China exports beat expectations at +21.8% YoY. KWEB benefits from tech self-reliance push under China\'s 15th Five-Year Plan.",themes:["KWEB","China Tech","Tariffs"]},
-  {sentiment:"positive",headline:"Rare Earth & Strategic Metals Rally on Supply Chain Focus",body:"Governments prioritising critical materials resilience amid trade tensions. RARE remains a top performer at +9.08% return as the strategic metals theme strengthens.",themes:["RARE","Critical Minerals"]},
-  {sentiment:"neutral",headline:"WCBR Outlook: Disrupted or Discounted at These Levels?",body:"WisdomTree argues the sell-off is overdone \u2014 WCBR lagged S&P 500 by 36% over 12m but cybersecurity spend still forecast at $10.5T. AI-driven vibe coding fears may be overstated as AI augments rather than replaces EDR, IAM, zero-trust and SIEM platforms. CrowdStrike and Okta may offer valuation opportunities.",themes:["WCBR","Cybersecurity","Valuation"]},
+  {sentiment:"negative",headline:"Cybersecurity Sell-Off: AI Disruption Fears Hammer WCBR -14.6%",body:"AI-driven vulnerability discovery tools have spooked markets, triggering a broad sell-off in cybersecurity names. CrowdStrike, Palo Alto and Cloudflare fell 7-14% in a single session. Investors pricing in risk that AI could disrupt traditional security platforms, though underlying enterprise security spend remains on an uptrend.",themes:["WCBR","Cybersecurity","AI Disruption"]},
+  {sentiment:"positive",headline:"Copper Miners Surge: COPX Up +9.4% as Electrification Demand Grows",body:"COPX continues to benefit from electrification and grid capex tailwinds, with copper prices elevated despite Goldman Sachs noting a supply surplus. Sentiment-driven inflows have pushed COPX AUM higher. Note: fundamentals show rising supply, so the rally may be momentum-driven rather than deficit-based.",themes:["COPX","Copper","Electrification"]},
+  {sentiment:"positive",headline:"Nuclear Energy Momentum: NCLR Rides Uranium Bull Market",body:"WisdomTree\u2019s NCLR (Uranium & Nuclear Energy UCITS) has gained +5.1% as nuclear power gains bipartisan policy support globally. Uranium prices remain elevated with reactor restarts in Japan and new builds in China. Cameco and Constellation Energy are among top holdings.",themes:["NCLR","Nuclear","Uranium"]},
+  {sentiment:"positive",headline:"Trump-Xi April State Visit Could Ease Tariff Overhang on KWEB",body:"Scheduled April 2026 summit follows November tariff cut from 34% to 10%. China exports beat expectations at +21.8% YoY. KWEB\u2019s China internet holdings benefit from Beijing\u2019s tech self-reliance push, though Feb 2026 saw -12.6% returns, underperforming the category.",themes:["KWEB","China Tech","Tariffs"]},
+  {sentiment:"positive",headline:"Brazil Equities Rally: IDBZ Returns +7.7% on EM Rotation",body:"iShares MSCI Brazil UCITS (IDBZ) is among the portfolio\u2019s top performers as emerging market rotation favours Latin America. Brazil\u2019s commodity exports and rate-cut cycle are supporting equity valuations. The real has strengthened on improved fiscal outlook.",themes:["IDBZ","Brazil","EM Rotation"]},
+  {sentiment:"neutral",headline:"WCBR Outlook: Disrupted or Discounted at These Levels?",body:"WisdomTree argues the sell-off is overdone \u2014 WCBR lagged the S&P 500 by 36% over 12 months but global cybersecurity spend is still forecast to reach $10.5T cumulatively. AI augments rather than replaces EDR, IAM, zero-trust and SIEM platforms. CrowdStrike and Okta may offer valuation entry points.",themes:["WCBR","Cybersecurity","Valuation"]},
 ];
 
 /* ===================== HELPERS ===================== */
@@ -425,6 +442,44 @@ function updateTime(){
   const m=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   document.getElementById("refreshTime").textContent=`${String(now.getDate()).padStart(2,"0")} ${m[now.getMonth()]} ${now.getFullYear()} · ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
 }
+
+/* Column display names for sort label */
+const COL_LABELS={tk:"Ticker",sleeve:"Sleeve",sub:"Sub-theme",plan:"Plan $",inv:"Invested",cur:"Current",pl:"P&L",ret:"Return",wt:"% of Port"};
+
+function renderHoldingsTable(){
+  if(!holdings.length) return;
+  const tb=document.querySelector("#holdingsTable tbody");
+  tb.innerHTML="";
+  const cmp=(a,b)=>{
+    let va=a[sortCol],vb=b[sortCol];
+    if(typeof va==="string") va=va.toLowerCase(), vb=(vb||"").toLowerCase();
+    if(va<vb) return sortAsc?-1:1;
+    if(va>vb) return sortAsc?1:-1;
+    return 0;
+  };
+  const sorted=[...holdings].sort(cmp);
+  sorted.forEach(h=>{
+    const up=h.pl>=0;
+    tb.insertAdjacentHTML("beforeend",`<tr><td><div class="tk">${h.tk}</div><div class="nm">${h.name}</div></td><td><span class="sleeve-tag ${h.sleeve}">${h.sleeve==="core"?"Core":"Thematic"}</span></td><td><span style="font-size:11px;color:var(--text-dim)">${h.sub}</span></td><td class="r mono">$${h.plan.toLocaleString("en-US")}</td><td class="r mono">${fmt$(h.inv)}</td><td class="r mono">${fmt$(h.cur)}</td><td class="r"><span class="pill ${up?"up":"down"}">${fmtSgn$(h.pl)}</span></td><td class="r"><span class="pill ${up?"up":"down"}">${fmtP(h.ret)}</span></td><td class="r"><div class="weight"><span class="mono" style="font-size:12px">${h.wt.toFixed(2)}%</span><div class="w-bar"><div class="f" style="width:${h.wt*5}%"></div></div></div></td></tr>`);
+  });
+  document.querySelectorAll("#holdingsTable th.sortable").forEach(th=>{
+    th.classList.remove("asc","desc");
+    if(th.dataset.col===sortCol) th.classList.add(sortAsc?"asc":"desc");
+  });
+  const lbl=document.getElementById("sortLabel");
+  if(lbl) lbl.textContent="sort: "+(COL_LABELS[sortCol]||sortCol)+" "+(sortAsc?"\u2191":"\u2193");
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  document.querySelectorAll("#holdingsTable th.sortable").forEach(th=>{
+    th.addEventListener("click",()=>{
+      const col=th.dataset.col;
+      if(sortCol===col) sortAsc=!sortAsc;
+      else { sortCol=col; sortAsc=(typeof holdings[0]?.[col]==="string"); }
+      renderHoldingsTable();
+    });
+  });
+});
 
 /* ===================== CSV PARSER ===================== */
 function parseCSV(csv){
@@ -536,14 +591,8 @@ function renderDashboard(data){
     <div class="sleeve-row sat"><div><div class="name">Thematic Satellites</div><div class="desc">30% target · $30,000</div></div><div class="figs"><div class="m">${fmt$(satCur)}</div><div class="d">Inv ${fmt$(satInv)} · <span style="color:var(--mint)">${fmtSgn$(satPL)} · ${fmtP(satInv>0?satPL/satInv*100:0)}</span></div></div><div class="sleeve-bar"><div class="fill" style="width:${(satCur/totalCur*100).toFixed(1)}%"></div></div></div>
     <div style="margin-top:20px;padding:16px;background:var(--panel-2);border-radius:10px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:11px;color:var(--text-mute);text-transform:uppercase;letter-spacing:.1em;font-weight:600">ETF Total</div><div style="font-size:20px;font-weight:700;margin-top:4px;font-family:'JetBrains Mono',monospace">${fmt$(totalCur)}</div></div><div style="text-align:right"><div style="font-size:11px;color:var(--text-mute)">Tilted thematic-heavy during DCA ramp</div><div style="margin-top:4px;font-size:12px"><span class="pill up">${fmtSgn$(totalPL)}</span> <span class="pill up">${fmtP(totalRet)}</span></div></div></div>`;
 
-  // Holdings table
-  const tb = document.querySelector("#holdingsTable tbody");
-  tb.innerHTML = "";
-  const sorted = [...holdings].sort((a,b)=>b.wt-a.wt);
-  sorted.forEach(h=>{
-    const up=h.pl>=0;
-    tb.insertAdjacentHTML("beforeend",`<tr><td><div class="tk">${h.tk}</div><div class="nm">${h.name}</div></td><td><span class="sleeve-tag ${h.sleeve}">${h.sleeve==="core"?"Core":"Thematic"}</span></td><td><span style="font-size:11px;color:var(--text-dim)">${h.sub}</span></td><td class="r mono">$${h.plan.toLocaleString("en-US")}</td><td class="r mono">${fmt$(h.inv)}</td><td class="r mono">${fmt$(h.cur)}</td><td class="r"><span class="pill ${up?"up":"down"}">${fmtSgn$(h.pl)}</span></td><td class="r"><span class="pill ${up?"up":"down"}">${fmtP(h.ret)}</span></td><td class="r"><div class="weight"><span class="mono" style="font-size:12px">${h.wt.toFixed(2)}%</span><div class="w-bar"><div class="f" style="width:${h.wt*5}%"></div></div></div></td></tr>`);
-  });
+  // Holdings table (uses sortCol / sortAsc state)
+  renderHoldingsTable();
 
   // Top movers
   const movers=[...holdings].sort((a,b)=>b.ret-a.ret);
@@ -684,15 +733,15 @@ const FALLBACK_DATA = [
   {tk:"COPX",name:"Global X Copper Miners UCITS",sleeve:"sat",sub:"Copper",plan:3000,inv:1734.89,cur:1897.47,pl:162.58,ret:9.37,wt:6.36},
   {tk:"MLPS",name:"Global X MLP & Energy Infrastructure UCITS",sleeve:"sat",sub:"MLP & Energy Infra",plan:3000,inv:1897.36,cur:1874.88,pl:-22.48,ret:-1.18,wt:6.28},
   {tk:"BRIJ",name:"iShares Global Infrastructure UCITS",sleeve:"sat",sub:"Global Infrastructure",plan:3000,inv:1462.53,cur:1551.69,pl:89.16,ret:6.10,wt:5.20},
-  {tk:"NCLR",name:"VanEck Uranium & Nuclear Technologies UCITS",sleeve:"sat",sub:"Nuclear & Uranium",plan:3000,inv:1496.19,cur:1572.50,pl:76.31,ret:5.10,wt:5.27},
+  {tk:"NCLR",name:"WisdomTree Uranium & Nuclear Energy UCITS",sleeve:"sat",sub:"Nuclear & Uranium",plan:3000,inv:1496.19,cur:1572.50,pl:76.31,ret:5.10,wt:5.27},
   {tk:"RARE",name:"VanEck Rare Earth & Strategic Metals UCITS",sleeve:"sat",sub:"Rare Earth",plan:1500,inv:1378.64,cur:1503.84,pl:125.20,ret:9.08,wt:5.04},
   {tk:"HEAL",name:"iShares Healthcare Innovation UCITS",sleeve:"sat",sub:"Healthcare Innovation",plan:3600,inv:1425.41,cur:1435.00,pl:9.59,ret:0.67,wt:4.81},
   {tk:"AINF",name:"WisdomTree AI & Data Infrastructure UCITS",sleeve:"sat",sub:"AI Infrastructure",plan:3000,inv:1189.58,cur:1222.76,pl:33.18,ret:2.79,wt:4.10},
   {tk:"RBOT",name:"iShares Automation & Robotics UCITS",sleeve:"sat",sub:"Robotics & Automation",plan:2400,inv:932.05,cur:972.66,pl:40.61,ret:4.36,wt:3.26},
-  {tk:"XVTD",name:"Xtrackers MSCI AC World Tilted UCITS",sleeve:"sat",sub:"AI Enablers & Picks",plan:1500,inv:972.08,cur:1040.52,pl:68.44,ret:7.04,wt:3.49},
+  {tk:"XVTD",name:"Xtrackers Vietnam Swap UCITS",sleeve:"sat",sub:"Vietnam",plan:1500,inv:972.08,cur:1040.52,pl:68.44,ret:7.04,wt:3.49},
   {tk:"WCBR",name:"WisdomTree Cybersecurity UCITS",sleeve:"sat",sub:"Cybersecurity",plan:3000,inv:1178.05,cur:1006.20,pl:-171.85,ret:-14.59,wt:3.37},
   {tk:"KWEB",name:"KraneShares CSI China Internet UCITS",sleeve:"sat",sub:"China Internet",plan:1500,inv:978.65,cur:979.20,pl:0.55,ret:0.06,wt:3.28},
-  {tk:"IDBZ",name:"iShares MSCI India UCITS",sleeve:"sat",sub:"Emerging Markets",plan:1500,inv:585.93,cur:630.80,pl:44.87,ret:7.66,wt:2.11},
+  {tk:"IDBZ",name:"iShares MSCI Brazil UCITS",sleeve:"sat",sub:"Brazil",plan:1500,inv:585.93,cur:630.80,pl:44.87,ret:7.66,wt:2.11},
 ];
 
 /* ===================== INIT ===================== */

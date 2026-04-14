@@ -2359,34 +2359,53 @@
     }
 
     function parseCSV(text) {
-      const lines = text.trim().split("\n");
+      const rows = text.trim().split("\n").map(r => {
+        const result = []; let cur = ""; let inQ = false;
+        for (let i = 0; i < r.length; i++) {
+          if (r[i] === '"') { inQ = !inQ; }
+          else if (r[i] === ',' && !inQ) { result.push(cur.trim()); cur = ""; }
+          else { cur += r[i]; }
+        }
+        result.push(cur.trim());
+        return result;
+      });
+
       const data = [];
       const seenTickers = new Set();
+      const clean = s => parseFloat((s || "0").replace(/[\$,%]/g, "").replace(/[()]/g, "")) || 0;
 
-      for (const line of lines) {
-        const cols = line.split(",").map(s => s.trim().replace(/^"(.*)"$/, "$1"));
-        const ticker = cols[0];
-
+      for (const cols of rows) {
+        const ticker = (cols[0] || "").replace(/[^A-Z]/g, "");
         if (!KNOWN_TICKERS.includes(ticker) || seenTickers.has(ticker)) continue;
+        const line = cols.join(",");
         if (/[✓✗✔]/.test(line)) continue;
-        if (/^\d+$/.test(cols[2])) continue;
+        const col2 = (cols[2] || "").trim();
+        if (/^\d+$/.test(col2) && parseInt(col2) <= 20) continue;
 
         seenTickers.add(ticker);
 
-        const item = {
-          tk: ticker,
-          name: NAME_OVERRIDE_MAP[ticker] || cols[2] || cols[1] || ticker,
-          sleeve: SLEEVE_MAP[ticker] || "unknown",
-          sub: SUB_THEME_MAP[ticker] || "Other",
-          plan: parseFloat(cols[3]) || 0,
-          inv: parseFloat(cols[4]) || 0,
-          cur: parseFloat(cols[5]) || 0,
-          pl: parseFloat(cols[6]) || 0,
-          ret: parseFloat(cols[7]) || 0,
-          wt: parseFloat(cols[8]) || 0,
-        };
+        const inv = clean(cols[4]);
+        const cur = clean(cols[5]);
+        const pl = clean(cols[6]) || (cur - inv);
+        const plPctRaw = (cols[7] || "").trim();
+        const plPct = parseFloat(plPctRaw.replace(/[%+]/g, "")) || (inv > 0 ? ((cur - inv) / inv * 100) : 0);
+        const wtRaw = (cols[8] || "").trim();
+        const wt = parseFloat(wtRaw.replace(/[%+]/g, "")) || 0;
 
-        data.push(item);
+        if (inv > 0 || cur > 0) {
+          data.push({
+            tk: ticker,
+            name: NAME_OVERRIDE_MAP[ticker] || cols[2] || cols[1] || ticker,
+            sleeve: SLEEVE_MAP[ticker] || "sat",
+            sub: SUB_THEME_MAP[ticker] || "Other",
+            plan: clean(cols[3]),
+            inv: inv,
+            cur: cur,
+            pl: pl,
+            ret: plPct,
+            wt: wt,
+          });
+        }
       }
 
       return data.length > 0 ? data : FALLBACK_DATA;

@@ -1388,6 +1388,154 @@
       font-weight: 600;
     }
 
+    /* Strategy Section */
+    .strategy-section { display: none; }
+    .strategy-section.visible { display: block; }
+
+    .strategy-hero {
+      text-align: center;
+      padding: 40px 20px 30px;
+    }
+
+    .strategy-hero h2 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--accent-teal), var(--accent-mint));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .strategy-hero p {
+      font-size: 14px;
+      color: var(--text-dim);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .strategy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 0 20px;
+      margin-bottom: 24px;
+    }
+
+    .strategy-card {
+      background: rgba(18, 26, 46, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(229, 236, 246, 0.08);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .strategy-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-teal), transparent);
+    }
+
+    .strategy-card.gold::before {
+      background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+    }
+
+    .strategy-card.violet::before {
+      background: linear-gradient(90deg, transparent, var(--accent-violet), var(--accent-gold), transparent);
+    }
+
+    .strategy-card h3 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .strategy-card .card-value {
+      font-size: 28px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 8px;
+    }
+
+    .strategy-card .card-desc {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .strategy-full {
+      padding: 0 20px;
+      margin-bottom: 24px;
+    }
+
+    .strategy-full .strategy-card {
+      width: 100%;
+    }
+
+    .thesis-item {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(229, 236, 246, 0.06);
+    }
+
+    .thesis-item:last-child { border-bottom: none; }
+
+    .thesis-badge {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-primary);
+    }
+
+    .thesis-badge.core { background: rgba(79, 209, 197, 0.15); border: 1px solid rgba(79, 209, 197, 0.3); }
+    .thesis-badge.sat { background: rgba(139, 124, 246, 0.15); border: 1px solid rgba(139, 124, 246, 0.3); }
+
+    .thesis-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .thesis-tickers {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent-teal);
+      margin-bottom: 4px;
+    }
+
+    .thesis-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .strategy-chart-container {
+      height: 280px;
+      margin: 16px 0;
+    }
+
+    @media (max-width: 768px) {
+      .strategy-grid { grid-template-columns: 1fr; }
+      .strategy-hero h2 { font-size: 22px; }
+      .strategy-chart-container { height: 220px; }
+    }
+
     /* Footer */
     .footer {
       padding: 20px;
@@ -1453,6 +1601,7 @@
       .header {
         grid-template-columns: 1fr;
         gap: 12px;
+        padding-top: 62px;
       }
 
       .header-right {
@@ -1492,6 +1641,7 @@
 
       .header {
         padding: 16px 12px;
+        padding-top: 58px;
       }
 
       .header-left {
@@ -1776,6 +1926,7 @@
       <div class="nav-pill" data-section="holdings">Holdings</div>
       <div class="nav-pill" data-section="dca">DCA</div>
       <div class="nav-pill" data-section="news">News</div>
+      <div class="nav-pill" data-section="strategy">Strategy</div>
     </nav>
 
     <!-- Header -->
@@ -1863,12 +2014,13 @@
           <div class="sleeve-card core" id="sleeveCore">
             <div class="sleeve-card-header" onclick="toggleSleeve('core')">
               <div>
-                <div class="sleeve-card-label">Core Equity (70% target)</div>
+                <div class="sleeve-card-label" id="sleeveCoreLabel">Core Equity · Plan $70,000</div>
                 <div class="sleeve-card-value" id="sleeveCoreValue">$0.00</div>
                 <div class="sleeve-card-stats">
                   <span id="sleeveCoreInv" style="color:var(--text-dim)">Inv $0</span>
                   <span id="sleeveCorePL" style="color:var(--accent-mint)">+$0.00</span>
                   <span id="sleeveCoreRet" style="color:var(--accent-mint)">+0.00%</span>
+                  <span id="sleeveCoreDeploy" style="color:var(--accent-teal)"></span>
                 </div>
               </div>
               <span class="sleeve-card-chevron">▾</span>
@@ -1878,12 +2030,13 @@
           <div class="sleeve-card thematic" id="sleeveThematic">
             <div class="sleeve-card-header" onclick="toggleSleeve('thematic')">
               <div>
-                <div class="sleeve-card-label">Thematic Satellites (30% target)</div>
+                <div class="sleeve-card-label" id="sleeveThematicLabel">Thematic Satellites · Plan $30,000</div>
                 <div class="sleeve-card-value" id="sleeveThematicValue">$0.00</div>
                 <div class="sleeve-card-stats">
                   <span id="sleeveThematicInv" style="color:var(--text-dim)">Inv $0</span>
                   <span id="sleeveThematicPL" style="color:var(--accent-mint)">+$0.00</span>
                   <span id="sleeveThematicRet" style="color:var(--accent-mint)">+0.00%</span>
+                  <span id="sleeveThematicDeploy" style="color:var(--accent-teal)"></span>
                 </div>
               </div>
               <span class="sleeve-card-chevron">▾</span>
@@ -2168,6 +2321,136 @@
       </div>
     </main>
 
+    <!-- Strategy Section -->
+    <section class="strategy-section" id="strategySection">
+      <div class="strategy-hero">
+        <h2>Portfolio Construction & Strategy</h2>
+        <p>A disciplined UCITS ETF portfolio targeting ~$100,000 deployed via bi-weekly DCA into core global equity (70%) and thematic satellite (30%) positions. ~30% deployed to date across two tranches. Undeployed capital and dry powder earn daily yield in a liquid money market fund.</p>
+      </div>
+
+      <!-- Allocation Overview -->
+      <div class="strategy-grid">
+        <div class="strategy-card">
+          <h3>ETF Deployment Plan</h3>
+          <div class="card-value" style="color:var(--accent-teal)">$100,000</div>
+          <div class="card-desc">Target ETF capital across 5 bi-weekly DCA tranches (Core 70% / Thematic 30%). ~$29K deployed via T1 & T2. ~$71K remaining across T3–T5, currently earning yield in the MMF until deployment. Plan finalised 23 March 2026 with Advisor Daniel Lee, Vault Wealth ADGM.</div>
+        </div>
+        <div class="strategy-card gold">
+          <h3>Liquid Fund & Dry Powder</h3>
+          <div class="card-value" style="color:var(--accent-gold)">$120,825</div>
+          <div class="card-desc">Total held in a UCITS-compliant money market fund yielding <strong style="color:var(--accent-gold)">3.64% p.a.</strong> (~$12/day compounded daily). Of this, ~$71K is earmarked for remaining ETF tranches. The remaining <strong style="color:var(--accent-gold)">~$50K is dry powder</strong> — tactical reserve to attack opportunities on pullbacks and position ahead of the anticipated US midterm election rally cycle.</div>
+        </div>
+      </div>
+
+      <!-- Capital Structure Overview -->
+      <div class="strategy-grid">
+        <div class="strategy-card">
+          <h3>Capital Structure</h3>
+          <div class="strategy-chart-container" style="height:260px">
+            <canvas id="strategyAllocChart"></canvas>
+          </div>
+        </div>
+        <div class="strategy-card">
+          <h3>ETF Sleeve Allocation · Stacked by Theme</h3>
+          <div class="strategy-chart-container" style="height:260px">
+            <canvas id="strategyStackedChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Core Thesis -->
+      <div class="strategy-full">
+        <div class="strategy-card">
+          <h3>Core Equity Sleeve — 70% · $70,000 Target</h3>
+          <div class="card-desc" style="margin-bottom:16px">Low-cost, globally diversified equity exposure forming the portfolio's foundation. Combines passive indexing with JPM's proprietary enhanced-index and multi-factor strategies to target modest alpha above benchmark.</div>
+          <div class="thesis-item">
+            <div class="thesis-badge core">VHVE</div>
+            <div><div class="thesis-title">Vanguard FTSE Developed World</div><div class="thesis-tickers">30% of sleeve · $21,000 plan</div><div class="thesis-desc">Broadest possible DM equity anchor — ~2,000 stocks across US, Europe, Japan, and Pacific. Ultra-low TER (0.12%). Provides foundational market-cap-weighted exposure to global growth.</div></div>
+          </div>
+          <div class="thesis-item">
+            <div class="thesis-badge core">JREG</div>
+            <div><div class="thesis-title">JPM Global Research Enhanced Index</div><div class="thesis-tickers">34.2% of sleeve · $23,800 plan</div><div class="thesis-desc">Enhanced index strategy applying JPM's proprietary bottom-up stock selection to overweight favoured names within MSCI World. Targets incremental alpha of ~1-1.5% above benchmark while maintaining index-like risk. Integrates ESG screening.</div></div>
+          </div>
+          <div class="thesis-item">
+            <div class="thesis-badge core">JPGL</div>
+            <div><div class="thesis-title">JPM Global Equity Multi-Factor</div><div class="thesis-tickers">26% of sleeve · $18,200 plan</div><div class="thesis-desc">Smart-beta strategy targeting value, momentum, and quality factors that have historically outperformed broad markets. Rebalanced quarterly to capture best-scoring factor combinations.</div></div>
+          </div>
+          <div class="thesis-item">
+            <div class="thesis-badge core">JREM</div>
+            <div><div class="thesis-title">JPM Emerging Markets Research Enhanced</div><div class="thesis-tickers">10% of sleeve · $7,000 plan</div><div class="thesis-desc">Active EM strategy mirroring MSCI EM country/sector weights but making bottom-up stock bets using JPM's global analyst network. Holds 300-350 high-conviction EM names for diversified developing market exposure.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Thematic Thesis -->
+      <div class="strategy-full">
+        <div class="strategy-card violet">
+          <h3>Thematic Satellite Sleeve — 30% · $30,000 Target</h3>
+          <div class="card-desc" style="margin-bottom:16px">High-conviction thematic bets across 8 structural growth themes. Sized at 5-12% each within the satellite sleeve, these positions express specific views on multi-year macro and technological megatrends. Higher risk, higher potential reward.</div>
+          <div class="thesis-item">
+            <div class="thesis-badge sat">AINF</div>
+            <div><div class="thesis-title">AI & Data Infrastructure</div><div class="thesis-tickers">AINF · 10% of sleeve · $3,000</div><div class="thesis-desc">Picks-and-shovels play on the AI compute build-out — data centres, networking, power management, and semiconductor fabrication. Benefits from hyperscale capex regardless of which AI models win.</div></div>
+          </div>
+          <div class="thesis-item">
+            <div class="thesis-badge sat">COPX</div>
+            <div><div class="thesis-title">Copper Miners</div><div class="thesis-tickers">COPX · 10% of sleeve · $3,000</div><div class="thesis-desc">Pure-play on copper producers. Electrification, grid modernisation, and AI data centre cooling all require massive copper. Each large data centre needs ~50,000 metric tons. A structural demand story.</div></div>
+          </div>
+          <div class="thesis-item">
+            <div class="thesis-badge sat">NCLR</div>
+            <div><div class="thesis-title">Nuclear & Uranium</div><div class="thesis-tickers">NCLR · 10% of sleeve · $3,000</div><div class="thesis-desc">Uranium miners, reactor tech, and nuclear utilities. Nuclear gaining bipartisan global policy support as the only scalable carbon-free baseload power source. Reactor restarts in Japan, new builds in China and the US.</div></div>
+          </div>
+          <div class="thesis-item">
+            <div class="thesis-badge sat">MLPS</div>
+            <div><div class="thesis-title">MLP & Energy Infrastructure</div><div class="thesis-tickers">MLPS · 10% of sleeve · $3,000</div><div class="thesis-desc">US midstream energy — pipelines, storage, and processing. Real-asset yield exposure with inflation protection. Benefits from growing US LNG exports and domestic energy security.</div></div>
+          </div>
+          <div class="thesis-item">
+            <div class="thesis-badge sat">BRIJ</div>
+            <div><div class="thesis-title">Global Infrastructure</div><div class="thesis-tickers">BRIJ · 10% of sleeve · $3,000</div><div class="thesis-desc">Listed real-asset infrastructure — utilities, toll roads, airports, and communication towers. Provides stable cash flows and inflation linkage. Benefits from global infrastructure spending programs.</div></div>
+          </div>
+          <div class="thesis-item">
+            <div class="thesis-badge sat">HEAL</div>
+            <div><div class="thesis-title">Healthcare Innovation</div><div class="thesis-tickers">HEAL · 12% of sleeve · $3,600</div><div class="thesis-desc">Global innovators in genomics, medtech, and biotech. Pure-play on healthcare technology disruption — from mRNA therapeutics to robotic surgery and personalised medicine.</div></div>
+          </div>
+          <div class="thesis-item">
+            <div class="thesis-badge sat">WCBR</div>
+            <div><div class="thesis-title">Cybersecurity</div><div class="thesis-tickers">WCBR · 10% of sleeve · $3,000</div><div class="thesis-desc">Pure-play on cyber software and network security. Enterprise security spend is non-discretionary and growing. Covers EDR, IAM, zero-trust, and SIEM platforms — critical infrastructure in an AI-driven threat landscape.</div></div>
+          </div>
+          <div class="thesis-item">
+            <div class="thesis-badge sat">RBOT</div>
+            <div><div class="thesis-title">Automation & Robotics</div><div class="thesis-tickers">RBOT · 8% of sleeve · $2,400</div><div class="thesis-desc">Global industrial automation, factory robotics, and autonomous systems. Structural labour shortage theme — companies replacing human labour with intelligent machines across manufacturing and logistics.</div></div>
+          </div>
+          <div class="thesis-item">
+            <div class="thesis-badge sat">RARE</div>
+            <div><div class="thesis-title">Rare Earth & Strategic Metals</div><div class="thesis-tickers">RARE · 5% of sleeve · $1,500</div><div class="thesis-desc">Rare-earth miners and processors critical for EVs, defence, and semiconductors. Supply-chain geopolitical hedge — diversifying away from China's dominant rare earth processing.</div></div>
+          </div>
+          <div class="thesis-item">
+            <div class="thesis-badge sat">IDBZ</div>
+            <div><div class="thesis-title">Brazil Equities</div><div class="thesis-tickers">IDBZ · 5% of sleeve · $1,500</div><div class="thesis-desc">Broad Brazil large/mid-cap equity exposure. Commodity-rich EM play benefiting from rate-cut cycle, agricultural exports, and growing domestic middle class.</div></div>
+          </div>
+          <div class="thesis-item">
+            <div class="thesis-badge sat">XVTD</div>
+            <div><div class="thesis-title">Vietnam</div><div class="thesis-tickers">XVTD · 5% of sleeve · $1,500</div><div class="thesis-desc">Pure-play Vietnam frontier market equity. Beneficiary of China+1 supply chain migration — Samsung, OLED manufacturing. $1.8B semiconductor investing by H2 2026. Fast-growing consumer economy.</div></div>
+          </div>
+          <div class="thesis-item">
+            <div class="thesis-badge sat">KWEB</div>
+            <div><div class="thesis-title">China Internet</div><div class="thesis-tickers">KWEB · 5% of sleeve · $1,500</div><div class="thesis-desc">Concentrated bet on China's internet and consumer-tech giants (Tencent, Alibaba, Meituan). Provides exposure to AI innovation and domestic digital consumption. Monitor closely for regulatory risk.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DCA & Cash Strategy -->
+      <div class="strategy-full">
+        <div class="strategy-card gold">
+          <h3>DCA Deployment & Cash Strategy</h3>
+          <div class="card-desc" style="line-height:1.7">
+            <strong style="color:var(--accent-gold)">Bi-weekly Dollar Cost Averaging</strong> — $100K is being deployed across 5 tranches over ~10 weeks to smooth market timing risk. T1 ($21,550) and T2 ($21,550) are funded. T3–T5 deploy the remaining ~$57K over the next 3 tranches. Each tranche invests proportionally across all 16 ETFs per sleeve targets.<br><br>
+            <strong style="color:var(--accent-gold)">Liquid Money Market Fund</strong> — All undeployed capital sits in a UCITS-compliant MMF earning 3.64% p.a., compounded daily (~$12/day). This is not idle cash — it generates yield while awaiting each successive DCA deployment. The MMF currently holds ~$121K covering both remaining tranches and dry powder.<br><br>
+            <strong style="color:var(--accent-gold)">Dry Powder (~$50K)</strong> — Capital beyond the $100K ETF deployment plan is held as a tactical reserve in the same MMF. This dry powder serves two purposes: (1) attack opportunities on significant pullbacks in existing themes (e.g. WCBR's -14.6% cybersecurity dip), and (2) position ahead of anticipated market momentum in the lead-up to the US midterm election cycle, where historical patterns show equity tailwinds.
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
       AG Vault Portfolio · Live Dashboard<br>
@@ -2277,16 +2560,167 @@
 
     function setupNavigation() {
       const pills = document.querySelectorAll(".nav-pill");
+      const mainContent = document.querySelector(".main-content");
+      const strategySection = document.getElementById("strategySection");
+
       pills.forEach(pill => {
         pill.addEventListener("click", () => {
           pills.forEach(p => p.classList.remove("active"));
           pill.classList.add("active");
           const section = pill.dataset.section;
-          document.querySelectorAll(".section-header, .section-content").forEach(el => {
-            el.style.display = el.id.startsWith(section) || el.id === section + "Header" || el.id === section + "Content" ? "block" : "none";
-          });
+
+          if (section === "strategy") {
+            // Show strategy, hide main dashboard content
+            mainContent.style.display = "none";
+            strategySection.classList.add("visible");
+            strategySection.style.display = "block";
+            renderStrategyChart();
+            window.scrollTo({top: 0, behavior: "smooth"});
+          } else {
+            // Show main dashboard, hide strategy
+            mainContent.style.display = "block";
+            strategySection.classList.remove("visible");
+            strategySection.style.display = "none";
+
+            // Scroll to relevant section
+            const targetMap = {
+              overview: ".hero",
+              holdings: "#holdingsHeader",
+              dca: "#dcaHeader",
+              news: "#moversNewsSection"
+            };
+            const target = document.querySelector(targetMap[section]);
+            if (target) {
+              setTimeout(() => target.scrollIntoView({behavior: "smooth", block: "start"}), 100);
+            }
+          }
         });
       });
+    }
+
+    let strategyCharts = [];
+    function renderStrategyChart() {
+      strategyCharts.forEach(c => c.destroy());
+      strategyCharts = [];
+
+      const ttp = {
+        backgroundColor: "#0a0f1c",
+        borderColor: "rgba(79,209,197,0.4)",
+        borderWidth: 1,
+        padding: 12,
+        titleFont: { family: "Inter", size: 12 },
+        bodyFont: { family: "'JetBrains Mono', monospace", size: 12 }
+      };
+
+      // 1. Capital Structure doughnut
+      // ETF deployed ~$29K, ETF pending ~$71K, Dry powder ~$50K
+      const deployed = holdings.reduce((s,h) => s+h.inv, 0) || 28995;
+      const pending = Math.max(0, ETF_TARGET - deployed);
+      const dryPowder = Math.max(0, LIQUID_BALANCE - pending);
+
+      const ctx1 = document.getElementById("strategyAllocChart");
+      if (ctx1) {
+        strategyCharts.push(new Chart(ctx1, {
+          type: "doughnut",
+          data: {
+            labels: ["ETF Deployed (~30%)", "Pending Deployment (MMF)", "Dry Powder (MMF)"],
+            datasets: [{
+              data: [Math.round(deployed), Math.round(pending), Math.round(dryPowder)],
+              backgroundColor: ["rgba(79,209,197,0.85)", "rgba(246,198,103,0.7)", "rgba(139,124,246,0.6)"],
+              borderColor: "rgba(10,15,28,0.8)",
+              borderWidth: 3,
+              hoverOffset: 8
+            }]
+          },
+          options: {
+            cutout: "62%",
+            plugins: {
+              legend: { position: "bottom", labels: { boxWidth: 10, boxHeight: 10, padding: 12, font: { size: 11, family: "Inter" }, color: "rgba(139,151,176,0.9)" } },
+              tooltip: { ...ttp, callbacks: { label: ctx => " $" + ctx.parsed.toLocaleString("en-US") } }
+            }
+          },
+          plugins: [{
+            id: "ct",
+            afterDraw(chart) {
+              const {ctx: c, chartArea: {left, right, top, bottom}} = chart;
+              const cx = (left+right)/2, cy = (top+bottom)/2;
+              c.save(); c.textAlign = "center"; c.textBaseline = "middle";
+              c.fillStyle = "rgba(139,151,176,0.8)"; c.font = "600 9px Inter";
+              c.fillText("TOTAL PORTFOLIO", cx, cy-16);
+              c.fillStyle = "#e5ecf6"; c.font = "700 18px 'JetBrains Mono'";
+              c.fillText("$" + Math.round(deployed + LIQUID_BALANCE).toLocaleString("en-US"), cx, cy+4);
+              c.fillStyle = "rgba(246,198,103,0.9)"; c.font = "500 9px Inter";
+              c.fillText("MMF yields 3.64% p.a.", cx, cy+22);
+              c.restore();
+            }
+          }]
+        }));
+      }
+
+      // 2. Stacked bar: Core column + Thematic column, each with ETF segments
+      const ctx2 = document.getElementById("strategyStackedChart");
+      if (ctx2) {
+        // Core ETFs as individual datasets (stacked on "Core" bar)
+        // Thematic ETFs as individual datasets (stacked on "Thematic" bar)
+        const datasets = [
+          // Core ETFs
+          { label: "JREG \u00B7 Research Enhanced", data: [23800, 0], backgroundColor: "rgba(94,163,255,0.8)", borderRadius: 2 },
+          { label: "VHVE \u00B7 FTSE Developed", data: [21000, 0], backgroundColor: "rgba(79,209,197,0.8)", borderRadius: 2 },
+          { label: "JPGL \u00B7 Multi-Factor", data: [18200, 0], backgroundColor: "rgba(83,201,249,0.8)", borderRadius: 2 },
+          { label: "JREM \u00B7 EM Enhanced", data: [7000, 0], backgroundColor: "rgba(61,220,151,0.8)", borderRadius: 2 },
+          // Thematic ETFs (sorted desc)
+          { label: "HEAL \u00B7 Healthcare", data: [0, 3600], backgroundColor: "rgba(139,124,246,0.8)", borderRadius: 2 },
+          { label: "AINF \u00B7 AI Infra", data: [0, 3000], backgroundColor: "rgba(94,163,255,0.7)", borderRadius: 2 },
+          { label: "COPX \u00B7 Copper", data: [0, 3000], backgroundColor: "rgba(245,158,11,0.7)", borderRadius: 2 },
+          { label: "NCLR \u00B7 Nuclear", data: [0, 3000], backgroundColor: "rgba(246,198,103,0.7)", borderRadius: 2 },
+          { label: "MLPS \u00B7 Energy", data: [0, 3000], backgroundColor: "rgba(255,107,107,0.6)", borderRadius: 2 },
+          { label: "BRIJ \u00B7 Infra", data: [0, 3000], backgroundColor: "rgba(79,209,197,0.6)", borderRadius: 2 },
+          { label: "WCBR \u00B7 Cyber", data: [0, 3000], backgroundColor: "rgba(83,201,249,0.6)", borderRadius: 2 },
+          { label: "RBOT \u00B7 Robotics", data: [0, 2400], backgroundColor: "rgba(61,220,151,0.6)", borderRadius: 2 },
+          { label: "RARE \u00B7 Rare Earth", data: [0, 1500], backgroundColor: "rgba(139,124,246,0.5)", borderRadius: 2 },
+          { label: "IDBZ \u00B7 Brazil", data: [0, 1500], backgroundColor: "rgba(94,163,255,0.5)", borderRadius: 2 },
+          { label: "XVTD \u00B7 Vietnam", data: [0, 1500], backgroundColor: "rgba(245,158,11,0.5)", borderRadius: 2 },
+          { label: "KWEB \u00B7 China", data: [0, 1500], backgroundColor: "rgba(246,198,103,0.5)", borderRadius: 2 },
+        ];
+
+        strategyCharts.push(new Chart(ctx2, {
+          type: "bar",
+          data: {
+            labels: ["Core Equity\n$70,000 (70%)", "Thematic Satellites\n$30,000 (30%)"],
+            datasets: datasets
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                stacked: true,
+                grid: { display: false },
+                ticks: { font: { size: 11, family: "Inter", weight: "600" }, color: "#e5ecf6" }
+              },
+              y: {
+                stacked: true,
+                grid: { color: "rgba(229,236,246,0.06)" },
+                ticks: { font: { size: 10, family: "'JetBrains Mono'" }, color: "rgba(139,151,176,0.7)", callback: v => "$" + (v/1000).toFixed(0) + "k" }
+              }
+            },
+            plugins: {
+              legend: {
+                display: true,
+                position: "bottom",
+                labels: { boxWidth: 8, boxHeight: 8, padding: 8, font: { size: 10, family: "Inter" }, color: "rgba(139,151,176,0.8)" }
+              },
+              tooltip: {
+                ...ttp,
+                callbacks: {
+                  label: ctx => ctx.dataset.label + ": $" + ctx.parsed.y.toLocaleString("en-US")
+                },
+                filter: ctx => ctx.parsed.y > 0
+              }
+            }
+          }
+        }));
+      }
     }
 
     function setupSections() {
@@ -2592,19 +3026,31 @@
       const satPL = satCur - satInv;
       const satRet = satInv > 0 ? (satPL/satInv*100) : 0;
 
+      // Core deployment: plan $70K, show % deployed + remaining
+      const corePlan = 70000;
+      const coreDeployPct = (coreInv / corePlan * 100).toFixed(0);
+      const coreRemaining = Math.max(0, corePlan - coreInv);
+      document.getElementById('sleeveCoreLabel').textContent = 'Core Equity \u00B7 Plan $70,000';
       document.getElementById('sleeveCoreValue').textContent = fmt$(coreCur);
       document.getElementById('sleeveCoreInv').textContent = 'Inv ' + fmt$(coreInv);
       document.getElementById('sleeveCorePL').textContent = fmtSgn$(corePL);
       document.getElementById('sleeveCorePL').style.color = corePL >= 0 ? 'var(--accent-mint)' : 'var(--accent-coral)';
       document.getElementById('sleeveCoreRet').textContent = fmtP(coreRet);
       document.getElementById('sleeveCoreRet').style.color = coreRet >= 0 ? 'var(--accent-mint)' : 'var(--accent-coral)';
+      document.getElementById('sleeveCoreDeploy').textContent = coreDeployPct + '% deployed \u00B7 ' + fmt$(coreRemaining) + ' to go';
 
+      // Thematic deployment: plan $30K
+      const satPlan = 30000;
+      const satDeployPct = (satInv / satPlan * 100).toFixed(0);
+      const satRemaining = Math.max(0, satPlan - satInv);
+      document.getElementById('sleeveThematicLabel').textContent = 'Thematic Satellites \u00B7 Plan $30,000';
       document.getElementById('sleeveThematicValue').textContent = fmt$(satCur);
       document.getElementById('sleeveThematicInv').textContent = 'Inv ' + fmt$(satInv);
       document.getElementById('sleeveThematicPL').textContent = fmtSgn$(satPL);
       document.getElementById('sleeveThematicPL').style.color = satPL >= 0 ? 'var(--accent-mint)' : 'var(--accent-coral)';
       document.getElementById('sleeveThematicRet').textContent = fmtP(satRet);
       document.getElementById('sleeveThematicRet').style.color = satRet >= 0 ? 'var(--accent-mint)' : 'var(--accent-coral)';
+      document.getElementById('sleeveThematicDeploy').textContent = satDeployPct + '% deployed \u00B7 ' + fmt$(satRemaining) + ' to go';
 
       // Render individual holdings in expandable body
       const renderSleeveBody = (items, containerId) => {
@@ -2722,7 +3168,7 @@
       document.getElementById("usdUPL").textContent = fmtSgn$(totalPL);
 
       // AED
-      document.getElementById("aedEtf").textContent = convert(etfTotal, rates.aead, "en-US", "د.إ");
+      document.getElementById("aedEtf").textContent = convert(etfTotal, rates.aed, "en-US", "د.إ");
       document.getElementById("aedLiquid").textContent = convert(LIQUID_BALANCE, rates.aed, "en-US", "د.إ");
       document.getElementById("aedTotal").textContent = convert(etfTotal + LIQUID_BALANCE, rates.aed, "en-US", "د.إ");
       document.getElementById("aedUPL").textContent = fmtSgn$(totalPL * rates.aed).replace("$", "د.إ");

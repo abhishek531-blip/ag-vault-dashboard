@@ -409,6 +409,11 @@ const SUB_THEME_MAP = {
   NCLR:"Nuclear & Uranium", COPX:"Copper", RARE:"Rare Earth", HEAL:"Healthcare Innovation",
   WCBR:"Cybersecurity", IDBZ:"Brazil", XVTD:"Vietnam", KWEB:"China Internet"
 };
+const NAME_OVERRIDE_MAP = {
+  IDBZ:"iShares MSCI Brazil UCITS",
+  XVTD:"Xtrackers Vietnam Swap UCITS",
+  NCLR:"WisdomTree Uranium & Nuclear Energy UCITS"
+};
 const SLEEVE_MAP = {
   JREG:"core",VHVE:"core",JPGL:"core",JREM:"core",
   AINF:"sat",MLPS:"sat",BRIJ:"sat",RBOT:"sat",NCLR:"sat",COPX:"sat",RARE:"sat",HEAL:"sat",WCBR:"sat",IDBZ:"sat",XVTD:"sat",KWEB:"sat"
@@ -518,7 +523,7 @@ function parseCSV(csv){
     if(inv > 0 && cur > 0){
       parsed.push({
         tk:ticker,
-        name:row[2]||row[1]||ticker,
+        name:NAME_OVERRIDE_MAP[ticker]||row[2]||row[1]||ticker,
         sleeve:SLEEVE_MAP[ticker]||"sat",
         sub:SUB_THEME_MAP[ticker]||"Other",
         plan, inv, cur,

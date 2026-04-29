@@ -3,1904 +3,433 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AG Vault Portfolio - Secure Dashboard</title>
+  <title>AG Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg-primary: #0a0f1c;
-      --bg-panel: #121a2e;
-      --text-primary: #e5ecf6;
-      --text-dim: #8b97b0;
-      --text-mute: #5b6781;
-      --accent-mint: #3ddc97;
-      --accent-coral: #ff6b6b;
-      --accent-gold: #f6c667;
-      --accent-teal: #4fd1c5;
-      --accent-violet: #8b7cf6;
-      --accent-blue: #5ea3ff;
+      --bg: #FFFFFF;
+      --surface: #F7F8FA;
+      --text-primary: #1B1B1B;
+      --text-secondary: #6F7177;
+      --text-tertiary: #74777C;
+      --green: #00C805;
+      --red: #FF5000;
+      --border: rgba(0,0,0,0.06);
+      --accent: #00C805;
     }
 
     html, body {
-      width: 100%;
-      height: 100%;
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, var(--bg-primary) 0%, #0d1425 50%, var(--bg-primary) 100%);
+      width: 100%; height: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
       color: var(--text-primary);
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    body {
-      position: relative;
+    /* ---- A11y: Focus-visible ---- */
+    *:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
     }
 
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background:
-        radial-gradient(circle at 20% 50%, rgba(79, 209, 197, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(139, 124, 246, 0.08) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
+    /* ---- Login ---- */
     .login-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 9999;
-      background: linear-gradient(135deg, #0a0f1c 0%, #0d1425 50%, #0a0f1c 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(2px);
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 9999; background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
     }
-
-    .login-screen::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background:
-        radial-gradient(circle at 20% 50%, rgba(79, 209, 197, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(139, 124, 246, 0.1) 0%, transparent 50%);
-      pointer-events: none;
-    }
-
     .login-card {
-      position: relative;
-      z-index: 2;
-      background: rgba(18, 26, 46, 0.7);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(229, 236, 246, 0.1);
-      border-radius: 20px;
-      padding: 48px 40px;
-      width: 90%;
-      max-width: 420px;
+      background: var(--bg); border-radius: 12px;
+      padding: 48px 40px; width: 90%; max-width: 400px;
       text-align: center;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
     }
-
     .login-logo {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 24px;
-      background: linear-gradient(135deg, var(--accent-teal), var(--accent-mint));
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--bg-primary);
-      box-shadow: 0 12px 24px rgba(79, 209, 197, 0.25);
+      width: 56px; height: 56px; margin: 0 auto 20px;
+      background: var(--accent); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 700; color: #fff;
     }
-
     .login-title {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, var(--accent-teal), var(--accent-mint));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-size: 22px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;
     }
-
     .login-subtitle {
-      font-size: 14px;
-      color: var(--text-dim);
-      margin-bottom: 32px;
-      letter-spacing: 0.5px;
+      font-size: 14px; color: var(--text-secondary); margin-bottom: 28px;
     }
-
     .login-input {
-      width: 100%;
-      padding: 14px 16px;
-      background: rgba(139, 151, 176, 0.1);
-      border: 1px solid rgba(229, 236, 246, 0.15);
-      border-radius: 10px;
-      color: var(--text-primary);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 16px;
-      letter-spacing: 2px;
-      text-align: center;
-      margin-bottom: 24px;
-      transition: all 0.3s ease;
+      width: 100%; padding: 12px 16px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text-primary);
+      font-family: 'Inter', sans-serif; font-size: 16px;
+      letter-spacing: 2px; text-align: center; margin-bottom: 16px;
+      transition: border-color 0.15s ease;
     }
-
-    .login-input::placeholder {
-      color: var(--text-mute);
-    }
-
-    .login-input:focus {
-      outline: none;
-      background: rgba(139, 151, 176, 0.15);
-      border-color: var(--accent-teal);
-      box-shadow: 0 0 20px rgba(79, 209, 197, 0.2);
-    }
-
+    .login-input::placeholder { color: var(--text-tertiary); }
+    .login-input:focus { outline: none; border-color: var(--accent); }
     .login-button {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, var(--accent-teal), var(--accent-mint));
-      border: none;
-      border-radius: 10px;
-      color: var(--bg-primary);
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 20px rgba(79, 209, 197, 0.25);
+      width: 100%; padding: 12px; background: var(--accent);
+      border: none; border-radius: 8px; color: #fff;
+      font-size: 15px; font-weight: 600; cursor: pointer;
+      margin-bottom: 12px; transition: opacity 0.15s ease;
     }
+    .login-button:hover { opacity: 0.9; }
+    .login-footer { font-size: 12px; color: var(--text-tertiary); }
+    .login-error { color: var(--red); font-size: 13px; margin-bottom: 12px; display: none; }
 
-    .login-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(79, 209, 197, 0.35);
-    }
-
-    .login-button:active {
-      transform: translateY(0);
-    }
-
-    .login-footer {
-      font-size: 12px;
-      color: var(--text-mute);
-      letter-spacing: 0.3px;
-    }
-
-    .login-error {
-      color: var(--accent-coral);
-      font-size: 13px;
-      margin-bottom: 16px;
-      display: none;
-    }
-
-    .dashboard {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      padding-bottom: 60px;
-    }
-
-    /* Navigation Pill Bar */
-    .nav-pills {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: rgba(10, 15, 28, 0.8);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(229, 236, 246, 0.08);
-      padding: 12px 20px;
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      scroll-behavior: smooth;
-      scrollbar-width: none;
-    }
-
-    .nav-pills::-webkit-scrollbar {
-      display: none;
-    }
-
-    .nav-pill {
-      padding: 8px 20px;
-      background: rgba(139, 151, 176, 0.1);
-      border: 1px solid rgba(229, 236, 246, 0.1);
-      border-radius: 20px;
-      color: var(--text-dim);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.3s ease;
-    }
-
-    .nav-pill:hover {
-      border-color: var(--accent-teal);
-      color: var(--text-primary);
-    }
-
-    .nav-pill.active {
-      background: rgba(79, 209, 197, 0.2);
-      border-color: var(--accent-teal);
-      color: var(--accent-teal);
-    }
-
-    .main-content {
-      margin-top: 0;
-    }
-
-    /* Header */
+    /* ---- Header ---- */
     .header {
-      padding: 24px 20px;
-      padding-top: 68px;
-      background: rgba(18, 26, 46, 0.4);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(229, 236, 246, 0.08);
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 24px;
-      align-items: center;
+      position: sticky; top: 0; z-index: 100;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      padding: 0 20px; height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 100%;
     }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
+    .header-left { display: flex; align-items: center; gap: 10px; }
     .header-logo {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, var(--accent-teal), var(--accent-mint));
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--bg-primary);
+      width: 32px; height: 32px; background: var(--accent);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #fff;
     }
-
-    .header-title {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+    .header-title-main { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .last-updated { font-size: 11px; color: var(--text-tertiary); }
+    .currency-toggle {
+      display: flex; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
     }
-
-    .header-title-main {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--text-primary);
+    .curr-opt {
+      padding: 8px 14px; font-size: 12px; font-weight: 600;
+      color: var(--text-tertiary); cursor: pointer; user-select: none;
+      transition: all 0.15s ease;
     }
-
-    .header-subtitle {
-      font-size: 12px;
-      color: var(--text-mute);
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .header-strategy {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      text-align: right;
-      font-size: 13px;
-    }
-
-    .header-strategy-label {
-      color: var(--text-mute);
-    }
-
-    .header-strategy-value {
-      color: var(--text-primary);
-      font-weight: 600;
-    }
-
-    .header-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: var(--text-mute);
-    }
-
+    .curr-opt.active { background: var(--accent); color: #fff; }
     .live-badge {
-      width: 8px;
-      height: 8px;
-      background: var(--accent-mint);
-      border-radius: 50%;
-      animation: pulse 2s infinite;
+      width: 8px; height: 8px; background: var(--accent);
+      border-radius: 50%; animation: pulse 2s infinite;
     }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
     .settings-btn {
-      background: rgba(139, 151, 176, 0.1);
-      border: 1px solid rgba(229, 236, 246, 0.1);
-      border-radius: 8px;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-dim);
-      cursor: pointer;
-      font-size: 16px;
-      transition: all 0.3s ease;
+      background: none; border: 1px solid var(--border); border-radius: 8px;
+      min-width: 36px; min-height: 36px; display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary); cursor: pointer; font-size: 14px;
+      transition: border-color 0.15s ease;
     }
-
-    .settings-btn:hover {
-      border-color: var(--accent-teal);
-      color: var(--accent-teal);
+    .settings-btn:hover { border-color: var(--text-secondary); }
+    .refresh-btn {
+      background: none; border: 1px solid var(--border); border-radius: 8px;
+      min-width: 36px; min-height: 36px; display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary); cursor: pointer; font-size: 16px;
+      transition: border-color 0.15s ease;
     }
+    .refresh-btn:hover { border-color: var(--text-secondary); }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .refresh-btn.spinning .refresh-icon { animation: spin 0.8s linear infinite; }
+    .refresh-icon { display: inline-block; }
 
+    /* ---- CSV Bar ---- */
     .csv-bar {
-      display: none;
-      background: rgba(18, 26, 46, 0.6);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(229, 236, 246, 0.08);
-      padding: 16px 20px;
-      gap: 12px;
-      align-items: center;
+      display: none; background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px; gap: 12px; align-items: center;
     }
-
-    .csv-bar.active {
-      display: flex;
-    }
-
+    .csv-bar.active { display: flex; }
     .csv-input {
-      flex: 1;
-      padding: 10px 14px;
-      background: rgba(139, 151, 176, 0.1);
-      border: 1px solid rgba(229, 236, 246, 0.1);
-      border-radius: 8px;
-      color: var(--text-primary);
-      font-size: 12px;
-      font-family: 'JetBrains Mono', monospace;
-      transition: all 0.3s ease;
+      flex: 1; padding: 8px 12px; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text-primary); font-size: 12px; font-family: 'Inter', sans-serif;
     }
-
-    .csv-input:focus {
-      outline: none;
-      border-color: var(--accent-teal);
-    }
-
+    .csv-input:focus { outline: none; border-color: var(--accent); }
     .csv-btn {
-      padding: 10px 16px;
-      background: var(--accent-teal);
-      border: none;
-      border-radius: 8px;
-      color: var(--bg-primary);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      padding: 8px 16px; background: var(--accent); border: none;
+      border-radius: 8px; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer;
     }
+    .csv-status { font-size: 12px; color: var(--text-tertiary); min-width: 100px; }
 
-    .csv-btn:hover {
-      background: var(--accent-mint);
-    }
+    /* ---- Layout ---- */
+    .dashboard { min-height: 100vh; }
+    .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
 
-    .csv-status {
-      font-size: 12px;
-      color: var(--text-mute);
-      min-width: 100px;
-    }
-
-    /* Container */
-    .container {
-      max-width: 1440px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    /* Hero Section */
-    .hero {
-      margin-bottom: 40px;
-    }
-
+    /* ---- Hero ---- */
+    .hero { padding: 24px 0 16px; }
+    .hero-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 4px; }
     .hero-value {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 48px;
-      font-weight: 700;
-      font-feature-settings: "tnum";
-      background: linear-gradient(135deg, var(--accent-teal), var(--accent-mint));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 16px;
-      line-height: 1.2;
+      font-size: 48px; font-weight: 500; color: var(--text-primary);
+      letter-spacing: -1px; font-feature-settings: "tnum";
+      line-height: 1.15; margin-bottom: 4px;
     }
+    .hero-change { font-size: 14px; font-weight: 500; margin-bottom: 20px; }
+    .hero-change.positive { color: var(--green); }
+    .hero-change.negative { color: var(--red); }
+    .hero-chart-wrap { height: 120px; margin: 0 -20px 16px; }
+
+    /* ---- Skeleton Loading ---- */
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface) 25%, #e8e9ec 50%, var(--surface) 75%);
+      background-size: 200% 100%;
+      animation: skeleton-pulse 1.5s ease-in-out infinite;
+      border-radius: 6px;
+    }
+    @keyframes skeleton-pulse {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    #heroSkeleton {
+      padding: 4px 0 20px;
+    }
+    .skeleton-bar {
+      height: 48px; width: 260px; margin-bottom: 8px;
+    }
+    .skeleton-bar-sm {
+      height: 16px; width: 180px;
+    }
+
+    /* ---- Time Chips ---- */
+    .time-chips { display: flex; gap: 0; justify-content: center; margin: 8px 0 12px; }
+    .time-chip {
+      padding: 6px 16px; font-size: 12px; font-weight: 500;
+      color: var(--text-tertiary); cursor: pointer; user-select: none;
+      transition: color 0.15s ease;
+    }
+    .time-chip.active { color: var(--accent); }
+    .time-chip:hover { color: var(--text-primary); }
+
+    /* ---- DCA Progress ---- */
+    .dca-progress { width: 100%; padding: 12px 0; }
+    .dca-label { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .dca-bar { display: flex; gap: 4px; margin-bottom: 4px; }
+    .dca-step {
+      flex: 1; height: 6px; background: var(--border);
+      border-radius: 3px; font-size: 0; overflow: hidden;
+      position: relative;
+    }
+    .dca-step.done { background: var(--accent); }
+    .dca-step.next { background: rgba(0,200,5,0.3); animation: pulse 2s infinite; }
+    .dca-status { font-size: 12px; color: var(--text-secondary); }
 
     .hero-chips {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
+      display: flex; gap: 8px; flex-wrap: wrap; padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
     }
-
     .chip {
-      padding: 8px 16px;
-      background: rgba(139, 151, 176, 0.1);
-      border: 1px solid rgba(229, 236, 246, 0.15);
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-dim);
-      display: flex;
-      gap: 6px;
-      align-items: center;
+      padding: 6px 12px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 20px;
+      font-size: 12px; font-weight: 500; color: var(--text-secondary);
     }
 
-    .chip.positive {
-      border-color: rgba(61, 220, 151, 0.3);
-      color: var(--accent-mint);
-    }
-
-    .chip.negative {
-      border-color: rgba(255, 107, 107, 0.3);
-      color: var(--accent-coral);
-    }
-
-    .hero-subtitle {
-      font-size: 14px;
-      color: var(--text-dim);
-    }
-
-    /* KPI Grid */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 16px;
-      margin-bottom: 40px;
-    }
-
-    .kpi-card {
-      background: rgba(18, 26, 46, 0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(229, 236, 246, 0.08);
-      border-radius: 16px;
-      padding: 20px;
-      border-top: 2px solid transparent;
-      border-image: linear-gradient(90deg, transparent, var(--accent-teal), transparent) 1;
-      transition: all 0.3s ease;
-    }
-
-    .kpi-card:hover {
-      border-color: rgba(229, 236, 246, 0.15);
-      box-shadow: 0 8px 24px rgba(79, 209, 197, 0.1);
-    }
-
-    .kpi-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-mute);
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    .kpi-value {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 20px;
-      font-weight: 700;
-      font-feature-settings: "tnum";
-      color: var(--text-primary);
-      margin-bottom: 4px;
-    }
-
-    .kpi-subtitle {
-      font-size: 12px;
-      color: var(--text-dim);
-      margin-bottom: 12px;
-    }
-
-    .kpi-icon {
-      font-size: 16px;
-      text-align: right;
-    }
-
-    /* Sleeve Performance Cards */
-    .sleeve-cards {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
+    /* ---- Sleeve Summary Cards ---- */
+    .sleeve-cards { display: flex; gap: 8px; margin: 16px 0; }
     .sleeve-card {
-      background: rgba(18, 26, 46, 0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(229, 236, 246, 0.08);
-      border-radius: 16px;
+      flex: 1; padding: 12px; background: var(--surface);
+      border-radius: 10px; border: 1px solid var(--border);
+    }
+    .sleeve-label { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .sleeve-value { font-size: 18px; font-weight: 500; color: var(--text-primary); font-feature-settings: "tnum"; }
+    .sleeve-return { font-size: 12px; font-weight: 500; margin-top: 2px; font-feature-settings: "tnum"; }
+    .sleeve-return.positive { color: var(--green); }
+    .sleeve-return.negative { color: var(--red); }
+
+    /* ---- Alert Banner ---- */
+    .alerts-section {
+      margin: 16px 0; background: #FFF8E1;
+      border: 1px solid rgba(255,193,7,0.3); border-radius: 12px;
       overflow: hidden;
-      transition: all 0.3s ease;
     }
-
-    .sleeve-card:hover {
-      border-color: rgba(229, 236, 246, 0.15);
+    .alerts-header {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 16px; cursor: pointer; user-select: none;
     }
-
-    .sleeve-card-header {
-      padding: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
+    .alerts-title { font-size: 13px; font-weight: 600; color: #F57F17; flex: 1; }
+    .alerts-count {
+      background: #F57F17; color: #fff; font-size: 11px; font-weight: 700;
+      padding: 2px 8px; border-radius: 10px;
     }
-
-    .sleeve-card-header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
+    .alerts-chevron { font-size: 12px; color: #F57F17; transition: transform 0.15s ease; }
+    .alerts-section.expanded .alerts-chevron { transform: rotate(180deg); }
+    .alerts-list { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .alerts-section.expanded .alerts-list { max-height: 500px; }
+    .alert-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; font-size: 13px;
+      border-top: 1px solid rgba(255,193,7,0.15);
     }
-
-    .sleeve-card.core {
-      position: relative;
-    }
-
-    .sleeve-card.core::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent-teal), var(--accent-blue), transparent);
-      z-index: 1;
-    }
-
-    .sleeve-card.thematic {
-      position: relative;
-    }
-
-    .sleeve-card.thematic::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent-violet), var(--accent-gold), transparent);
-      z-index: 1;
-    }
-
-    .sleeve-card-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-weight: 600;
-      color: var(--text-mute);
-      margin-bottom: 4px;
-    }
-
-    .sleeve-card-value {
-      font-size: 22px;
-      font-weight: 700;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .sleeve-card-stats {
-      display: flex;
-      gap: 12px;
-      margin-top: 6px;
-      font-size: 12px;
-    }
-
-    .sleeve-card-chevron {
-      font-size: 14px;
-      color: var(--text-mute);
-      transition: transform 0.3s ease;
-    }
-
-    .sleeve-card.expanded .sleeve-card-chevron {
-      transform: rotate(180deg);
-    }
-
-    .sleeve-card-body {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease;
-    }
-
-    .sleeve-card.expanded .sleeve-card-body {
-      max-height: 600px;
-    }
-
-    .sleeve-holding {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      border-top: 1px solid rgba(229, 236, 246, 0.05);
-      font-size: 13px;
-    }
-
-    .sleeve-holding-ticker {
-      font-weight: 600;
-      font-family: 'JetBrains Mono', monospace;
-      min-width: 50px;
-    }
-
-    .sleeve-holding-name {
-      color: var(--text-dim);
-      flex: 1;
-      margin-left: 12px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .sleeve-holding-pl {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 600;
-      font-size: 12px;
-      min-width: 80px;
-      text-align: right;
-    }
-
-    /* Liquid Fund Card */
-    .liquid-card {
-      background: rgba(18, 26, 46, 0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(246, 198, 103, 0.2);
-      border-radius: 16px;
-      padding: 24px;
-      border-top: 3px solid var(--accent-gold);
-      margin-bottom: 40px;
-    }
-
-    .liquid-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--accent-gold);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 20px;
-    }
-
-    .liquid-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
-
-    .liquid-item {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .liquid-item-label {
-      font-size: 12px;
-      color: var(--text-mute);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .liquid-item-value {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 18px;
-      font-weight: 700;
+    .alert-ticker {
+      font-size: 12px; font-weight: 600; color: var(--text-primary); min-width: 60px;
       font-feature-settings: "tnum";
-      color: var(--text-primary);
     }
+    .alert-message { flex: 1; color: var(--text-secondary); }
+    .alert-value { font-size: 12px; font-weight: 600; font-feature-settings: "tnum"; }
 
-    .liquid-yield {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      background: rgba(246, 198, 103, 0.15);
-      border: 1px solid rgba(246, 198, 103, 0.3);
-      border-radius: 8px;
-      font-size: 13px;
-      color: var(--accent-gold);
-      font-weight: 600;
-      width: fit-content;
+    /* ---- Holdings ---- */
+    .section-title {
+      font-size: 18px; font-weight: 500; color: var(--text-primary);
+      padding: 20px 0 12px;
     }
-
-    /* Section Headers */
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 20px;
-      background: rgba(18, 26, 46, 0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(229, 236, 246, 0.08);
-      border-radius: 16px 16px 0 0;
+    .holdings-tabs {
+      display: flex; gap: 0; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 8px;
+      overflow: hidden; margin-bottom: 12px;
+    }
+    .holdings-tab {
+      flex: 1; padding: 8px 0; text-align: center;
+      font-size: 13px; font-weight: 500; color: var(--text-secondary);
+      cursor: pointer; user-select: none; transition: all 0.15s ease;
+      border-right: 1px solid var(--border);
+    }
+    .holdings-tab:last-child { border-right: none; }
+    .holdings-tab.active { background: var(--accent); color: #fff; }
+    .holding-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
       cursor: pointer;
-      user-select: none;
-      transition: all 0.3s ease;
+      transition: background 0.15s ease;
     }
-
-    .section-header:hover {
-      border-color: rgba(229, 236, 246, 0.15);
+    .holding-row:hover { background: var(--surface); }
+    .holding-row:last-child { border-bottom: none; }
+    .holding-left {}
+    .holding-ticker { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+    .holding-name { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+    .holding-right { text-align: right; }
+    .holding-value { font-size: 14px; font-weight: 500; color: var(--text-primary); font-feature-settings: "tnum"; }
+    .holding-return { font-size: 12px; font-weight: 500; font-feature-settings: "tnum"; margin-top: 2px; }
+    .holding-return.positive { color: var(--green); }
+    .holding-return.negative { color: var(--red); }
+    .holding-weight { font-size: 11px; color: var(--text-tertiary); margin-top: 1px; }
+    .holding-detail {
+      padding: 8px 0 12px; display: none;
+      border-bottom: 1px solid var(--border);
     }
-
-    .section-header h3 {
-      flex: 1;
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin: 0;
+    .holding-detail.open { display: block; }
+    .detail-row {
+      display: flex; justify-content: space-between;
+      padding: 3px 0; font-size: 12px; color: var(--text-secondary);
     }
-
-    .section-chevron {
-      color: var(--text-dim);
-      font-size: 16px;
-      transition: transform 0.3s ease;
+    .detail-row span:last-child { font-feature-settings: "tnum"; color: var(--text-primary); }
+    .show-all-btn {
+      display: block; width: 100%; padding: 14px; text-align: center;
+      font-size: 14px; font-weight: 500; color: var(--accent);
+      cursor: pointer; border-top: 1px solid var(--border);
     }
+    .show-all-btn:hover { background: var(--surface); }
 
-    .section-content {
-      background: rgba(18, 26, 46, 0.4);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(229, 236, 246, 0.08);
-      border-top: none;
-      border-radius: 0 0 16px 16px;
-      overflow: hidden;
-      max-height: 9999px;
-      transition: max-height 0.3s ease;
+    /* ---- India / Segment Summary ---- */
+    .india-summary {
+      padding: 12px 0; margin-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
     }
+    .india-summary-value { font-size: 24px; font-weight: 500; color: var(--text-primary); font-feature-settings: "tnum"; }
+    .india-summary-return { font-size: 14px; font-weight: 500; margin-top: 2px; font-feature-settings: "tnum"; }
+    .india-summary-return.positive { color: var(--green); }
+    .india-summary-return.negative { color: var(--red); }
 
-    .section-content.collapsed {
-      max-height: 0;
+    /* ---- Allocation ---- */
+    .allocation-section {
+      padding: 20px 0; border-top: 1px solid var(--border);
     }
-
-    .section-body {
-      padding: 20px;
+    .allocation-wrap {
+      display: flex; align-items: center; gap: 24px;
     }
-
-    /* Charts Section */
-    .charts-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      margin-bottom: 20px;
+    .allocation-chart-wrap { width: 140px; height: 140px; flex-shrink: 0; }
+    .allocation-legend { flex: 1; }
+    .legend-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 0; font-size: 13px;
     }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .legend-label { flex: 1; color: var(--text-secondary); }
+    .legend-pct { font-weight: 500; color: var(--text-primary); font-feature-settings: "tnum"; }
 
-    .chart-card {
-      background: rgba(18, 26, 46, 0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(229, 236, 246, 0.08);
-      border-radius: 16px;
-      padding: 20px;
-      position: relative;
-      height: 300px;
-    }
-
-    .chart-card h4 {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin: 0;
-      z-index: 10;
-    }
-
-    .chart-container {
-      position: relative;
-      height: 260px;
-      margin-top: 30px;
-    }
-
-    .chart-row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
-    /* Top Movers & News */
-    .movers-news-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 20px;
-    }
-
-    .movers-card, .news-card {
-      background: rgba(18, 26, 46, 0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(229, 236, 246, 0.08);
-      border-radius: 16px;
-      padding: 20px;
-    }
-
-    .movers-card h4, .news-card h4 {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 16px;
-    }
-
-    .movers-section {
-      margin-bottom: 20px;
-    }
-
-    .movers-section-title {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-mute);
-      margin-bottom: 12px;
-    }
-
-    .mover-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px;
-      background: rgba(139, 151, 176, 0.05);
-      border-left: 3px solid transparent;
-      border-radius: 8px;
-      margin-bottom: 8px;
-      font-size: 13px;
-    }
-
-    .mover-item.gainer {
-      border-left-color: var(--accent-mint);
-    }
-
-    .mover-item.loser {
-      border-left-color: var(--accent-coral);
-    }
-
-    .mover-left {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      flex: 1;
-    }
-
-    .mover-ticker {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .mover-name {
-      font-size: 11px;
-      color: var(--text-mute);
-    }
-
-    .mover-tag {
-      display: inline-block;
-      font-size: 10px;
-      padding: 2px 8px;
-      background: rgba(61, 220, 151, 0.15);
-      color: var(--accent-mint);
-      border-radius: 4px;
-      margin-top: 2px;
-    }
-
-    .mover-right {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      text-align: right;
-    }
-
-    .mover-pl {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 600;
-    }
-
-    .mover-return {
-      font-size: 12px;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
+    /* ---- News ---- */
+    .news-section { padding: 20px 0; border-top: 1px solid var(--border); }
     .news-item {
-      padding: 14px;
-      background: rgba(139, 151, 176, 0.05);
-      border-left: 3px solid var(--accent-blue);
-      border-radius: 8px;
-      margin-bottom: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+      cursor: pointer; display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 12px;
+      transition: background 0.15s ease;
     }
-
-    .news-item.negative {
-      border-left-color: var(--accent-coral);
-    }
-
-    .news-item.positive {
-      border-left-color: var(--accent-mint);
-    }
-
-    .news-item:hover {
-      background: rgba(139, 151, 176, 0.1);
-    }
-
-    .news-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-
+    .news-item:hover { background: var(--surface); border-radius: 8px; }
+    .news-item:last-child { border-bottom: none; }
+    .news-content { flex: 1; }
     .news-headline {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-primary);
-      flex: 1;
-      line-height: 1.4;
+      font-size: 14px; font-weight: 500; color: var(--text-primary);
+      line-height: 1.4; margin-bottom: 4px;
     }
-
-    .news-sentiment {
-      display: inline-block;
-      font-size: 10px;
-      padding: 4px 8px;
-      background: rgba(139, 151, 176, 0.15);
-      color: var(--text-mute);
-      border-radius: 4px;
-      white-space: nowrap;
-      font-weight: 500;
+    .news-meta { font-size: 12px; color: var(--text-tertiary); }
+    .news-tag {
+      padding: 4px 8px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; font-size: 11px; font-weight: 500; color: var(--text-secondary);
+      white-space: nowrap; flex-shrink: 0; align-self: center;
     }
-
-    .news-sentiment.negative {
-      background: rgba(255, 107, 107, 0.15);
-      color: var(--accent-coral);
-    }
-
-    .news-sentiment.positive {
-      background: rgba(61, 220, 151, 0.15);
-      color: var(--accent-mint);
-    }
-
     .news-body {
-      font-size: 12px;
-      color: var(--text-dim);
-      line-height: 1.5;
-      margin-bottom: 10px;
-      display: none;
-    }
-
-    .news-item.expanded .news-body {
-      display: block;
-    }
-
-    .news-themes {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .news-theme {
-      display: inline-block;
-      font-size: 10px;
-      padding: 3px 8px;
-      background: rgba(94, 163, 255, 0.15);
-      color: var(--accent-blue);
-      border-radius: 4px;
-    }
-
-    /* Holdings Table */
-    .holdings-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-
-    .holdings-table thead {
-      background: rgba(139, 151, 176, 0.1);
-    }
-
-    .holdings-table th {
-      padding: 12px;
-      text-align: left;
-      font-weight: 600;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      font-size: 11px;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      user-select: none;
-      border-bottom: 1px solid rgba(229, 236, 246, 0.08);
-    }
-
-    .holdings-table th:hover {
-      color: var(--text-primary);
-    }
-
-    .holdings-table th .sort-arrow {
-      margin-left: 4px;
-      font-size: 10px;
-      opacity: 0.4;
-    }
-
-    .holdings-table th.sort-active {
-      color: var(--accent-teal);
-    }
-
-    .holdings-table th.sort-active .sort-arrow {
-      opacity: 1;
-    }
-
-    .holdings-table td {
-      padding: 14px 12px;
-      border-bottom: 1px solid rgba(229, 236, 246, 0.05);
-    }
-
-    .holdings-table tbody tr:hover {
-      background: rgba(139, 151, 176, 0.05);
-    }
-
-    .table-ticker {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .table-value {
-      font-family: 'JetBrains Mono', monospace;
-      text-align: right;
-    }
-
-    .pill {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 500;
-      text-align: center;
-    }
-
-    .pill-mint {
-      background: rgba(61, 220, 151, 0.15);
-      color: var(--accent-mint);
-    }
-
-    .pill-coral {
-      background: rgba(255, 107, 107, 0.15);
-      color: var(--accent-coral);
-    }
-
-    .pill-tag {
-      display: inline-block;
-      padding: 3px 8px;
-      background: rgba(94, 163, 255, 0.15);
-      color: var(--accent-blue);
-      border-radius: 4px;
-      font-size: 11px;
-      margin-right: 4px;
-    }
-
-    /* Holdings Cards (Mobile) */
-    .holdings-cards {
-      display: none;
-      gap: 12px;
-    }
-
-    .holding-card {
-      background: rgba(139, 151, 176, 0.05);
-      border: 1px solid rgba(229, 236, 246, 0.08);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 10px;
-    }
-
-    .holding-card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
-    }
-
-    .holding-card-left h4 {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin: 0 0 4px 0;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .holding-card-left p {
-      font-size: 11px;
-      color: var(--text-mute);
-      margin: 0;
-    }
-
-    .holding-card-right {
-      text-align: right;
-    }
-
-    .holding-card-value {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-    }
-
-    .holding-card-return {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      margin-bottom: 4px;
-    }
-
-    .holding-card-bar {
-      width: 60px;
-      height: 4px;
-      background: rgba(139, 151, 176, 0.2);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .holding-card-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent-teal), var(--accent-mint));
-      border-radius: 2px;
-    }
-
-    .holding-card-tags {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-      font-size: 11px;
-    }
-
-    .holding-card-tag {
-      padding: 3px 8px;
-      background: rgba(94, 163, 255, 0.15);
-      color: var(--accent-blue);
-      border-radius: 4px;
-    }
-
-    /* DCA Timeline */
-    .dca-timeline {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
-      position: relative;
-    }
-
-    .dca-tranche {
-      text-align: center;
-      position: relative;
-    }
-
-    .dca-tranche:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      top: 20px;
-      left: calc(100% + 6px);
-      width: calc(100% - 12px);
-      height: 1px;
-      background: rgba(139, 151, 176, 0.3);
-    }
-
-    .dca-circle {
-      width: 40px;
-      height: 40px;
-      margin: 0 auto 8px;
-      background: rgba(139, 151, 176, 0.1);
-      border: 2px solid rgba(139, 151, 176, 0.3);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-dim);
-      transition: all 0.3s ease;
-    }
-
-    .dca-tranche.funded .dca-circle {
-      background: rgba(61, 220, 151, 0.2);
-      border-color: var(--accent-mint);
-      color: var(--accent-mint);
-    }
-
-    .dca-label {
-      font-size: 11px;
-      color: var(--text-mute);
-      font-weight: 500;
-    }
-
-    .dca-status {
-      font-size: 10px;
-      padding: 4px 8px;
-      background: rgba(139, 151, 176, 0.1);
-      color: var(--text-mute);
-      border-radius: 4px;
-      margin-top: 4px;
-      display: inline-block;
-    }
-
-    .dca-tranche.funded .dca-status {
-      background: rgba(61, 220, 151, 0.15);
-      color: var(--accent-mint);
-    }
-
-    .dca-countdown {
-      padding: 12px 16px;
-      background: rgba(94, 163, 255, 0.15);
-      border: 1px solid rgba(94, 163, 255, 0.3);
-      border-radius: 10px;
-      font-size: 13px;
-      color: var(--accent-blue);
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    /* Currency Cards */
-    .currency-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .currency-card {
-      background: rgba(18, 26, 46, 0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(229, 236, 246, 0.08);
-      border-radius: 16px;
-      padding: 20px;
-    }
-
-    .currency-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid rgba(229, 236, 246, 0.08);
-    }
-
-    .currency-code {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    .currency-rate {
-      font-size: 11px;
-      color: var(--text-mute);
-    }
-
-    .currency-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      font-size: 12px;
-      border-bottom: 1px solid rgba(229, 236, 246, 0.05);
-    }
-
-    .currency-item:last-child {
-      border-bottom: none;
-    }
-
-    .currency-item-label {
-      color: var(--text-mute);
-    }
-
-    .currency-item-value {
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--text-primary);
-      font-weight: 600;
-    }
-
-    /* Deployment Progress */
-    .deployment-card {
-      background: rgba(18, 26, 46, 0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(229, 236, 246, 0.08);
-      border-radius: 16px;
-      padding: 20px;
-    }
-
-    .deployment-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .deployment-label {
-      font-size: 12px;
-      color: var(--text-mute);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .deployment-percent {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--accent-mint);
-    }
-
-    .deployment-bar {
-      width: 100%;
-      height: 8px;
-      background: rgba(139, 151, 176, 0.2);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-
-    .deployment-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent-teal), var(--accent-mint));
-      border-radius: 4px;
-      transition: width 0.6s ease;
-    }
-
-    .deployment-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      font-size: 12px;
-    }
-
-    .deployment-stat {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .deployment-stat-label {
-      color: var(--text-mute);
-    }
-
-    .deployment-stat-value {
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--text-primary);
-      font-weight: 600;
-    }
-
-    /* Strategy Section */
-    .strategy-section { display: none; }
-    .strategy-section.visible { display: block; }
-
-    .strategy-hero {
-      text-align: center;
-      padding: 40px 20px 30px;
-    }
-
-    .strategy-hero h2 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, var(--accent-teal), var(--accent-mint));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .strategy-hero p {
-      font-size: 14px;
-      color: var(--text-dim);
-      max-width: 600px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    .strategy-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      padding: 0 20px;
-      margin-bottom: 24px;
-    }
-
-    .strategy-card {
-      background: rgba(18, 26, 46, 0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(229, 236, 246, 0.08);
-      border-radius: 16px;
-      padding: 24px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .strategy-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent-teal), transparent);
-    }
-
-    .strategy-card.gold::before {
-      background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
-    }
-
-    .strategy-card.violet::before {
-      background: linear-gradient(90deg, transparent, var(--accent-violet), var(--accent-gold), transparent);
-    }
-
-    .strategy-card h3 {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-dim);
-      font-weight: 600;
-      margin-bottom: 16px;
-    }
-
-    .strategy-card .card-value {
-      font-size: 28px;
-      font-weight: 700;
-      font-family: 'JetBrains Mono', monospace;
-      margin-bottom: 8px;
-    }
-
-    .strategy-card .card-desc {
-      font-size: 13px;
-      color: var(--text-dim);
-      line-height: 1.6;
-    }
-
-    .strategy-full {
-      padding: 0 20px;
-      margin-bottom: 24px;
-    }
-
-    .strategy-full .strategy-card {
-      width: 100%;
-    }
-
-    .thesis-item {
-      display: grid;
-      grid-template-columns: 64px 1fr;
-      gap: 16px;
-      padding: 16px 0;
-      border-bottom: 1px solid rgba(229, 236, 246, 0.06);
-    }
-
-    .thesis-item:last-child { border-bottom: none; }
-
+      font-size: 13px; color: var(--text-secondary);
+      padding: 8px 0 0; line-height: 1.5;
+    }
+
+    /* ---- Strategy Accordion ---- */
+    .strategy-section { padding: 20px 0; border-top: 1px solid var(--border); }
+    .strategy-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; user-select: none; padding: 8px 0;
+    }
+    .strategy-chevron {
+      font-size: 14px; color: var(--text-tertiary);
+      transition: transform 0.15s ease;
+    }
+    .strategy-body {
+      max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
+    }
+    .strategy-section.expanded .strategy-body { max-height: 3000px; }
+    .strategy-section.expanded .strategy-chevron { transform: rotate(180deg); }
+    .strategy-text {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.7; padding: 12px 0;
+    }
+    .strategy-text strong { color: var(--text-primary); font-weight: 600; }
+    .thesis-accordion { border-bottom: 1px solid var(--border); }
+    .thesis-summary {
+      display: flex; align-items: center; gap: 10px; padding: 10px 0;
+      cursor: pointer; list-style: none; font-size: 13px;
+    }
+    .thesis-summary::-webkit-details-marker { display: none; }
+    .thesis-summary::after {
+      content: '\25B8'; margin-left: auto; color: var(--text-tertiary);
+      font-size: 11px; transition: transform 0.15s ease;
+    }
+    details[open] .thesis-summary::after { transform: rotate(90deg); }
     .thesis-badge {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--text-primary);
+      padding: 3px 8px; border-radius: 6px; font-size: 12px;
+      font-weight: 600; font-feature-settings: "tnum";
+    }
+    .thesis-badge.core { background: rgba(0,200,5,0.1); color: var(--accent); }
+    .thesis-badge.sat { background: rgba(55,138,221,0.1); color: #378ADD; }
+    .thesis-title-compact { color: var(--text-primary); font-weight: 500; }
+    .thesis-alloc { color: var(--text-tertiary); font-size: 12px; }
+    .thesis-detail {
+      padding: 0 0 12px 0; font-size: 13px;
+      color: var(--text-secondary); line-height: 1.6;
     }
 
-    .thesis-badge.core { background: rgba(79, 209, 197, 0.15); border: 1px solid rgba(79, 209, 197, 0.3); }
-    .thesis-badge.sat { background: rgba(139, 124, 246, 0.15); border: 1px solid rgba(139, 124, 246, 0.3); }
-
-    .thesis-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .thesis-tickers {
-      font-size: 11px;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--accent-teal);
-      margin-bottom: 4px;
-    }
-
-    .thesis-desc {
-      font-size: 12px;
-      color: var(--text-dim);
-      line-height: 1.5;
-    }
-
-    .strategy-chart-container {
-      height: 280px;
-      margin: 16px 0;
-    }
-
-    @media (max-width: 768px) {
-      .strategy-grid { grid-template-columns: 1fr; }
-      .strategy-hero h2 { font-size: 22px; }
-      .strategy-chart-container { height: 220px; }
-    }
-
-    /* Footer */
+    /* ---- Footer ---- */
     .footer {
-      padding: 20px;
-      text-align: center;
-      font-size: 12px;
-      color: var(--text-mute);
-      border-top: 1px solid rgba(229, 236, 246, 0.08);
-      margin-top: 40px;
+      padding: 24px 0; text-align: center; font-size: 12px;
+      color: var(--text-tertiary); border-top: 1px solid var(--border);
+      margin-top: 20px;
     }
 
-    /* Mobile Responsive */
-    @media (max-width: 1024px) {
-      .kpi-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .liquid-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .movers-news-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .charts-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .chart-row {
-        grid-template-columns: 1fr;
-      }
-
-      .currency-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .dca-timeline {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .dca-tranche:not(:last-child)::after {
-        display: none;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .hero-value {
-        font-size: 36px;
-      }
-
-      .kpi-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .sleeve-cards {
-        grid-template-columns: 1fr;
-      }
-
-      .liquid-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .header {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        padding-top: 62px;
-      }
-
-      .header-right {
-        grid-column: 1;
-      }
-
-      .currency-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .dca-timeline {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .deployment-stats {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 12px;
-      }
-
-      .hero-value {
-        font-size: 28px;
-      }
-
-      .nav-pills {
-        padding: 8px 12px;
-      }
-
-      .nav-pill {
-        padding: 6px 14px;
-        font-size: 12px;
-      }
-
-      .header {
-        padding: 16px 12px;
-        padding-top: 58px;
-      }
-
-      .header-left {
-        gap: 12px;
-      }
-
-      .header-logo {
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
-      }
-
-      .header-title-main {
-        font-size: 14px;
-      }
-
-      .header-subtitle {
-        font-size: 11px;
-      }
-
-      .header-right {
-        gap: 12px;
-        font-size: 12px;
-      }
-
-      .header-strategy {
-        gap: 2px;
-      }
-
-      .header-strategy-label {
-        font-size: 10px;
-      }
-
-      .header-strategy-value {
-        font-size: 12px;
-      }
-
-      .header-status {
-        font-size: 10px;
-      }
-
-      .hero-chips {
-        gap: 8px;
-      }
-
-      .chip {
-        padding: 6px 12px;
-        font-size: 11px;
-      }
-
-      .hero-subtitle {
-        font-size: 12px;
-      }
-
-      .kpi-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        margin-bottom: 24px;
-      }
-
-      .kpi-card {
-        padding: 16px;
-      }
-
-      .kpi-label {
-        font-size: 10px;
-      }
-
-      .kpi-value {
-        font-size: 16px;
-      }
-
-      .kpi-subtitle {
-        font-size: 11px;
-      }
-
-      .liquid-card {
-        padding: 16px;
-        margin-bottom: 24px;
-      }
-
-      .liquid-title {
-        font-size: 12px;
-        margin-bottom: 16px;
-      }
-
-      .liquid-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-
-      .liquid-item-value {
-        font-size: 16px;
-      }
-
-      .section-header {
-        padding: 16px;
-      }
-
-      .section-header h3 {
-        font-size: 14px;
-      }
-
-      .section-body {
-        padding: 16px;
-      }
-
-      .chart-card {
-        height: 250px;
-        padding: 14px;
-      }
-
-      .chart-card h4 {
-        font-size: 12px;
-        top: 14px;
-        left: 14px;
-      }
-
-      .chart-container {
-        height: 210px;
-        margin-top: 24px;
-      }
-
-      .movers-news-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-
-      .movers-card, .news-card {
-        padding: 16px;
-      }
-
-      .movers-card h4, .news-card h4 {
-        font-size: 13px;
-        margin-bottom: 12px;
-      }
-
-      .holdings-table {
-        display: none;
-      }
-
-      .holdings-cards {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .holding-card {
-        padding: 12px;
-      }
-
-      .holding-card-left h4 {
-        font-size: 12px;
-      }
-
-      .holding-card-left p {
-        font-size: 10px;
-      }
-
-      .holding-card-value {
-        font-size: 13px;
-      }
-
-      .holding-card-return {
-        font-size: 11px;
-      }
-
-      .dca-timeline {
-        grid-template-columns: 1fr;
-      }
-
-      .dca-tranche {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        align-items: center;
-        gap: 12px;
-        text-align: left;
-      }
-
-      .dca-circle {
-        margin: 0;
-      }
-
-      .dca-info {
-        text-align: left;
-      }
-
-      .dca-label {
-        display: block;
-      }
-
-      .dca-status {
-        margin-left: 0;
-      }
-
-      .dca-countdown {
-        margin-bottom: 16px;
-        font-size: 12px;
-      }
-
-      .currency-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .currency-card {
-        padding: 16px;
-      }
-
-      .deployment-card {
-        padding: 16px;
-      }
-
-      .deployment-stats {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-      }
-
-      .footer {
-        font-size: 11px;
-        padding: 16px;
-      }
-    }
-
-    @media (max-width: 380px) {
-      .hero-value {
-        font-size: 24px;
-      }
-
-      .kpi-value {
-        font-size: 14px;
-      }
-
-      .liquid-item-value {
-        font-size: 14px;
-      }
-
-      .mover-item {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .mover-right {
-        align-self: flex-start;
-        margin-top: 8px;
-        text-align: left;
-      }
-
-      .news-sentiment {
-        font-size: 9px;
-      }
-
-      .holding-card-value {
-        font-size: 12px;
-      }
-
-      .dca-circle {
-        width: 36px;
-        height: 36px;
-        font-size: 11px;
-      }
+    /* ---- Responsive ---- */
+    @media (max-width: 480px) {
+      .hero-value { font-size: 36px; }
+      .allocation-wrap { flex-direction: column; }
+      .allocation-chart-wrap { width: 120px; height: 120px; }
+      .header { padding: 0 12px; }
+      .container { padding: 0 16px; }
+      .sleeve-cards { flex-direction: column; }
     }
   </style>
 </head>
@@ -1908,46 +437,36 @@
   <!-- Login Screen -->
   <div class="login-screen" id="loginScreen">
     <div class="login-card">
-      <div class="login-logo">AV</div>
-      <h1 class="login-title">AG Vault Portfolio</h1>
-      <p class="login-subtitle">Secure Dashboard · Vault Wealth ADGM</p>
+      <div class="login-logo">AG</div>
+      <h1 class="login-title">AG Portfolio</h1>
+      <p class="login-subtitle">Enter password to continue</p>
       <div class="login-error" id="loginError">Invalid password</div>
-      <input type="password" class="login-input" id="loginInput" placeholder="Enter password" autocomplete="off">
-      <button class="login-button" id="loginBtn">Unlock Dashboard</button>
-      <p class="login-footer">For authorised access only</p>
+      <input type="password" class="login-input" id="loginInput" placeholder="Password" autocomplete="off">
+      <button class="login-button" id="loginBtn">Unlock</button>
+      <p class="login-footer">Authorised access only</p>
     </div>
   </div>
 
   <!-- Dashboard -->
-  <div class="dashboard" id="dashboard" style="display: none;">
-    <!-- Navigation Pills -->
-    <nav class="nav-pills" id="navPills">
-      <div class="nav-pill active" data-section="overview">Overview</div>
-      <div class="nav-pill" data-section="holdings">Holdings</div>
-      <div class="nav-pill" data-section="dca">DCA</div>
-      <div class="nav-pill" data-section="news">News</div>
-      <div class="nav-pill" data-section="strategy">Strategy</div>
-    </nav>
-
+  <div class="dashboard" id="dashboard" style="display:none;">
     <!-- Header -->
     <header class="header">
       <div class="header-left">
-        <div class="header-logo">AV</div>
-        <div class="header-title">
-          <div class="header-title-main">AG Vault Portfolio</div>
-          <div class="header-subtitle">Secure Dashboard · Vault Wealth ADGM</div>
-        </div>
+        <div class="header-logo">AG</div>
+        <div class="header-title-main">Investing</div>
       </div>
       <div class="header-right">
-        <div class="header-strategy">
-          <div class="header-strategy-label">Strategy</div>
-          <div class="header-strategy-value">Bi-weekly DCA</div>
+        <span class="last-updated" id="lastUpdated"></span>
+        <div class="currency-toggle" id="currencyToggle" role="navigation" aria-label="Currency" title="Switch display currency">
+          <span class="curr-opt active" id="currOptUSD" role="tab" aria-selected="true">USD</span>
+          <span class="curr-opt" id="currOptAED" role="tab" aria-selected="false">AED</span>
+          <span class="curr-opt" id="currOptINR" role="tab" aria-selected="false">INR</span>
         </div>
-        <div class="header-status">
-          <div>Refreshed <span id="refreshTime">--:--</span></div>
-          <div class="live-badge"></div>
-        </div>
-        <button class="settings-btn" id="settingsBtn">⚙️</button>
+        <div class="live-badge"></div>
+        <button class="refresh-btn" id="refreshBtn" aria-label="Refresh data" title="Refresh data">
+          <span class="refresh-icon">&#8635;</span>
+        </button>
+        <button class="settings-btn" id="settingsBtn">&#9881;</button>
       </div>
     </header>
 
@@ -1959,569 +478,301 @@
     </div>
 
     <!-- Main Content -->
-    <main class="main-content">
-      <div class="container">
-        <!-- Hero Section -->
-        <section class="hero">
+    <main class="container">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-label">Total portfolio</div>
+        <!-- Skeleton loading state -->
+        <div id="heroSkeleton">
+          <div class="skeleton skeleton-bar"></div>
+          <div class="skeleton skeleton-bar-sm"></div>
+        </div>
+        <div id="heroContent" style="display:none;">
           <div class="hero-value" id="heroValue">$0.00</div>
-          <div class="hero-chips">
-            <div class="chip positive">
-              <span id="heroUPL">+$0.00</span> unrealised
-            </div>
-            <div class="chip positive">
-              <span id="heroDailyYield">+$0.00</span> daily yield
-            </div>
-          </div>
-          <div class="hero-subtitle">ETFs + Liquid Fund · 3 tranches deployed</div>
-        </section>
-
-        <!-- KPI Grid -->
-        <section class="kpi-grid">
-          <div class="kpi-card">
-            <div class="kpi-label">Total with Vault</div>
-            <div class="kpi-value" id="kpiTotal">$0.00</div>
-            <div class="kpi-subtitle">ETFs + Liquid</div>
-            <div class="kpi-icon">🏦</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">ETF Portfolio</div>
-            <div class="kpi-value" id="kpiETF">$0.00</div>
-            <div class="kpi-subtitle">Current value</div>
-            <div class="kpi-icon">📊</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Liquid Fund (MMF)</div>
-            <div class="kpi-value" id="kpiLiquid">$0.00</div>
-            <div class="kpi-subtitle">Cash reserve</div>
-            <div class="kpi-icon">💧</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Invested in ETFs</div>
-            <div class="kpi-value" id="kpiInvested">$0.00</div>
-            <div class="kpi-subtitle">Deployed capital</div>
-            <div class="kpi-icon">📈</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Unrealised P&L</div>
-            <div class="kpi-value" id="kpiUPL">$0.00</div>
-            <div class="kpi-subtitle">All positions</div>
-            <div class="kpi-icon">🎯</div>
-          </div>
-        </section>
-
-        <!-- Sleeve Performance Cards -->
-        <section class="sleeve-cards" id="sleeveCards">
-          <div class="sleeve-card core" id="sleeveCore">
-            <div class="sleeve-card-header" onclick="toggleSleeve('core')">
-              <div>
-                <div class="sleeve-card-label" id="sleeveCoreLabel">Core Equity · Plan $70,000</div>
-                <div class="sleeve-card-value" id="sleeveCoreValue">$0.00</div>
-                <div class="sleeve-card-stats">
-                  <span id="sleeveCoreInv" style="color:var(--text-dim)">Inv $0</span>
-                  <span id="sleeveCorePL" style="color:var(--accent-mint)">+$0.00</span>
-                  <span id="sleeveCoreRet" style="color:var(--accent-mint)">+0.00%</span>
-                  <span id="sleeveCoreDeploy" style="color:var(--accent-teal)"></span>
-                </div>
-              </div>
-              <span class="sleeve-card-chevron">▾</span>
-            </div>
-            <div class="sleeve-card-body" id="sleeveCoreBody"></div>
-          </div>
-          <div class="sleeve-card thematic" id="sleeveThematic">
-            <div class="sleeve-card-header" onclick="toggleSleeve('thematic')">
-              <div>
-                <div class="sleeve-card-label" id="sleeveThematicLabel">Thematic Satellites · Plan $30,000</div>
-                <div class="sleeve-card-value" id="sleeveThematicValue">$0.00</div>
-                <div class="sleeve-card-stats">
-                  <span id="sleeveThematicInv" style="color:var(--text-dim)">Inv $0</span>
-                  <span id="sleeveThematicPL" style="color:var(--accent-mint)">+$0.00</span>
-                  <span id="sleeveThematicRet" style="color:var(--accent-mint)">+0.00%</span>
-                  <span id="sleeveThematicDeploy" style="color:var(--accent-teal)"></span>
-                </div>
-              </div>
-              <span class="sleeve-card-chevron">▾</span>
-            </div>
-            <div class="sleeve-card-body" id="sleeveThematicBody"></div>
-          </div>
-        </section>
-
-        <!-- Cash & Liquidity Card -->
-        <section class="liquid-card">
-          <div class="liquid-title">Cash & Liquidity</div>
-          <div class="liquid-grid">
-            <div class="liquid-item">
-              <div class="liquid-item-label">USD MMF (SMTC)</div>
-              <div class="liquid-item-value" id="liquidBalance">$0.00</div>
-              <div style="font-size:10px;color:var(--text-dim);margin-top:2px" id="liquidPnlUSD"></div>
-            </div>
-            <div class="liquid-item">
-              <div class="liquid-item-label">INR Liquid (LIQUIDCASE)</div>
-              <div class="liquid-item-value" id="liquidINR">₹0</div>
-              <div style="font-size:10px;color:var(--text-dim);margin-top:2px" id="liquidPnlINR"></div>
-            </div>
-            <div class="liquid-item">
-              <div class="liquid-item-label">Total Cash (USD eq.)</div>
-              <div class="liquid-item-value" id="liquidTotal">$0.00</div>
-            </div>
-            <div class="liquid-item">
-              <div class="liquid-item-label">Dry Powder</div>
-              <div class="liquid-item-value" id="liquidDryPowder">$0.00</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:12px;margin-top:8px;justify-content:center">
-            <div class="liquid-yield">SMTC 3.64% p.a.</div>
-            <div class="liquid-yield">LIQUIDCASE 6.5% p.a.</div>
-          </div>
-        </section>
-
-        <!-- Charts Section -->
-        <section class="section-header" id="chartsHeader">
-          <h3>Charts & Analysis</h3>
-          <span class="section-chevron" id="chartsChevron">▾</span>
-        </section>
-        <section class="section-content collapsed" id="chartsContent">
-          <div class="section-body">
-            <div class="charts-grid">
-              <div class="chart-card">
-                <h4>Portfolio Composition</h4>
-                <div class="chart-container">
-                  <canvas id="chartComposition"></canvas>
-                </div>
-              </div>
-              <div class="chart-card">
-                <h4>ETF Allocation</h4>
-                <div class="chart-container">
-                  <canvas id="chartAllocation"></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="chart-row">
-              <div class="chart-card">
-                <h4>Sleeve Performance</h4>
-                <div class="chart-container">
-                  <canvas id="chartSleeve"></canvas>
-                </div>
-              </div>
-              <div class="chart-card">
-                <h4>Thematic Sub-themes</h4>
-                <div class="chart-container">
-                  <canvas id="chartThemes"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Top Movers & News -->
-        <div class="movers-news-grid" id="moversNewsSection">
-          <div class="movers-card">
-            <h4>Top Movers</h4>
-            <div class="movers-section">
-              <div class="movers-section-title">Leaders</div>
-              <div id="leadersList"></div>
-            </div>
-            <div class="movers-section">
-              <div class="movers-section-title">Laggards</div>
-              <div id="laggardsList"></div>
-            </div>
-          </div>
-          <div class="news-card">
-            <h4>Key News & Signals</h4>
-            <div id="newsList"></div>
+          <div class="hero-change positive" id="heroChange">
+            <span id="heroUPL">+$0.00</span> unrealised
           </div>
         </div>
-
-        <!-- Holdings Section -->
-        <section class="section-header" id="holdingsHeader">
-          <h3>Holdings</h3>
-          <span class="section-chevron" id="holdingsChevron">▾</span>
-        </section>
-        <section class="section-content" id="holdingsContent">
-          <div class="section-body">
-            <table class="holdings-table" id="holdingsTable">
-              <thead>
-                <tr>
-                  <th data-column="0">Ticker / Fund</th>
-                  <th data-column="1">Sleeve</th>
-                  <th data-column="2">Sub-theme</th>
-                  <th data-column="3" style="text-align: right;">Plan $</th>
-                  <th data-column="4" style="text-align: right;">Invested $</th>
-                  <th data-column="5" style="text-align: right;">Current $</th>
-                  <th data-column="6" style="text-align: right;">P&L $</th>
-                  <th data-column="7" style="text-align: right;">Return %</th>
-                  <th data-column="8" style="text-align: right;">%Port</th>
-                </tr>
-              </thead>
-              <tbody id="holdingsBody"></tbody>
-            </table>
-            <div class="holdings-cards" id="holdingsCards"></div>
+        <div class="hero-chart-wrap">
+          <canvas id="heroChart"></canvas>
+        </div>
+        <!-- Time range chips -->
+        <div class="time-chips" id="timeChips">
+          <span class="time-chip" data-range="1W">1W</span>
+          <span class="time-chip active" data-range="1M">1M</span>
+          <span class="time-chip" data-range="3M">3M</span>
+          <span class="time-chip" data-range="YTD">YTD</span>
+          <span class="time-chip" data-range="ALL">ALL</span>
+        </div>
+        <div class="hero-chips">
+          <div class="chip" id="chipYield">Cash yield +$0.00/day</div>
+          <div class="chip" id="chipAlerts" style="display:none;">0 alerts</div>
+        </div>
+        <!-- DCA Progress Tracker -->
+        <div class="dca-progress" id="dcaProgress">
+          <div class="dca-label">DCA Progress</div>
+          <div class="dca-bar">
+            <div class="dca-step done" title="T1: $21,550">T1</div>
+            <div class="dca-step done" title="T2: $21,550">T2</div>
+            <div class="dca-step done" title="T3: $13,596">T3</div>
+            <div class="dca-step next" title="T4: ~$21K">T4</div>
+            <div class="dca-step" title="T5: ~$22K">T5</div>
           </div>
-        </section>
+          <div class="dca-status" id="dcaStatus">T4 in --d</div>
+        </div>
+      </section>
 
-        <!-- India Holdings Section -->
-        <section class="section-header" id="indiaHeader">
-          <h3>India Holdings</h3>
-          <span class="section-chevron" id="indiaChevron">▸</span>
-        </section>
-        <section class="section-content collapsed" id="indiaContent">
-          <div class="section-body">
-            <div class="holdings-summary" id="indiaSummary" style="margin-bottom:12px;color:var(--text-dim);font-size:13px;"></div>
-            <div class="holdings-table-wrap">
-              <table class="holdings-table" id="indiaTable">
-                <thead>
-                  <tr>
-                    <th>Ticker</th>
-                    <th>Name</th>
-                    <th>Exchange</th>
-                    <th style="text-align:right;">Qty</th>
-                    <th style="text-align:right;">Avg Buy (₹)</th>
-                    <th style="text-align:right;">Current (₹)</th>
-                    <th style="text-align:right;">Value (₹)</th>
-                    <th style="text-align:right;">P&L (₹)</th>
-                    <th style="text-align:right;">P&L%</th>
-                  </tr>
-                </thead>
-                <tbody id="indiaBody"></tbody>
-              </table>
-            </div>
-            <div class="holdings-cards" id="indiaCards"></div>
-          </div>
-        </section>
-
-        <!-- DCA Section -->
-        <section class="section-header" id="dcaHeader">
-          <h3>DCA Tranche Tracker</h3>
-          <span class="section-chevron" id="dcaChevron">▸</span>
-        </section>
-        <section class="section-content" id="dcaContent">
-          <div class="section-body">
-            <div class="dca-countdown" id="dcaCountdown">Next tranche in X days</div>
-            <div class="dca-timeline" id="dcaTimeline">
-              <div class="dca-tranche funded">
-                <div class="dca-circle">T1</div>
-                <div class="dca-info">
-                  <div class="dca-label">Apr 1</div>
-                  <div class="dca-status">Funded</div>
-                </div>
-              </div>
-              <div class="dca-tranche funded">
-                <div class="dca-circle">T2</div>
-                <div class="dca-info">
-                  <div class="dca-label">Apr 8</div>
-                  <div class="dca-status">Funded</div>
-                </div>
-              </div>
-              <div class="dca-tranche funded">
-                <div class="dca-circle">T3</div>
-                <div class="dca-info">
-                  <div class="dca-label">Apr 29</div>
-                  <div class="dca-status">Funded</div>
-                </div>
-              </div>
-              <div class="dca-tranche">
-                <div class="dca-circle">T4</div>
-                <div class="dca-info">
-                  <div class="dca-label">May 6</div>
-                  <div class="dca-status">Scheduled</div>
-                </div>
-              </div>
-              <div class="dca-tranche">
-                <div class="dca-circle">T5</div>
-                <div class="dca-info">
-                  <div class="dca-label">May 20</div>
-                  <div class="dca-status">Scheduled</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Multi-Currency Section -->
-        <section class="section-header" id="currencyHeader">
-          <h3>Multi-Currency View</h3>
-          <span class="section-chevron" id="currencyChevron">▸</span>
-        </section>
-        <section class="section-content collapsed" id="currencyContent">
-          <div class="section-body">
-            <div class="currency-grid">
-              <div class="currency-card">
-                <div class="currency-header">
-                  <div>
-                    <div class="currency-code">USD</div>
-                    <div class="currency-rate">Base (1.0000)</div>
-                  </div>
-                </div>
-                <div class="currency-item">
-                  <div class="currency-item-label">ETF Portfolio</div>
-                  <div class="currency-item-value" id="usdEtf">$0.00</div>
-                </div>
-                <div class="currency-item">
-                  <div class="currency-item-label">Liquid Fund</div>
-                  <div class="currency-item-value" id="usdLiquid">$0.00</div>
-                </div>
-                <div class="currency-item">
-                  <div class="currency-item-label">Total</div>
-                  <div class="currency-item-value" id="usdTotal">$0.00</div>
-                </div>
-                <div class="currency-item">
-                  <div class="currency-item-label">Unrealised P&L</div>
-                  <div class="currency-item-value" id="usdUPL">$0.00</div>
-                </div>
-              </div>
-              <div class="currency-card">
-                <div class="currency-header">
-                  <div>
-                    <div class="currency-code">AED</div>
-                    <div class="currency-rate">3.6725</div>
-                  </div>
-                </div>
-                <div class="currency-item">
-                  <div class="currency-item-label">ETF Portfolio</div>
-                  <div class="currency-item-value" id="aedEtf">د.إ0.00</div>
-                </div>
-                <div class="currency-item">
-                  <div class="currency-item-label">Liquid Fund</div>
-                  <div class="currency-item-value" id="aedLiquid">د.إ0.00</div>
-                </div>
-                <div class="currency-item">
-                  <div class="currency-item-label">Total</div>
-                  <div class="currency-item-value" id="aedTotal">د.إ0.00</div>
-                </div>
-                <div class="currency-item">
-                  <div class="currency-item-label">Unrealised P&L</div>
-                  <div class="currency-item-value" id="aedUPL">د.إ0.00</div>
-                </div>
-              </div>
-              <div class="currency-card">
-                <div class="currency-header">
-                  <div>
-                    <div class="currency-code">INR</div>
-                    <div class="currency-rate">85.50</div>
-                  </div>
-                </div>
-                <div class="currency-item">
-                  <div class="currency-item-label">ETF Portfolio</div>
-                  <div class="currency-item-value" id="inrEtf">₹0.00</div>
-                </div>
-                <div class="currency-item">
-                  <div class="currency-item-label">Liquid Fund</div>
-                  <div class="currency-item-value" id="inrLiquid">₹0.00</div>
-                </div>
-                <div class="currency-item">
-                  <div class="currency-item-label">Total</div>
-                  <div class="currency-item-value" id="inrTotal">₹0.00</div>
-                </div>
-                <div class="currency-item">
-                  <div class="currency-item-label">Unrealised P&L</div>
-                  <div class="currency-item-value" id="inrUPL">₹0.00</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Deployment Progress -->
-        <section class="section-header" id="deploymentHeader">
-          <h3>Deployment Progress</h3>
-          <span class="section-chevron" id="deploymentChevron">▸</span>
-        </section>
-        <section class="section-content collapsed" id="deploymentContent">
-          <div class="section-body">
-            <div class="deployment-card">
-              <div class="deployment-header">
-                <div>
-                  <div class="deployment-label">Deployment toward $100K target</div>
-                </div>
-                <div class="deployment-percent" id="deploymentPercent">0%</div>
-              </div>
-              <div class="deployment-bar">
-                <div class="deployment-bar-fill" id="deploymentBarFill" style="width: 0%;"></div>
-              </div>
-              <div class="deployment-stats">
-                <div class="deployment-stat">
-                  <div class="deployment-stat-label">Current</div>
-                  <div class="deployment-stat-value" id="deploymentCurrent">$0.00</div>
-                </div>
-                <div class="deployment-stat">
-                  <div class="deployment-stat-label">Remaining</div>
-                  <div class="deployment-stat-value" id="deploymentRemaining">$0.00</div>
-                </div>
-                <div class="deployment-stat">
-                  <div class="deployment-stat-label">Target</div>
-                  <div class="deployment-stat-value">$100,000.00</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+      <!-- Sleeve Summary Cards -->
+      <div class="sleeve-cards" id="sleeveCards">
+        <div class="sleeve-card" id="sleeveCore"></div>
+        <div class="sleeve-card" id="sleeveSat"></div>
+        <div class="sleeve-card" id="sleeveCash"></div>
       </div>
+
+      <!-- Alert Banner -->
+      <section class="alerts-section" id="alertsSection" style="display:none;">
+        <div class="alerts-header" id="alertsToggle" aria-label="Toggle alerts">
+          <span class="alerts-title">Attention needed</span>
+          <span class="alerts-count" id="alertsCount">0</span>
+          <span class="alerts-chevron">&#9660;</span>
+        </div>
+        <div class="alerts-list" id="alertsList"></div>
+      </section>
+
+      <!-- Holdings -->
+      <section>
+        <div class="section-title">Holdings</div>
+        <div class="holdings-tabs" id="holdingsTabs" role="tablist">
+          <div class="holdings-tab active" data-filter="all" role="tab" aria-selected="true">All</div>
+          <div class="holdings-tab" data-filter="global" role="tab" aria-selected="false">Global</div>
+          <div class="holdings-tab" data-filter="india" role="tab" aria-selected="false">India</div>
+          <div class="holdings-tab" data-filter="cash" role="tab" aria-selected="false">Cash</div>
+        </div>
+        <div id="holdingsList"></div>
+        <div class="show-all-btn" id="showAllBtn" style="display:none;"></div>
+      </section>
+
+      <!-- Allocation -->
+      <section class="allocation-section">
+        <div class="section-title" style="padding-top:0;">Allocation</div>
+        <div class="allocation-wrap">
+          <div class="allocation-chart-wrap">
+            <canvas id="chartAllocation"></canvas>
+          </div>
+          <div class="allocation-legend" id="allocationLegend"></div>
+        </div>
+      </section>
+
+      <!-- News -->
+      <section class="news-section">
+        <div class="section-title" style="padding-top:0;">News</div>
+        <div id="newsList"></div>
+      </section>
+
+      <!-- Strategy -->
+      <section class="strategy-section" id="strategySection">
+        <div class="strategy-toggle" id="strategyToggle" aria-label="Toggle strategy">
+          <div class="section-title" style="padding:0;">Strategy</div>
+          <span class="strategy-chevron">&#9660;</span>
+        </div>
+        <div class="strategy-body">
+          <div class="strategy-text">
+            A disciplined UCITS ETF portfolio targeting ~$100,000 deployed via bi-weekly DCA into core global equity (70%) and thematic satellite (30%) positions. ~43% deployed to date across three tranches. Undeployed capital earns daily yield in a liquid money market fund.
+          </div>
+
+          <div class="section-title" style="font-size:15px;">Core Equity -- 70%</div>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge core">VHVE</span>
+              <span class="thesis-title-compact">Vanguard FTSE Developed World</span>
+              <span class="thesis-alloc">30%</span>
+            </summary>
+            <div class="thesis-detail">Broadest possible DM equity anchor -- ~2,000 stocks across US, Europe, Japan, and Pacific. Ultra-low TER (0.12%). Provides foundational market-cap-weighted exposure to global growth.</div>
+          </details>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge core">JREG</span>
+              <span class="thesis-title-compact">JPM Global Research Enhanced Index</span>
+              <span class="thesis-alloc">34.2%</span>
+            </summary>
+            <div class="thesis-detail">Enhanced index strategy applying JPM's proprietary bottom-up stock selection to overweight favoured names within MSCI World. Targets incremental alpha of ~1-1.5% above benchmark while maintaining index-like risk.</div>
+          </details>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge core">JPGL</span>
+              <span class="thesis-title-compact">JPM Global Equity Multi-Factor</span>
+              <span class="thesis-alloc">26%</span>
+            </summary>
+            <div class="thesis-detail">Smart-beta strategy targeting value, momentum, and quality factors that have historically outperformed broad markets. Rebalanced quarterly.</div>
+          </details>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge core">JREM</span>
+              <span class="thesis-title-compact">JPM Emerging Markets Research Enhanced</span>
+              <span class="thesis-alloc">10%</span>
+            </summary>
+            <div class="thesis-detail">Active EM strategy mirroring MSCI EM country/sector weights but making bottom-up stock bets using JPM's global analyst network. Holds 300-350 high-conviction EM names.</div>
+          </details>
+
+          <div class="section-title" style="font-size:15px;">Thematic Satellites -- 30%</div>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge sat">AINF</span>
+              <span class="thesis-title-compact">AI & Data Infrastructure</span>
+              <span class="thesis-alloc">10%</span>
+            </summary>
+            <div class="thesis-detail">Picks-and-shovels play on the AI compute build-out -- data centres, networking, power management, and semiconductor fabrication.</div>
+          </details>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge sat">COPX</span>
+              <span class="thesis-title-compact">Copper Miners</span>
+              <span class="thesis-alloc">10%</span>
+            </summary>
+            <div class="thesis-detail">Pure-play on copper producers. Electrification, grid modernisation, and AI data centre cooling all require massive copper.</div>
+          </details>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge sat">NCLR</span>
+              <span class="thesis-title-compact">Nuclear & Uranium</span>
+              <span class="thesis-alloc">10%</span>
+            </summary>
+            <div class="thesis-detail">Uranium miners, reactor tech, and nuclear utilities. Nuclear gaining bipartisan global policy support as the only scalable carbon-free baseload power source.</div>
+          </details>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge sat">MLPS</span>
+              <span class="thesis-title-compact">MLP & Energy Infrastructure</span>
+              <span class="thesis-alloc">10%</span>
+            </summary>
+            <div class="thesis-detail">US midstream energy -- pipelines, storage, and processing. Real-asset yield exposure with inflation protection.</div>
+          </details>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge sat">BRIJ</span>
+              <span class="thesis-title-compact">Global Infrastructure</span>
+              <span class="thesis-alloc">10%</span>
+            </summary>
+            <div class="thesis-detail">Listed real-asset infrastructure -- utilities, toll roads, airports, and communication towers.</div>
+          </details>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge sat">HEAL</span>
+              <span class="thesis-title-compact">Healthcare Innovation</span>
+              <span class="thesis-alloc">12%</span>
+            </summary>
+            <div class="thesis-detail">Global innovators in genomics, medtech, and biotech. Pure-play on healthcare technology disruption.</div>
+          </details>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge sat">WCBR</span>
+              <span class="thesis-title-compact">Cybersecurity</span>
+              <span class="thesis-alloc">10%</span>
+            </summary>
+            <div class="thesis-detail">Pure-play on cyber software and network security. Enterprise security spend is non-discretionary and growing.</div>
+          </details>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge sat">RBOT</span>
+              <span class="thesis-title-compact">Automation & Robotics</span>
+              <span class="thesis-alloc">8%</span>
+            </summary>
+            <div class="thesis-detail">Global industrial automation, factory robotics, and autonomous systems.</div>
+          </details>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge sat">RARE</span>
+              <span class="thesis-title-compact">Rare Earth & Strategic Metals</span>
+              <span class="thesis-alloc">5%</span>
+            </summary>
+            <div class="thesis-detail">Rare-earth miners and processors critical for EVs, defence, and semiconductors.</div>
+          </details>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge sat">IDBZ</span>
+              <span class="thesis-title-compact">Brazil Equities</span>
+              <span class="thesis-alloc">5%</span>
+            </summary>
+            <div class="thesis-detail">Broad Brazil large/mid-cap equity exposure. Commodity-rich EM play.</div>
+          </details>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge sat">XVTD</span>
+              <span class="thesis-title-compact">Vietnam</span>
+              <span class="thesis-alloc">5%</span>
+            </summary>
+            <div class="thesis-detail">Pure-play Vietnam frontier market equity. Beneficiary of China+1 supply chain migration.</div>
+          </details>
+          <details class="thesis-accordion">
+            <summary class="thesis-summary">
+              <span class="thesis-badge sat">KWEB</span>
+              <span class="thesis-title-compact">China Internet</span>
+              <span class="thesis-alloc">5%</span>
+            </summary>
+            <div class="thesis-detail">Concentrated bet on China's internet and consumer-tech giants (Tencent, Alibaba, Meituan).</div>
+          </details>
+
+          <div class="section-title" style="font-size:15px;">DCA & Cash Strategy</div>
+          <div class="strategy-text">
+            <strong>Bi-weekly Dollar Cost Averaging</strong> -- $100K is being deployed across 5 tranches over ~10 weeks. T1 ($21,550), T2 ($21,550) and T3 ($13,596) are funded. T4-T5 deploy the remaining ~$43K.<br><br>
+            <strong>Cash & Liquidity</strong> -- SMTC (iShares USD MMF) earning 3.64% p.a. (~$12/day). LIQUIDCASE (Zerodha Nifty 1D Rate Liquid ETF) earning ~6.5% p.a.<br><br>
+            <strong>Dry Powder (~$50K)</strong> -- Tactical reserve for pullback opportunities and US midterm election cycle positioning.
+          </div>
+
+          <div class="section-title" style="font-size:15px;">India Portfolio Strategy</div>
+          <div class="strategy-text">
+            <strong>Gold & Silver (GOLDBEES, SILVERBEES, GOLDCASE)</strong> -- Core precious metals allocation via NSE-listed ETFs. Gold acts as geopolitical hedge; GOLDBEES delivering 24.8% CAGR over 5 years.<br><br>
+            <strong>Index Exposure (NIFTYBEES)</strong> -- Broad Nifty 50 index exposure as long-term core India equity anchor.<br><br>
+            <strong>India Equity Picks</strong> -- GENUSPOWER (smart meter rollout), EIHOTEL (Oberoi Hotels tourism tailwinds), JIOFIN (early-stage fintech), Sayaji Hotels (mid-cap hospitality).<br><br>
+            <strong>INR Liquidity (LIQUIDCASE)</strong> -- Dry powder for India market opportunities.
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        AG Portfolio<br>
+        Quotes delayed up to 20 min
+      </footer>
     </main>
-
-    <!-- Strategy Section -->
-    <section class="strategy-section" id="strategySection">
-      <div class="strategy-hero">
-        <h2>Portfolio Construction & Strategy</h2>
-        <p>A disciplined UCITS ETF portfolio targeting ~$100,000 deployed via bi-weekly DCA into core global equity (70%) and thematic satellite (30%) positions. ~43% deployed to date across three tranches. Undeployed capital and dry powder earn daily yield in a liquid money market fund.</p>
-      </div>
-
-      <!-- Allocation Overview -->
-      <div class="strategy-grid">
-        <div class="strategy-card">
-          <h3>ETF Deployment Plan</h3>
-          <div class="card-value" style="color:var(--accent-teal)">$100,000</div>
-          <div class="card-desc">Target ETF capital across 5 bi-weekly DCA tranches (Core 70% / Thematic 30%). ~$43K deployed via T1, T2 & T3. ~$57K remaining across T4–T5, currently earning yield in the MMF until deployment. Plan finalised 23 March 2026 with Advisor Daniel Lee, Vault Wealth ADGM.</div>
-        </div>
-        <div class="strategy-card gold">
-          <h3>Liquid Fund & Dry Powder</h3>
-          <div class="card-value" style="color:var(--accent-gold)">$120,825</div>
-          <div class="card-desc">Total held in a UCITS-compliant money market fund yielding <strong style="color:var(--accent-gold)">3.64% p.a.</strong> (~$12/day compounded daily). Of this, ~$71K is earmarked for remaining ETF tranches. The remaining <strong style="color:var(--accent-gold)">~$50K is dry powder</strong> — tactical reserve to attack opportunities on pullbacks and position ahead of the anticipated US midterm election rally cycle.</div>
-        </div>
-      </div>
-
-      <!-- Capital Structure Overview -->
-      <div class="strategy-grid">
-        <div class="strategy-card">
-          <h3>Capital Structure</h3>
-          <div class="strategy-chart-container" style="height:260px">
-            <canvas id="strategyAllocChart"></canvas>
-          </div>
-        </div>
-        <div class="strategy-card">
-          <h3>ETF Sleeve Allocation · Stacked by Theme</h3>
-          <div class="strategy-chart-container" style="height:260px">
-            <canvas id="strategyStackedChart"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <!-- Core Thesis -->
-      <div class="strategy-full">
-        <div class="strategy-card">
-          <h3>Core Equity Sleeve — 70% · $70,000 Target</h3>
-          <div class="card-desc" style="margin-bottom:16px">Low-cost, globally diversified equity exposure forming the portfolio's foundation. Combines passive indexing with JPM's proprietary enhanced-index and multi-factor strategies to target modest alpha above benchmark.</div>
-          <div class="thesis-item">
-            <div class="thesis-badge core">VHVE</div>
-            <div><div class="thesis-title">Vanguard FTSE Developed World</div><div class="thesis-tickers">30% of sleeve · $21,000 plan</div><div class="thesis-desc">Broadest possible DM equity anchor — ~2,000 stocks across US, Europe, Japan, and Pacific. Ultra-low TER (0.12%). Provides foundational market-cap-weighted exposure to global growth.</div></div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-badge core">JREG</div>
-            <div><div class="thesis-title">JPM Global Research Enhanced Index</div><div class="thesis-tickers">34.2% of sleeve · $23,800 plan</div><div class="thesis-desc">Enhanced index strategy applying JPM's proprietary bottom-up stock selection to overweight favoured names within MSCI World. Targets incremental alpha of ~1-1.5% above benchmark while maintaining index-like risk. Integrates ESG screening.</div></div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-badge core">JPGL</div>
-            <div><div class="thesis-title">JPM Global Equity Multi-Factor</div><div class="thesis-tickers">26% of sleeve · $18,200 plan</div><div class="thesis-desc">Smart-beta strategy targeting value, momentum, and quality factors that have historically outperformed broad markets. Rebalanced quarterly to capture best-scoring factor combinations.</div></div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-badge core">JREM</div>
-            <div><div class="thesis-title">JPM Emerging Markets Research Enhanced</div><div class="thesis-tickers">10% of sleeve · $7,000 plan</div><div class="thesis-desc">Active EM strategy mirroring MSCI EM country/sector weights but making bottom-up stock bets using JPM's global analyst network. Holds 300-350 high-conviction EM names for diversified developing market exposure.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Thematic Thesis -->
-      <div class="strategy-full">
-        <div class="strategy-card violet">
-          <h3>Thematic Satellite Sleeve — 30% · $30,000 Target</h3>
-          <div class="card-desc" style="margin-bottom:16px">High-conviction thematic bets across 8 structural growth themes. Sized at 5-12% each within the satellite sleeve, these positions express specific views on multi-year macro and technological megatrends. Higher risk, higher potential reward.</div>
-          <div class="thesis-item">
-            <div class="thesis-badge sat">AINF</div>
-            <div><div class="thesis-title">AI & Data Infrastructure</div><div class="thesis-tickers">AINF · 10% of sleeve · $3,000</div><div class="thesis-desc">Picks-and-shovels play on the AI compute build-out — data centres, networking, power management, and semiconductor fabrication. Benefits from hyperscale capex regardless of which AI models win.</div></div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-badge sat">COPX</div>
-            <div><div class="thesis-title">Copper Miners</div><div class="thesis-tickers">COPX · 10% of sleeve · $3,000</div><div class="thesis-desc">Pure-play on copper producers. Electrification, grid modernisation, and AI data centre cooling all require massive copper. Each large data centre needs ~50,000 metric tons. A structural demand story.</div></div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-badge sat">NCLR</div>
-            <div><div class="thesis-title">Nuclear & Uranium</div><div class="thesis-tickers">NCLR · 10% of sleeve · $3,000</div><div class="thesis-desc">Uranium miners, reactor tech, and nuclear utilities. Nuclear gaining bipartisan global policy support as the only scalable carbon-free baseload power source. Reactor restarts in Japan, new builds in China and the US.</div></div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-badge sat">MLPS</div>
-            <div><div class="thesis-title">MLP & Energy Infrastructure</div><div class="thesis-tickers">MLPS · 10% of sleeve · $3,000</div><div class="thesis-desc">US midstream energy — pipelines, storage, and processing. Real-asset yield exposure with inflation protection. Benefits from growing US LNG exports and domestic energy security.</div></div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-badge sat">BRIJ</div>
-            <div><div class="thesis-title">Global Infrastructure</div><div class="thesis-tickers">BRIJ · 10% of sleeve · $3,000</div><div class="thesis-desc">Listed real-asset infrastructure — utilities, toll roads, airports, and communication towers. Provides stable cash flows and inflation linkage. Benefits from global infrastructure spending programs.</div></div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-badge sat">HEAL</div>
-            <div><div class="thesis-title">Healthcare Innovation</div><div class="thesis-tickers">HEAL · 12% of sleeve · $3,600</div><div class="thesis-desc">Global innovators in genomics, medtech, and biotech. Pure-play on healthcare technology disruption — from mRNA therapeutics to robotic surgery and personalised medicine.</div></div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-badge sat">WCBR</div>
-            <div><div class="thesis-title">Cybersecurity</div><div class="thesis-tickers">WCBR · 10% of sleeve · $3,000</div><div class="thesis-desc">Pure-play on cyber software and network security. Enterprise security spend is non-discretionary and growing. Covers EDR, IAM, zero-trust, and SIEM platforms — critical infrastructure in an AI-driven threat landscape.</div></div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-badge sat">RBOT</div>
-            <div><div class="thesis-title">Automation & Robotics</div><div class="thesis-tickers">RBOT · 8% of sleeve · $2,400</div><div class="thesis-desc">Global industrial automation, factory robotics, and autonomous systems. Structural labour shortage theme — companies replacing human labour with intelligent machines across manufacturing and logistics.</div></div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-badge sat">RARE</div>
-            <div><div class="thesis-title">Rare Earth & Strategic Metals</div><div class="thesis-tickers">RARE · 5% of sleeve · $1,500</div><div class="thesis-desc">Rare-earth miners and processors critical for EVs, defence, and semiconductors. Supply-chain geopolitical hedge — diversifying away from China's dominant rare earth processing.</div></div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-badge sat">IDBZ</div>
-            <div><div class="thesis-title">Brazil Equities</div><div class="thesis-tickers">IDBZ · 5% of sleeve · $1,500</div><div class="thesis-desc">Broad Brazil large/mid-cap equity exposure. Commodity-rich EM play benefiting from rate-cut cycle, agricultural exports, and growing domestic middle class.</div></div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-badge sat">XVTD</div>
-            <div><div class="thesis-title">Vietnam</div><div class="thesis-tickers">XVTD · 5% of sleeve · $1,500</div><div class="thesis-desc">Pure-play Vietnam frontier market equity. Beneficiary of China+1 supply chain migration — Samsung, OLED manufacturing. $1.8B semiconductor investing by H2 2026. Fast-growing consumer economy.</div></div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-badge sat">KWEB</div>
-            <div><div class="thesis-title">China Internet</div><div class="thesis-tickers">KWEB · 5% of sleeve · $1,500</div><div class="thesis-desc">Concentrated bet on China's internet and consumer-tech giants (Tencent, Alibaba, Meituan). Provides exposure to AI innovation and domestic digital consumption. Monitor closely for regulatory risk.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- DCA & Cash Strategy -->
-      <div class="strategy-full">
-        <div class="strategy-card gold">
-          <h3>DCA Deployment & Cash Strategy</h3>
-          <div class="card-desc" style="line-height:1.7">
-            <strong style="color:var(--accent-gold)">Bi-weekly Dollar Cost Averaging</strong> — $100K is being deployed across 5 tranches over ~10 weeks to smooth market timing risk. T1 ($21,550), T2 ($21,550) and T3 ($13,596) are funded. T4–T5 deploy the remaining ~$43K over the next 2 tranches. Each tranche invests proportionally across all 16 ETFs per sleeve targets.<br><br>
-            <strong style="color:var(--accent-gold)">Cash & Liquidity</strong> — Two liquid positions earning daily yield: <strong>SMTC</strong> (iShares USD MMF, LON) earning 3.64% p.a. (~$12/day) holds the undeployed DCA capital and dry powder (~$108K). <strong>LIQUIDCASE</strong> (Zerodha Nifty 1D Rate Liquid ETF, NSE) earning ~6.5% p.a. holds ₹38.5 lakh in INR liquidity. Combined cash: ~$149K equivalent. Neither position is idle — both generate yield while awaiting deployment.<br><br>
-            <strong style="color:var(--accent-gold)">Dry Powder (~$50K)</strong> — Capital beyond the $100K ETF deployment plan is held as a tactical reserve in the same MMF. This dry powder serves two purposes: (1) attack opportunities on significant pullbacks in existing themes (e.g. WCBR's -14.6% cybersecurity dip), and (2) position ahead of anticipated market momentum in the lead-up to the US midterm election cycle, where historical patterns show equity tailwinds.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-      AG Vault Portfolio · Live Dashboard<br>
-      Quotes delayed up to 20 min · For informational purposes only
-    </footer>
   </div>
 
   <script>
     // ========== Configuration ==========
     const REFRESH_MS = 120000;
-    let LIQUID_BALANCE = 108024.50;  // USD MMF (SMTC) — updated from CSV
-    let LIQUID_INVESTED = 107673.82; // USD MMF invested — updated from CSV
+    let LIQUID_BALANCE = 108024.50;
+    let LIQUID_INVESTED = 107673.82;
     const LIQUID_RATE = 0.0364;
     let LIQUID_DAILY = LIQUID_BALANCE * LIQUID_RATE / 365;
     const ETF_TARGET = 100000;
 
-    // India Liquid Fund (LIQUIDCASE) — updated from CSV or India Holdings
     let INR_LIQUID_INVESTED = 3854920;
     let INR_LIQUID_VALUE = 3869880;
     let INR_LIQUID_PNL = 14960;
-    const INR_LIQUID_RATE = 0.065; // ~6.5% p.a.
-    const INR_USD_RATE = 94.87; // INR per USD
+    const INR_LIQUID_RATE = 0.065;
+    let INR_USD_RATE = 94.87;
+    let AED_USD_RATE = 3.6725;
 
     const KNOWN_TICKERS = ["VHVE","JREG","JPGL","JREM","AINF","MLPS","BRIJ","RBOT","NCLR","COPX","RARE","HEAL","WCBR","IDBZ","XVTD","KWEB"];
+    const INDIA_TICKERS = ['GOLDCASE','NIFTYBEES','LIQUIDCASE','SILVERBEES','GOLDBEES','GENUSPOWER','JIOFIN','EIHOTEL','544080'];
 
     const FULLY_ALLOCATED = ['RARE', 'IDBZ', 'XVTD', 'MLPS'];
 
-    const INDIA_HOLDINGS = [
+    // UX 3: Persist currency preference
+    let displayCurrency = localStorage.getItem('agCurrency') || 'USD';
+
+    // UX 2: Hero animation control
+    let firstRender = true;
+    let lastHeroTotal = 0;
+
+    let indiaHoldings = [
       { ticker: 'GOLDCASE', name: 'Zerodha Gold ETF', exchange: 'NSE', qty: 25963, avgBuy: 21.83, investment: 566772, currentPrice: 23.18, currentValue: 601822, pnl: 35050, pnlPct: 6.18 },
       { ticker: 'NIFTYBEES', name: 'Nippon India ETF Nifty 50 BeES', exchange: 'NSE', qty: 4409, avgBuy: 274.64, investment: 1210888, currentPrice: 273.00, currentValue: 1203657, pnl: -7231, pnlPct: -0.60 },
       { ticker: 'LIQUIDCASE', name: 'Zerodha Nifty 1D Rate Liquid ETF', exchange: 'NSE', qty: 34000, avgBuy: 113.38, investment: 3854920, currentPrice: 113.82, currentValue: 3869880, pnl: 14960, pnlPct: 0.39 },
       { ticker: 'SILVERBEES', name: 'Nippon India Silver ETF', exchange: 'NSE', qty: 5000, avgBuy: 110.25, investment: 551250, currentPrice: 224.25, currentValue: 1121250, pnl: 570000, pnlPct: 103.40 },
       { ticker: 'GOLDBEES', name: 'Nippon India ETF Gold BeES', exchange: 'NSE', qty: 5000, avgBuy: 85.20, investment: 426000, currentPrice: 121.59, currentValue: 607950, pnl: 181950, pnlPct: 42.71 },
       { ticker: 'GENUSPOWER', name: 'Genus Power Infrastructure Ltd', exchange: 'NSE', qty: 1000, avgBuy: 267.43, investment: 267430, currentPrice: 311.10, currentValue: 311100, pnl: 43670, pnlPct: 16.33 },
-      { ticker: 'JIOFIN', name: 'Jio Financial Services Ltd', exchange: 'NSE', qty: 400, avgBuy: 309.45, investment: 123780, currentPrice: 250.70, currentValue: 100280, pnl: -23500, pnlPct: -18.99 },
+      { ticker: 'JIOFIN', name: 'Jio Financial Services Ltd', exchange: 'NSE', qty: 400, avgBuy: 309.45, investment: 123780, currentPrice: 306.30, currentValue: 122520, pnl: -1260, pnlPct: -1.02 },
       { ticker: 'EIHOTEL', name: 'EIH Ltd', exchange: 'NSE', qty: 150, avgBuy: 112.85, investment: 16928, currentPrice: 323.35, currentValue: 48503, pnl: 31575, pnlPct: 186.53 },
       { ticker: '544080', name: 'Sayaji Hotels Indore Ltd', exchange: 'BOM', qty: 64, avgBuy: 721.24, investment: 46159, currentPrice: 944.00, currentValue: 60416, pnl: 14257, pnlPct: 30.89 }
     ];
@@ -2558,38 +809,69 @@
       {tk:"AINF",name:"WisdomTree AI & Data Infrastructure UCITS",sleeve:"sat",sub:"AI Infrastructure",plan:3000,inv:1189.58,cur:1222.76,pl:33.18,ret:2.79,wt:4.10},
       {tk:"RBOT",name:"iShares Automation & Robotics UCITS",sleeve:"sat",sub:"Robotics & Automation",plan:2400,inv:932.05,cur:972.66,pl:40.61,ret:4.36,wt:3.26},
       {tk:"XVTD",name:"Xtrackers Vietnam Swap UCITS",sleeve:"sat",sub:"Vietnam",plan:1500,inv:972.08,cur:1040.52,pl:68.44,ret:7.04,wt:3.49},
-      {tk:"WCBR",name:"WisdomTree Cybersecurity UCITS",sleeve:"sat",sub:"Cybersecurity",plan:3000,inv:1178.05,cur:1006.20,pl:-171.85,ret:-14.59,wt:3.37},
+      {tk:"WCBR",name:"WisdomTree Cybersecurity UCITS",sleeve:"sat",sub:"Cybersecurity",plan:3000,inv:1964.10,cur:1932.00,pl:-32.10,ret:-1.63,wt:3.37},
       {tk:"KWEB",name:"KraneShares CSI China Internet UCITS",sleeve:"sat",sub:"China Internet",plan:1500,inv:978.65,cur:979.20,pl:0.55,ret:0.06,wt:3.28},
       {tk:"IDBZ",name:"iShares MSCI Brazil UCITS",sleeve:"sat",sub:"Brazil",plan:1500,inv:585.93,cur:630.80,pl:44.87,ret:7.66,wt:2.11},
     ];
 
     const newsItems = [
-      // === USA / GLOBAL ETF NEWS ===
-      {sentiment:"positive",headline:"Copper Surges to $12,951/mt on AI & Grid Demand",body:"Copper climbed from ~$9,173/mt a year ago to nearly $12,951/mt in early 2026 — driven by EV, data-centre, and grid-electrification demand. COPX benefiting directly; SETM returned ~173% over trailing twelve months.",themes:["COPX","AI Infra"]},
-      {sentiment:"positive",headline:"EM ETFs Pull In $35B+ YTD — Dollar Weakness Fuels Flows",body:"Emerging market ETFs gathered over $35 billion in 2026, already surpassing full-year totals from recent years. Weaker dollar, resilient semiconductor demand (Taiwan, Korea), and renewed flows into China & India driving the trend.",themes:["IDBZ","XVTD","KWEB","EM Rally"]},
-      {sentiment:"positive",headline:"Uranium Outlook: Renewed Contracting & Policy Tailwinds",body:"Sprott highlights potential for renewed uranium contracting and higher prices in 2026. Pivotal US policy decisions — including tax credits and NRC streamlining — are likely to boost demand for nuclear power. NCLR well-positioned.",themes:["NCLR","Energy Policy"]},
-      {sentiment:"negative",headline:"US-Iran Tensions Rattle Markets, Brent Crude at $112",body:"Escalating US-Iran conflict pushing Brent crude to ~$112/barrel. EM flows initially held up but turned to consecutive outflows. Risk-off sentiment across global equities, though commodity-linked positions benefiting.",themes:["Macro","Geopolitical"]},
-      {sentiment:"positive",headline:"Gold & Silver Hit All-Time Highs as Haven Demand Surges",body:"Gold surged to record highs, with 24K gold at ₹15,370/g in India. Silver trading at ~$75/oz globally, rebounding 3% after March correction. Investors seeking safety amid geopolitical uncertainty.",themes:["GOLDBEES","SILVERBEES","Safe Haven"]},
-      {sentiment:"negative",headline:"Stryker Cyberattack Highlights Critical Infra Risk",body:"Medical device manufacturer Stryker suffered an Iran-linked cyberattack in March affecting Q1 results. Now fully operational with no material 2026 guidance impact. Incident underscores cybersecurity investment thesis.",themes:["WCBR","Cybersecurity"]},
-      // === INDIA PORTFOLIO NEWS ===
-      {sentiment:"positive",headline:"🇮🇳 GOLDBEES Delivers 24.8% CAGR Over 5 Years",body:"Nippon India ETF Gold BeES trading at ₹123.42 (52-week high: ₹148.14). AUM crossed ₹54,127 Cr. Gold's safe-haven appeal continues to drive inflows amid global uncertainty and wedding-season demand in India.",themes:["GOLDBEES","India Gold"]},
-      {sentiment:"positive",headline:"🇮🇳 Silver ETF Rebounds — SILVERBEES Up on Industrial Demand",body:"Silver trading at ~₹2,28,515/kg in India, rebounding 3% after a 44% March correction. Industrial demand from solar panels and electronics supporting prices alongside macro-driven relief rally.",themes:["SILVERBEES","India Silver"]},
-      {sentiment:"negative",headline:"🇮🇳 Nifty Below 24,100 — Oil & FII Outflows Weigh",body:"Nifty stays under pressure amid elevated Brent crude ($112/bbl) and continued foreign outflows. Sensex recovering modestly to 77,221 but gains limited. RBI's new ECL framework adds banking sector pressure.",themes:["NIFTYBEES","India Macro"]},
-      {sentiment:"neutral",headline:"🇮🇳 Jio Financial Climbs 3.2% but Profit Falls 14% YoY",body:"JIOFIN rose to ₹253.64 with robust trading activity, but Q1 profit fell 13.88% YoY to ₹272 Cr. P/E ratio at 90-130x vs sector average of 21x — rich valuation limits upside near-term.",themes:["JIOFIN","India Fintech"]},
-      {sentiment:"positive",headline:"🇮🇳 EIH Hotels: 7% Revenue Growth, Occupancy Rising",body:"EIH Ltd (Oberoi Hotels) demonstrated resilience with 7% revenue growth in Q3 FY26 and 14% like-for-like increase. Occupancy improving with 9-11% rise in Average Room Rate. Tourism tailwind intact.",themes:["EIHOTEL","India Tourism"]},
-      {sentiment:"positive",headline:"🇮🇳 Genus Power — Smart Meter Rollout Accelerating",body:"Genus Power Infrastructure benefiting from India's massive smart meter deployment program. Government targeting 250M smart meters by 2028. Power infrastructure capex cycle remains strong with rising rural electrification demand.",themes:["GENUSPOWER","India Infra"]},
+      {sentiment:"positive",headline:"Copper Surges to $12,951/mt on AI & Grid Demand",body:"Copper climbed from ~$9,173/mt a year ago to nearly $12,951/mt in early 2026 -- driven by EV, data-centre, and grid-electrification demand.",themes:["COPX","AI Infra"]},
+      {sentiment:"positive",headline:"EM ETFs Pull In $35B+ YTD -- Dollar Weakness Fuels Flows",body:"Emerging market ETFs gathered over $35 billion in 2026, already surpassing full-year totals from recent years.",themes:["IDBZ","XVTD","KWEB","EM Rally"]},
+      {sentiment:"positive",headline:"Uranium Outlook: Renewed Contracting & Policy Tailwinds",body:"Sprott highlights potential for renewed uranium contracting and higher prices in 2026.",themes:["NCLR","Energy Policy"]},
+      {sentiment:"negative",headline:"US-Iran Tensions Rattle Markets, Brent Crude at $112",body:"Escalating US-Iran conflict pushing Brent crude to ~$112/barrel.",themes:["Macro","Geopolitical"]},
+      {sentiment:"positive",headline:"Gold & Silver Hit All-Time Highs as Haven Demand Surges",body:"Gold surged to record highs, with 24K gold at Rs15,370/g in India.",themes:["GOLDBEES","SILVERBEES","Safe Haven"]},
+      {sentiment:"negative",headline:"Stryker Cyberattack Highlights Critical Infra Risk",body:"Medical device manufacturer Stryker suffered an Iran-linked cyberattack in March.",themes:["WCBR","Cybersecurity"]},
+      {sentiment:"positive",headline:"GOLDBEES Delivers 24.8% CAGR Over 5 Years",body:"Nippon India ETF Gold BeES trading at Rs123.42. AUM crossed Rs54,127 Cr.",themes:["GOLDBEES","India Gold"]},
+      {sentiment:"positive",headline:"Silver ETF Rebounds -- SILVERBEES Up on Industrial Demand",body:"Silver trading at ~Rs2,28,515/kg in India, rebounding 3% after a 44% March correction.",themes:["SILVERBEES","India Silver"]},
+      {sentiment:"negative",headline:"Nifty Below 24,100 -- Oil & FII Outflows Weigh",body:"Nifty stays under pressure amid elevated Brent crude ($112/bbl) and continued foreign outflows.",themes:["NIFTYBEES","India Macro"]},
+      {sentiment:"neutral",headline:"Jio Financial Climbs 3.2% but Profit Falls 14% YoY",body:"JIOFIN rose to Rs253.64 with robust trading activity, but Q1 profit fell 13.88% YoY.",themes:["JIOFIN","India Fintech"]},
+      {sentiment:"positive",headline:"EIH Hotels: 7% Revenue Growth, Occupancy Rising",body:"EIH Ltd demonstrated resilience with 7% revenue growth in Q3 FY26.",themes:["EIHOTEL","India Tourism"]},
+      {sentiment:"positive",headline:"Genus Power -- Smart Meter Rollout Accelerating",body:"Genus Power Infrastructure benefiting from India's massive smart meter deployment program.",themes:["GENUSPOWER","India Infra"]},
     ];
 
     // ========== Formatting Functions ==========
     const fmt$ = n => "$"+Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
     const fmtSgn$ = n => (n>=0?"+$":"-$")+Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
     const fmtP = n => (n>=0?"+":"")+n.toFixed(2)+"%";
+    const fmtINRg = n => "₹" + Math.abs(n).toLocaleString("en-IN", {minimumFractionDigits:2, maximumFractionDigits:2});
+    const fmtSgnINR = n => (n>=0?"+₹":"-₹")+Math.abs(n).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+    const fmtAED = n => "د.إ" + Math.abs(n).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+    const fmtSgnAED = n => (n>=0?"+د.إ":"-د.إ") + Math.abs(n).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+
+    function fmtC(usdVal) {
+      if (displayCurrency === 'INR') {
+        const inr = usdVal * INR_USD_RATE;
+        return "₹" + Math.abs(inr).toLocaleString("en-IN", {minimumFractionDigits:2, maximumFractionDigits:2});
+      }
+      if (displayCurrency === 'AED') return fmtAED(usdVal * AED_USD_RATE);
+      return fmt$(usdVal);
+    }
+    function fmtSgnC(usdVal) {
+      if (displayCurrency === 'INR') {
+        const inr = usdVal * INR_USD_RATE;
+        return (inr>=0?"+₹":"-₹")+Math.abs(inr).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+      }
+      if (displayCurrency === 'AED') return fmtSgnAED(usdVal * AED_USD_RATE);
+      return fmtSgn$(usdVal);
+    }
+    function fmtIndiaC(inrVal) {
+      if (displayCurrency === 'USD') return fmt$(inrVal / INR_USD_RATE);
+      if (displayCurrency === 'AED') return fmtAED(inrVal / INR_USD_RATE * AED_USD_RATE);
+      return "₹" + Math.abs(inrVal).toLocaleString("en-IN", {minimumFractionDigits:2, maximumFractionDigits:2});
+    }
+    function fmtIndiaSgnC(inrVal) {
+      if (displayCurrency === 'USD') return fmtSgn$(inrVal / INR_USD_RATE);
+      if (displayCurrency === 'AED') return fmtSgnAED(inrVal / INR_USD_RATE * AED_USD_RATE);
+      return (inrVal>=0?"+₹":"-₹")+Math.abs(inrVal).toLocaleString("en-IN", {minimumFractionDigits:2, maximumFractionDigits:2});
+    }
 
     // ========== State ==========
     let holdings = [];
-    let currentSort = { column: 8, asc: false };
     let charts = {};
     let csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTYfmjAFnTd_DB6fCuSRDwpwDn7ZNt8VCXQDNiugKrnoqbRzqHI_MT0IdY7AE1L1rHkLfdMa88Gb0w-/pub?gid=549328411&single=true&output=csv";
+    let holdingsFilter = 'all';
+    let holdingsShowAll = false;
 
     // ========== Login ==========
     const loginInput = document.getElementById("loginInput");
@@ -2615,201 +897,38 @@
       if (e.key === "Escape") loginError.style.display = "none";
     });
 
+    // Currency toggle
+    function updateCurrencyToggleUI() {
+      const usdOpt = document.getElementById("currOptUSD");
+      const aedOpt = document.getElementById("currOptAED");
+      const inrOpt = document.getElementById("currOptINR");
+      [usdOpt, aedOpt, inrOpt].forEach(o => { o.classList.remove('active'); o.setAttribute('aria-selected', 'false'); });
+      if (displayCurrency === 'USD') { usdOpt.classList.add('active'); usdOpt.setAttribute('aria-selected', 'true'); }
+      else if (displayCurrency === 'AED') { aedOpt.classList.add('active'); aedOpt.setAttribute('aria-selected', 'true'); }
+      else { inrOpt.classList.add('active'); inrOpt.setAttribute('aria-selected', 'true'); }
+    }
+
+    // Initialize currency toggle UI on load
+    updateCurrencyToggleUI();
+
+    document.getElementById("currOptUSD").addEventListener("click", (e) => { e.stopPropagation(); displayCurrency = 'USD'; localStorage.setItem('agCurrency', displayCurrency); updateCurrencyToggleUI(); if (holdings.length > 0) renderDashboard(); });
+    document.getElementById("currOptAED").addEventListener("click", (e) => { e.stopPropagation(); displayCurrency = 'AED'; localStorage.setItem('agCurrency', displayCurrency); updateCurrencyToggleUI(); if (holdings.length > 0) renderDashboard(); });
+    document.getElementById("currOptINR").addEventListener("click", (e) => { e.stopPropagation(); displayCurrency = 'INR'; localStorage.setItem('agCurrency', displayCurrency); updateCurrencyToggleUI(); if (holdings.length > 0) renderDashboard(); });
+
     // ========== Dashboard Init ==========
     function initDashboard() {
-      setupNavigation();
-      setupSections();
+      // Show skeleton, hide content
+      document.getElementById('heroSkeleton').style.display = 'block';
+      document.getElementById('heroContent').style.display = 'none';
+
       setupSettings();
+      setupHoldingsTabs();
+      setupAlertToggle();
+      setupStrategyToggle();
+      setupRefreshBtn();
+      setupTimeChips();
       fetchAndRender();
       setInterval(fetchAndRender, REFRESH_MS);
-    }
-
-    function setupNavigation() {
-      const pills = document.querySelectorAll(".nav-pill");
-      const mainContent = document.querySelector(".main-content");
-      const strategySection = document.getElementById("strategySection");
-
-      pills.forEach(pill => {
-        pill.addEventListener("click", () => {
-          pills.forEach(p => p.classList.remove("active"));
-          pill.classList.add("active");
-          const section = pill.dataset.section;
-
-          if (section === "strategy") {
-            // Show strategy, hide main dashboard content
-            mainContent.style.display = "none";
-            strategySection.classList.add("visible");
-            strategySection.style.display = "block";
-            renderStrategyChart();
-            window.scrollTo({top: 0, behavior: "smooth"});
-          } else {
-            // Show main dashboard, hide strategy
-            mainContent.style.display = "block";
-            strategySection.classList.remove("visible");
-            strategySection.style.display = "none";
-
-            // Scroll to relevant section
-            const targetMap = {
-              overview: ".hero",
-              holdings: "#holdingsHeader",
-              dca: "#dcaHeader",
-              news: "#moversNewsSection"
-            };
-            const target = document.querySelector(targetMap[section]);
-            if (target) {
-              setTimeout(() => target.scrollIntoView({behavior: "smooth", block: "start"}), 100);
-            }
-          }
-        });
-      });
-    }
-
-    let strategyCharts = [];
-    function renderStrategyChart() {
-      strategyCharts.forEach(c => c.destroy());
-      strategyCharts = [];
-
-      const ttp = {
-        backgroundColor: "#0a0f1c",
-        borderColor: "rgba(79,209,197,0.4)",
-        borderWidth: 1,
-        padding: 12,
-        titleFont: { family: "Inter", size: 12 },
-        bodyFont: { family: "'JetBrains Mono', monospace", size: 12 }
-      };
-
-      // 1. Capital Structure doughnut
-      // ETF deployed ~$43K, ETF pending ~$57K, Dry powder ~$50K
-      const deployed = holdings.reduce((s,h) => s+h.inv, 0) || 42591;
-      const pending = Math.max(0, ETF_TARGET - deployed);
-      const dryPowder = Math.max(0, LIQUID_BALANCE - pending);
-
-      const ctx1 = document.getElementById("strategyAllocChart");
-      if (ctx1) {
-        strategyCharts.push(new Chart(ctx1, {
-          type: "doughnut",
-          data: {
-            labels: ["ETF Deployed (~43%)", "Pending Deployment (MMF)", "Dry Powder (MMF)"],
-            datasets: [{
-              data: [Math.round(deployed), Math.round(pending), Math.round(dryPowder)],
-              backgroundColor: ["rgba(79,209,197,0.85)", "rgba(246,198,103,0.7)", "rgba(139,124,246,0.6)"],
-              borderColor: "rgba(10,15,28,0.8)",
-              borderWidth: 3,
-              hoverOffset: 8
-            }]
-          },
-          options: {
-            cutout: "62%",
-            plugins: {
-              legend: { position: "bottom", labels: { boxWidth: 10, boxHeight: 10, padding: 12, font: { size: 11, family: "Inter" }, color: "rgba(139,151,176,0.9)" } },
-              tooltip: { ...ttp, callbacks: { label: ctx => " $" + ctx.parsed.toLocaleString("en-US") } }
-            }
-          },
-          plugins: [{
-            id: "ct",
-            afterDraw(chart) {
-              const {ctx: c, chartArea: {left, right, top, bottom}} = chart;
-              const cx = (left+right)/2, cy = (top+bottom)/2;
-              c.save(); c.textAlign = "center"; c.textBaseline = "middle";
-              c.fillStyle = "rgba(139,151,176,0.8)"; c.font = "600 9px Inter";
-              c.fillText("TOTAL PORTFOLIO", cx, cy-16);
-              c.fillStyle = "#e5ecf6"; c.font = "700 18px 'JetBrains Mono'";
-              c.fillText("$" + Math.round(deployed + LIQUID_BALANCE + INR_LIQUID_VALUE / INR_USD_RATE).toLocaleString("en-US"), cx, cy+4);
-              c.fillStyle = "rgba(246,198,103,0.9)"; c.font = "500 9px Inter";
-              c.fillText("MMF yields 3.64% p.a.", cx, cy+22);
-              c.restore();
-            }
-          }]
-        }));
-      }
-
-      // 2. Stacked bar: Core column + Thematic column, each with ETF segments
-      const ctx2 = document.getElementById("strategyStackedChart");
-      if (ctx2) {
-        // Core ETFs as individual datasets (stacked on "Core" bar)
-        // Thematic ETFs as individual datasets (stacked on "Thematic" bar)
-        const datasets = [
-          // Core ETFs
-          { label: "JREG \u00B7 Research Enhanced", data: [23800, 0], backgroundColor: "rgba(94,163,255,0.8)", borderRadius: 2 },
-          { label: "VHVE \u00B7 FTSE Developed", data: [21000, 0], backgroundColor: "rgba(79,209,197,0.8)", borderRadius: 2 },
-          { label: "JPGL \u00B7 Multi-Factor", data: [18200, 0], backgroundColor: "rgba(83,201,249,0.8)", borderRadius: 2 },
-          { label: "JREM \u00B7 EM Enhanced", data: [7000, 0], backgroundColor: "rgba(61,220,151,0.8)", borderRadius: 2 },
-          // Thematic ETFs (sorted desc)
-          { label: "HEAL \u00B7 Healthcare", data: [0, 3600], backgroundColor: "rgba(139,124,246,0.8)", borderRadius: 2 },
-          { label: "AINF \u00B7 AI Infra", data: [0, 3000], backgroundColor: "rgba(94,163,255,0.7)", borderRadius: 2 },
-          { label: "COPX \u00B7 Copper", data: [0, 3000], backgroundColor: "rgba(245,158,11,0.7)", borderRadius: 2 },
-          { label: "NCLR \u00B7 Nuclear", data: [0, 3000], backgroundColor: "rgba(246,198,103,0.7)", borderRadius: 2 },
-          { label: "MLPS \u00B7 Energy", data: [0, 3000], backgroundColor: "rgba(255,107,107,0.6)", borderRadius: 2 },
-          { label: "BRIJ \u00B7 Infra", data: [0, 3000], backgroundColor: "rgba(79,209,197,0.6)", borderRadius: 2 },
-          { label: "WCBR \u00B7 Cyber", data: [0, 3000], backgroundColor: "rgba(83,201,249,0.6)", borderRadius: 2 },
-          { label: "RBOT \u00B7 Robotics", data: [0, 2400], backgroundColor: "rgba(61,220,151,0.6)", borderRadius: 2 },
-          { label: "RARE \u00B7 Rare Earth", data: [0, 1500], backgroundColor: "rgba(139,124,246,0.5)", borderRadius: 2 },
-          { label: "IDBZ \u00B7 Brazil", data: [0, 1500], backgroundColor: "rgba(94,163,255,0.5)", borderRadius: 2 },
-          { label: "XVTD \u00B7 Vietnam", data: [0, 1500], backgroundColor: "rgba(245,158,11,0.5)", borderRadius: 2 },
-          { label: "KWEB \u00B7 China", data: [0, 1500], backgroundColor: "rgba(246,198,103,0.5)", borderRadius: 2 },
-        ];
-
-        strategyCharts.push(new Chart(ctx2, {
-          type: "bar",
-          data: {
-            labels: ["Core Equity\n$70,000 (70%)", "Thematic Satellites\n$30,000 (30%)"],
-            datasets: datasets
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              x: {
-                stacked: true,
-                grid: { display: false },
-                ticks: { font: { size: 11, family: "Inter", weight: "600" }, color: "#e5ecf6" }
-              },
-              y: {
-                stacked: true,
-                grid: { color: "rgba(229,236,246,0.06)" },
-                ticks: { font: { size: 10, family: "'JetBrains Mono'" }, color: "rgba(139,151,176,0.7)", callback: v => "$" + (v/1000).toFixed(0) + "k" }
-              }
-            },
-            plugins: {
-              legend: {
-                display: true,
-                position: "bottom",
-                labels: { boxWidth: 8, boxHeight: 8, padding: 8, font: { size: 10, family: "Inter" }, color: "rgba(139,151,176,0.8)" }
-              },
-              tooltip: {
-                ...ttp,
-                callbacks: {
-                  label: ctx => ctx.dataset.label + ": $" + ctx.parsed.y.toLocaleString("en-US")
-                },
-                filter: ctx => ctx.parsed.y > 0
-              }
-            }
-          }
-        }));
-      }
-    }
-
-    function setupSections() {
-      const headers = ["chartsHeader", "holdingsHeader", "indiaHeader", "dcaHeader", "currencyHeader", "deploymentHeader"];
-      const contents = ["chartsContent", "holdingsContent", "indiaContent", "dcaContent", "currencyContent", "deploymentContent"];
-      const chevrons = ["chartsChevron", "holdingsChevron", "indiaChevron", "dcaChevron", "currencyChevron", "deploymentChevron"];
-      const defaultCollapsed = [true, false, true, false, true, true];
-
-      headers.forEach((headerId, i) => {
-        const header = document.getElementById(headerId);
-        const content = document.getElementById(contents[i]);
-        const chevron = document.getElementById(chevrons[i]);
-
-        if (defaultCollapsed[i]) {
-          content.classList.add("collapsed");
-          chevron.textContent = "▸";
-        }
-
-        header.addEventListener("click", () => {
-          content.classList.toggle("collapsed");
-          chevron.textContent = content.classList.contains("collapsed") ? "▸" : "▾";
-        });
-      });
     }
 
     function setupSettings() {
@@ -2817,26 +936,61 @@
       const csvBar = document.getElementById("csvBar");
       const csvInput = document.getElementById("csvInput");
       const csvBtn = document.getElementById("csvBtn");
-
       settingsBtn.addEventListener("click", () => {
         csvBar.classList.toggle("active");
-        if (csvBar.classList.contains("active")) {
-          csvInput.value = csvUrl;
-          csvInput.focus();
-        }
+        if (csvBar.classList.contains("active")) { csvInput.value = csvUrl; csvInput.focus(); }
       });
-
       csvBtn.addEventListener("click", async () => {
         const newUrl = csvInput.value.trim();
-        if (newUrl) {
-          csvUrl = newUrl;
-          document.getElementById("csvStatus").textContent = "Status: Connecting...";
-          await fetchAndRender();
-        }
+        if (newUrl) { csvUrl = newUrl; document.getElementById("csvStatus").textContent = "Status: Connecting..."; await fetchAndRender(); }
       });
+      csvInput.addEventListener("keydown", (e) => { if (e.key === "Enter") csvBtn.click(); });
+    }
 
-      csvInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") csvBtn.click();
+    function setupHoldingsTabs() {
+      document.querySelectorAll('.holdings-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.holdings-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          holdingsFilter = tab.dataset.filter;
+          holdingsShowAll = false;
+          renderHoldings();
+        });
+      });
+    }
+
+    function setupAlertToggle() {
+      document.getElementById('alertsToggle').addEventListener('click', () => {
+        document.getElementById('alertsSection').classList.toggle('expanded');
+      });
+    }
+
+    function setupStrategyToggle() {
+      document.getElementById('strategyToggle').addEventListener('click', () => {
+        document.getElementById('strategySection').classList.toggle('expanded');
+      });
+    }
+
+    // UX 5: Refresh button
+    function setupRefreshBtn() {
+      const refreshBtn = document.getElementById('refreshBtn');
+      refreshBtn.addEventListener('click', async () => {
+        refreshBtn.classList.add('spinning');
+        await fetchAndRender();
+        refreshBtn.classList.remove('spinning');
+      });
+    }
+
+    // VP 4: Time range chips
+    function setupTimeChips() {
+      document.querySelectorAll('.time-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('.time-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          // For now all ranges show the same chart data (no real historical data available)
+          renderHeroChart();
+        });
       });
     }
 
@@ -2846,16 +1000,49 @@
         const url = csvUrl + (csvUrl.includes("?") ? "&" : "?") + "_t=" + Date.now();
         const response = await fetch(url);
         const text = await response.text();
+        const prevIndiaLen = indiaHoldings.length;
         holdings = parseCSV(text);
-        document.getElementById("csvStatus").textContent = "Status: Data loaded";
+        const globalLive = holdings !== FALLBACK_DATA;
+        const indiaInCSV = /JIOFIN|GOLDCASE|NIFTYBEES|SILVERBEES|GOLDBEES/i.test(text);
+        const statusEl = document.getElementById("csvStatus");
+        if (globalLive && indiaInCSV) {
+          statusEl.textContent = "Status: Live data ✓";
+          statusEl.style.color = "var(--green)";
+        } else if (globalLive) {
+          statusEl.textContent = "Status: Global live · India fallback";
+          statusEl.style.color = "#F57F17";
+          console.warn("[AG Portfolio] India tickers not found in CSV. Ensure India section is in your Google Sheet.");
+        } else {
+          statusEl.textContent = "Status: All fallback";
+          statusEl.style.color = "var(--red)";
+        }
       } catch (e) {
         console.error("CSV fetch error:", e);
         holdings = FALLBACK_DATA;
         document.getElementById("csvStatus").textContent = "Status: Using fallback";
+        document.getElementById("csvStatus").style.color = "var(--red)";
       }
 
+      try {
+        const fxRes = await fetch("https://open.er-api.com/v6/latest/USD");
+        const fxData = await fxRes.json();
+        if (fxData && fxData.rates) {
+          if (fxData.rates.INR) INR_USD_RATE = fxData.rates.INR;
+          if (fxData.rates.AED) AED_USD_RATE = fxData.rates.AED;
+        }
+      } catch (fxErr) {
+        console.warn("FX API fetch failed, using CSV/fallback rates:", fxErr);
+      }
+
+      document.getElementById("currencyToggle").title = "Live rates: 1 USD = ₹" + INR_USD_RATE.toFixed(2) + " | د.إ" + AED_USD_RATE.toFixed(4);
+
+      // VP 1: Update "last updated" timestamp
+      const lastUpdatedEl = document.getElementById('lastUpdated');
+      const now = new Date();
+      lastUpdatedEl.textContent = 'Updated ' + now.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'});
+      lastUpdatedEl.title = now.toLocaleString();
+
       renderDashboard();
-      updateRefreshTime();
     }
 
     function parseCSV(text) {
@@ -2872,7 +1059,12 @@
 
       const data = [];
       const seenTickers = new Set();
-      const clean = s => parseFloat((s || "0").replace(/[\$,%]/g, "").replace(/[()]/g, "")) || 0;
+      const clean = s => {
+        let v = (s || "0").replace(/[^0-9.\-+eE]/g, "").trim();
+        const parts = v.split(".");
+        if (parts.length > 2) v = parts[0] + "." + parts.slice(1).join("");
+        return parseFloat(v) || 0;
+      };
 
       for (const cols of rows) {
         const ticker = (cols[0] || "").replace(/[^A-Z]/g, "");
@@ -2899,16 +1091,12 @@
             sleeve: SLEEVE_MAP[ticker] || "sat",
             sub: SUB_THEME_MAP[ticker] || "Other",
             plan: clean(cols[3]),
-            inv: inv,
-            cur: cur,
-            pl: pl,
-            ret: plPct,
-            wt: wt,
+            inv: inv, cur: cur, pl: pl, ret: plPct, wt: wt,
           });
         }
       }
 
-      // Also extract SMTC (USD MMF) from CASH & LIQUIDITY section
+      // Extract SMTC
       for (const cols of rows) {
         const ticker = (cols[0] || "").trim();
         if (ticker === 'SMTC') {
@@ -2921,7 +1109,6 @@
           }
         }
         if (ticker === 'LIQUIDCASE' && (cols[3] || "").trim() === 'INR') {
-          // This is the LIQUIDCASE in the Cash section (has Currency=INR in col D)
           const inv = clean(cols[4]);
           const cur = clean(cols[5]);
           if (inv > 0 || cur > 0) {
@@ -2932,6 +1119,51 @@
         }
       }
 
+      // Parse FX rates from CSV
+      for (const cols of rows) {
+        const label = (cols[0] || "").trim().toUpperCase().replace(/[^A-Z]/g, "");
+        if (label === 'USDINR' || label === 'INRUSD') {
+          const rate = parseFloat((cols[1] || cols[4] || "0").replace(/[^0-9.]/g, ""));
+          if (rate > 50 && rate < 120) INR_USD_RATE = rate;
+          else if (rate > 0 && rate < 1) INR_USD_RATE = 1 / rate;
+        }
+        if (label === 'USDAED' || label === 'AEDUSD') {
+          const rate = parseFloat((cols[1] || cols[4] || "0").replace(/[^0-9.]/g, ""));
+          if (rate > 2 && rate < 5) AED_USD_RATE = rate;
+        }
+      }
+
+      // Parse India Holdings from CSV
+      const indiaData = [];
+      for (const cols of rows) {
+        let ticker = (cols[0] || "").trim().replace(/[",]/g, "");
+        const tickerClean = ticker.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+        if (tickerClean === '544' || tickerClean === '544080') ticker = '544080';
+        else ticker = tickerClean;
+        if (!INDIA_TICKERS.includes(ticker)) continue;
+        if ((cols[1] || "").trim().toLowerCase() === 'name') continue;
+        const name = (cols[1] || "").trim();
+        const exchange = (cols[3] || "").trim();
+        const inv = clean(cols[4]);
+        const curVal = clean(cols[5]);
+        const pnl = clean(cols[6]) || (curVal - inv);
+        const qty = parseInt((cols[8] || "0").replace(/[^0-9]/g, "")) || 0;
+        const avgBuy = qty > 0 ? inv / qty : 0;
+        const currentPrice = qty > 0 ? curVal / qty : 0;
+        const pnlPct = inv > 0 ? ((curVal - inv) / inv * 100) : 0;
+        if (inv > 0 || curVal > 0) {
+          indiaData.push({ ticker, name, exchange, qty, avgBuy, investment: inv, currentPrice, currentValue: curVal, pnl, pnlPct });
+        }
+      }
+      console.log("[AG Portfolio] India holdings parsed from CSV: " + indiaData.length + " of " + INDIA_TICKERS.length + " tickers found", indiaData.map(h => h.ticker));
+      if (indiaData.length > 0) {
+        indiaHoldings = indiaData;
+      } else {
+        console.warn("[AG Portfolio] No India holdings found in CSV -- using hardcoded fallback (may be stale!)");
+      }
+
+      console.log("[AG Portfolio] Global holdings parsed from CSV: " + data.length + " of " + KNOWN_TICKERS.length + " tickers found", data.map(h => h.tk));
+      if (data.length === 0) console.warn("[AG Portfolio] No global holdings found in CSV -- using hardcoded fallback (may be stale!)");
       return data.length > 0 ? data : FALLBACK_DATA;
     }
 
@@ -2941,535 +1173,624 @@
       const totalPL = holdings.reduce((s, h) => s + h.pl, 0);
       const totalInv = holdings.reduce((s, h) => s + h.inv, 0);
 
-      const totalWithLiquid = totalCur + LIQUID_BALANCE + (INR_LIQUID_VALUE / INR_USD_RATE);
+      const indiaExCash = indiaHoldings.filter(h => h.ticker !== 'LIQUIDCASE');
+      const indiaValue = indiaExCash.reduce((s, h) => s + h.currentValue, 0);
+      const indiaPnl = indiaExCash.reduce((s, h) => s + h.pnl, 0);
+      const indiaInv = indiaExCash.reduce((s, h) => s + h.investment, 0);
+      const indiaValueUSD = indiaValue / INR_USD_RATE;
+      const indiaPnlUSD = indiaPnl / INR_USD_RATE;
+
+      const cashUSD = LIQUID_BALANCE + (INR_LIQUID_VALUE / INR_USD_RATE);
+      const totalWithLiquid = totalCur + cashUSD + indiaValueUSD;
+      const totalPLAll = totalPL + indiaPnlUSD + (LIQUID_BALANCE - LIQUID_INVESTED);
+
+      // UX 1: Hide skeleton, show content on first render
+      document.getElementById('heroSkeleton').style.display = 'none';
+      document.getElementById('heroContent').style.display = 'block';
 
       // Hero
-      animateValue(document.getElementById("heroValue"), totalWithLiquid);
-      document.getElementById("heroUPL").textContent = fmtSgn$(totalPL);
-      document.getElementById("heroDailyYield").textContent = fmtSgn$(LIQUID_DAILY);
+      const heroTotal = displayCurrency === 'INR' ? totalWithLiquid * INR_USD_RATE : displayCurrency === 'AED' ? totalWithLiquid * AED_USD_RATE : totalWithLiquid;
+      const heroPrefix = displayCurrency === 'INR' ? "₹" : displayCurrency === 'AED' ? "د.إ" : "$";
 
-      // KPIs
-      document.getElementById("kpiTotal").textContent = fmt$(totalWithLiquid);
-      document.getElementById("kpiETF").textContent = fmt$(totalCur);
-      document.getElementById("kpiLiquid").textContent = fmt$(LIQUID_BALANCE);
-      document.getElementById("kpiInvested").textContent = fmt$(totalInv);
-      document.getElementById("kpiUPL").textContent = fmtSgn$(totalPL);
+      // UX 2: Only animate if first render or value changed significantly
+      if (firstRender || Math.abs(heroTotal - lastHeroTotal) > 50) {
+        animateValue(document.getElementById("heroValue"), heroTotal, heroPrefix);
+        firstRender = false;
+        lastHeroTotal = heroTotal;
+      } else {
+        // Just set the value without animation
+        const heroEl = document.getElementById("heroValue");
+        if (heroPrefix === "₹") heroEl.textContent = "₹" + Math.abs(heroTotal).toLocaleString("en-IN", {minimumFractionDigits:2, maximumFractionDigits:2});
+        else if (heroPrefix === "د.إ") heroEl.textContent = "د.إ" + Math.abs(heroTotal).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+        else heroEl.textContent = fmt$(heroTotal);
+      }
 
-      // Cash & Liquidity
-      const inrLiquidUSD = INR_LIQUID_VALUE / INR_USD_RATE;
-      const totalCash = LIQUID_BALANCE + inrLiquidUSD;
-      const usdPnl = LIQUID_BALANCE - LIQUID_INVESTED;
+      const heroChangeEl = document.getElementById("heroChange");
+      heroChangeEl.innerHTML = "<span id='heroUPL'>" + fmtSgnC(totalPLAll) + "</span> (" + fmtP(totalInv > 0 ? totalPLAll / (totalInv + LIQUID_INVESTED + indiaInv / INR_USD_RATE) * 100 : 0) + ") unrealised";
+      heroChangeEl.className = "hero-change " + (totalPLAll >= 0 ? "positive" : "negative");
 
-      document.getElementById("liquidBalance").textContent = fmt$(LIQUID_BALANCE);
-      document.getElementById("liquidPnlUSD").textContent = "Inv: " + fmt$(LIQUID_INVESTED) + " · P&L: " + fmtSgn$(usdPnl);
-      document.getElementById("liquidINR").textContent = "₹" + INR_LIQUID_VALUE.toLocaleString("en-IN");
-      document.getElementById("liquidPnlINR").textContent = "Inv: ₹" + INR_LIQUID_INVESTED.toLocaleString("en-IN") + " · P&L: " + (INR_LIQUID_PNL >= 0 ? "+₹" : "-₹") + Math.abs(INR_LIQUID_PNL).toLocaleString("en-IN");
-      document.getElementById("liquidTotal").textContent = fmt$(totalCash);
-      document.getElementById("liquidDryPowder").textContent = fmt$(LIQUID_BALANCE);
+      // Chips
+      document.getElementById("chipYield").textContent = "Cash yield " + fmtSgnC(LIQUID_DAILY) + "/day";
 
-      // Sleeve Performance
-      renderSleeves();
+      // DCA status
+      const today = new Date();
+      const t4 = new Date(2026, 4, 6);
+      const daysToT4 = Math.ceil((t4 - today) / (1000 * 60 * 60 * 24));
+      document.getElementById("dcaStatus").textContent = daysToT4 > 0 ? "T4 in " + daysToT4 + "d" : "T4 today!";
+
+      // Hero chart
+      renderHeroChart();
+
+      // VP 2: Sleeve summary cards
+      renderSleeveCards(totalCur, totalPL);
+
+      // Alerts
+      renderAlerts();
 
       // Holdings
-      renderHoldings(totalWithLiquid);
+      renderHoldings();
 
-      // Top Movers
-      renderMovers();
+      // Allocation
+      renderAllocation(totalCur, indiaValueUSD);
 
       // News
       renderNews();
-
-      // India Holdings
-      renderIndiaHoldings();
-
-      // DCA
-      renderDCA();
-
-      // Currency
-      renderCurrency(totalCur, totalPL);
-
-      // Deployment
-      renderDeployment(totalInv);
-
-      // Charts
-      renderCharts(totalCur, totalPL);
     }
 
-    function renderHoldings(totalWithLiquid) {
-      const tbody = document.getElementById("holdingsBody");
-      const cardsContainer = document.getElementById("holdingsCards");
-      tbody.innerHTML = "";
-      cardsContainer.innerHTML = "";
+    // VP 2: Sleeve summary cards
+    function renderSleeveCards(totalCur, totalPL) {
+      const coreHoldings = holdings.filter(h => SLEEVE_MAP[h.tk] === 'core');
+      const satHoldings = holdings.filter(h => SLEEVE_MAP[h.tk] === 'sat');
 
-      let sorted = [...holdings].sort((a, b) => {
-        let aVal, bVal;
-        if (currentSort.column === 0) {
-          aVal = a.tk;
-          bVal = b.tk;
-        } else if (currentSort.column === 1) {
-          aVal = a.sleeve;
-          bVal = b.sleeve;
-        } else if (currentSort.column === 2) {
-          aVal = a.sub;
-          bVal = b.sub;
-        } else if (currentSort.column === 3) {
-          aVal = a.plan;
-          bVal = b.plan;
-        } else if (currentSort.column === 4) {
-          aVal = a.inv;
-          bVal = b.inv;
-        } else if (currentSort.column === 5) {
-          aVal = a.cur;
-          bVal = b.cur;
-        } else if (currentSort.column === 6) {
-          aVal = a.pl;
-          bVal = b.pl;
-        } else if (currentSort.column === 7) {
-          aVal = a.ret;
-          bVal = b.ret;
-        } else {
-          aVal = a.wt;
-          bVal = b.wt;
-        }
+      const coreValue = coreHoldings.reduce((s, h) => s + h.cur, 0);
+      const corePL = coreHoldings.reduce((s, h) => s + h.pl, 0);
+      const coreInv = coreHoldings.reduce((s, h) => s + h.inv, 0);
+      const coreRet = coreInv > 0 ? (corePL / coreInv * 100) : 0;
 
-        if (typeof aVal === "string") return currentSort.asc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-        return currentSort.asc ? aVal - bVal : bVal - aVal;
-      });
+      const satValue = satHoldings.reduce((s, h) => s + h.cur, 0);
+      const satPL = satHoldings.reduce((s, h) => s + h.pl, 0);
+      const satInv = satHoldings.reduce((s, h) => s + h.inv, 0);
+      const satRet = satInv > 0 ? (satPL / satInv * 100) : 0;
 
-      sorted.forEach(h => {
-        const fullyAllocBadge = FULLY_ALLOCATED.includes(h.tk) ? '<span style="font-size:9px;background:rgba(139,151,176,0.2);color:var(--text-mute);padding:2px 6px;border-radius:3px;margin-left:6px;">Fully Allocated</span>' : '';
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td><span class="table-ticker">${h.tk}</span>${fullyAllocBadge}<br><span style="color:var(--text-mute);font-size:11px">${h.name}</span></td>
-          <td><span class="pill-tag">${h.sleeve.toUpperCase()}</span></td>
-          <td>${h.sub}</td>
-          <td class="table-value">${fmt$(h.plan)}</td>
-          <td class="table-value">${fmt$(h.inv)}</td>
-          <td class="table-value">${fmt$(h.cur)}</td>
-          <td class="table-value"><span class="pill ${h.pl >= 0 ? 'pill-mint' : 'pill-coral'}">${fmtSgn$(h.pl)}</span></td>
-          <td class="table-value"><span class="pill ${h.ret >= 0 ? 'pill-mint' : 'pill-coral'}">${fmtP(h.ret)}</span></td>
-          <td class="table-value">${h.wt.toFixed(2)}%</td>
-        `;
-        tbody.appendChild(tr);
+      const cashValue = LIQUID_BALANCE + (INR_LIQUID_VALUE / INR_USD_RATE);
+      const cashPL = (LIQUID_BALANCE - LIQUID_INVESTED) + (INR_LIQUID_PNL / INR_USD_RATE);
+      const cashInv = LIQUID_INVESTED + (INR_LIQUID_INVESTED / INR_USD_RATE);
+      const cashRet = cashInv > 0 ? (cashPL / cashInv * 100) : 0;
 
-        const card = document.createElement("div");
-        card.className = "holding-card";
-        card.innerHTML = `
-          <div class="holding-card-top">
-            <div class="holding-card-left">
-              <h4>${h.tk}${fullyAllocBadge}</h4>
-              <p>${h.name}</p>
-            </div>
-            <div class="holding-card-right">
-              <div class="holding-card-value">${fmt$(h.cur)}</div>
-              <span class="pill ${h.pl >= 0 ? 'pill-mint' : 'pill-coral'}" style="font-size:11px">${fmtSgn$(h.pl)}</span>
-            </div>
-          </div>
-          <div class="holding-card-return">${fmtP(h.ret)}</div>
-          <div class="holding-card-bar">
-            <div class="holding-card-bar-fill" style="width: ${h.wt}%;"></div>
-          </div>
-          <div class="holding-card-tags">
-            <span class="holding-card-tag">${h.sleeve.toUpperCase()}</span>
-            <span class="holding-card-tag">${h.sub}</span>
-          </div>
-        `;
-        cardsContainer.appendChild(card);
-      });
+      const coreEl = document.getElementById('sleeveCore');
+      coreEl.innerHTML = '<div class="sleeve-label">Core</div>' +
+        '<div class="sleeve-value">' + fmtC(coreValue) + '</div>' +
+        '<div class="sleeve-return ' + (coreRet >= 0 ? 'positive' : 'negative') + '">' + fmtP(coreRet) + '</div>';
 
-      // Sorting with visual indicators
-      document.querySelectorAll(".holdings-table th").forEach(th => {
-        th.style.cursor = "pointer";
-        th.addEventListener("click", () => {
-          const col = parseInt(th.dataset.column);
-          if (currentSort.column === col) {
-            currentSort.asc = !currentSort.asc;
-          } else {
-            currentSort.column = col;
-            currentSort.asc = false;
-          }
-          renderHoldings(totalWithLiquid);
-        });
-      });
-      // Update sort indicators
-      document.querySelectorAll(".holdings-table th").forEach(th => {
-        const col = parseInt(th.dataset.column);
-        th.classList.toggle("sort-active", col === currentSort.column);
-        // Remove old arrows
-        const oldArrow = th.querySelector(".sort-arrow");
-        if (oldArrow) oldArrow.remove();
-        // Add arrow to active column
-        if (col === currentSort.column) {
-          const arrow = document.createElement("span");
-          arrow.className = "sort-arrow";
-          arrow.textContent = currentSort.asc ? " \u25B2" : " \u25BC";
-          th.appendChild(arrow);
-        }
-      });
+      const satEl = document.getElementById('sleeveSat');
+      satEl.innerHTML = '<div class="sleeve-label">Satellite</div>' +
+        '<div class="sleeve-value">' + fmtC(satValue) + '</div>' +
+        '<div class="sleeve-return ' + (satRet >= 0 ? 'positive' : 'negative') + '">' + fmtP(satRet) + '</div>';
+
+      const cashEl = document.getElementById('sleeveCash');
+      cashEl.innerHTML = '<div class="sleeve-label">Cash</div>' +
+        '<div class="sleeve-value">' + fmtC(cashValue) + '</div>' +
+        '<div class="sleeve-return ' + (cashRet >= 0 ? 'positive' : 'negative') + '">' + fmtP(cashRet) + '</div>';
     }
 
-    function toggleSleeve(type) {
-      const card = document.getElementById(type === 'core' ? 'sleeveCore' : 'sleeveThematic');
-      card.classList.toggle('expanded');
-    }
-
-    function renderSleeves() {
-      const core = holdings.filter(h => h.sleeve === 'core');
-      const sat = holdings.filter(h => h.sleeve === 'sat');
-
-      const coreInv = core.reduce((s,h) => s+h.inv, 0);
-      const coreCur = core.reduce((s,h) => s+h.cur, 0);
-      const corePL = coreCur - coreInv;
-      const coreRet = coreInv > 0 ? (corePL/coreInv*100) : 0;
-
-      const satInv = sat.reduce((s,h) => s+h.inv, 0);
-      const satCur = sat.reduce((s,h) => s+h.cur, 0);
-      const satPL = satCur - satInv;
-      const satRet = satInv > 0 ? (satPL/satInv*100) : 0;
-
-      // Core deployment: plan $70K, show % deployed + remaining
-      const corePlan = 70000;
-      const coreDeployPct = (coreInv / corePlan * 100).toFixed(0);
-      const coreRemaining = Math.max(0, corePlan - coreInv);
-      document.getElementById('sleeveCoreLabel').textContent = 'Core Equity \u00B7 Plan $70,000';
-      document.getElementById('sleeveCoreValue').textContent = fmt$(coreCur);
-      document.getElementById('sleeveCoreInv').textContent = 'Inv ' + fmt$(coreInv);
-      document.getElementById('sleeveCorePL').textContent = fmtSgn$(corePL);
-      document.getElementById('sleeveCorePL').style.color = corePL >= 0 ? 'var(--accent-mint)' : 'var(--accent-coral)';
-      document.getElementById('sleeveCoreRet').textContent = fmtP(coreRet);
-      document.getElementById('sleeveCoreRet').style.color = coreRet >= 0 ? 'var(--accent-mint)' : 'var(--accent-coral)';
-      document.getElementById('sleeveCoreDeploy').textContent = coreDeployPct + '% deployed \u00B7 ' + fmt$(coreRemaining) + ' to go';
-
-      // Thematic deployment: plan $30K
-      const satPlan = 30000;
-      const satDeployPct = (satInv / satPlan * 100).toFixed(0);
-      const satRemaining = Math.max(0, satPlan - satInv);
-      document.getElementById('sleeveThematicLabel').textContent = 'Thematic Satellites \u00B7 Plan $30,000';
-      document.getElementById('sleeveThematicValue').textContent = fmt$(satCur);
-      document.getElementById('sleeveThematicInv').textContent = 'Inv ' + fmt$(satInv);
-      document.getElementById('sleeveThematicPL').textContent = fmtSgn$(satPL);
-      document.getElementById('sleeveThematicPL').style.color = satPL >= 0 ? 'var(--accent-mint)' : 'var(--accent-coral)';
-      document.getElementById('sleeveThematicRet').textContent = fmtP(satRet);
-      document.getElementById('sleeveThematicRet').style.color = satRet >= 0 ? 'var(--accent-mint)' : 'var(--accent-coral)';
-      document.getElementById('sleeveThematicDeploy').textContent = satDeployPct + '% deployed \u00B7 ' + fmt$(satRemaining) + ' to go';
-
-      // Render individual holdings in expandable body
-      const renderSleeveBody = (items, containerId) => {
-        const container = document.getElementById(containerId);
-        container.innerHTML = '';
-        const sorted = [...items].sort((a,b) => b.cur - a.cur);
-        sorted.forEach(h => {
-          const div = document.createElement('div');
-          div.className = 'sleeve-holding';
-          const plColor = h.pl >= 0 ? 'var(--accent-mint)' : 'var(--accent-coral)';
-          div.innerHTML = `
-            <span class="sleeve-holding-ticker">${h.tk}</span>
-            <span class="sleeve-holding-name">${h.sub}</span>
-            <span style="font-size:12px;font-family:'JetBrains Mono',monospace;min-width:70px;text-align:right">${fmt$(h.cur)}</span>
-            <span class="sleeve-holding-pl" style="color:${plColor}">${fmtSgn$(h.pl)} (${fmtP(h.ret)})</span>
-          `;
-          container.appendChild(div);
-        });
-      };
-      renderSleeveBody(core, 'sleeveCoreBody');
-      renderSleeveBody(sat, 'sleeveThematicBody');
-    }
-
-    function renderMovers() {
-      const sorted = [...holdings].sort((a, b) => b.ret - a.ret);
-      const leaders = sorted.slice(0, 3);
-      const laggards = sorted.slice(-2).reverse();
-
-      const leadersList = document.getElementById("leadersList");
-      const laggardsList = document.getElementById("laggardsList");
-      leadersList.innerHTML = "";
-      laggardsList.innerHTML = "";
-
-      leaders.forEach(h => {
-        const div = document.createElement("div");
-        div.className = "mover-item gainer";
-        div.innerHTML = `
-          <div class="mover-left">
-            <div class="mover-ticker">${h.tk}</div>
-            <div class="mover-name">${h.sub}</div>
-            <span class="mover-tag">${h.sleeve.toUpperCase()}</span>
-          </div>
-          <div class="mover-right">
-            <div class="mover-pl">${fmtSgn$(h.pl)}</div>
-            <div class="mover-return" style="color:var(--accent-mint)">${fmtP(h.ret)}</div>
-          </div>
-        `;
-        leadersList.appendChild(div);
-      });
-
-      laggards.forEach(h => {
-        const div = document.createElement("div");
-        div.className = "mover-item loser";
-        div.innerHTML = `
-          <div class="mover-left">
-            <div class="mover-ticker">${h.tk}</div>
-            <div class="mover-name">${h.sub}</div>
-            <span class="mover-tag" style="background:rgba(255,107,107,0.15);color:var(--accent-coral)">${h.sleeve.toUpperCase()}</span>
-          </div>
-          <div class="mover-right">
-            <div class="mover-pl">${fmtSgn$(h.pl)}</div>
-            <div class="mover-return" style="color:var(--accent-coral)">${fmtP(h.ret)}</div>
-          </div>
-        `;
-        laggardsList.appendChild(div);
-      });
-    }
-
-    function renderNews() {
-      const newsList = document.getElementById("newsList");
-      newsList.innerHTML = "";
-
-      newsItems.forEach(item => {
-        const div = document.createElement("div");
-        div.className = `news-item ${item.sentiment}`;
-        const themesHtml = item.themes.map(t => `<span class="news-theme">${t}</span>`).join("");
-        const sentimentIcon = item.sentiment === "negative" ? "▼" : item.sentiment === "positive" ? "▲" : "◆";
-
-        div.innerHTML = `
-          <div class="news-header">
-            <div class="news-headline">${item.headline}</div>
-            <span class="news-sentiment ${item.sentiment}">${sentimentIcon} ${item.sentiment.charAt(0).toUpperCase() + item.sentiment.slice(1)}</span>
-          </div>
-          <div class="news-body">${item.body}</div>
-          <div class="news-themes">${themesHtml}</div>
-        `;
-
-        div.addEventListener("click", () => {
-          div.classList.toggle("expanded");
-        });
-
-        newsList.appendChild(div);
-      });
-    }
-
-    function renderIndiaHoldings() {
-      const data = INDIA_HOLDINGS;
-      const tbody = document.getElementById("indiaBody");
-      const cardsContainer = document.getElementById("indiaCards");
-      const summary = document.getElementById("indiaSummary");
-      if (!tbody || !cardsContainer || !summary) return;
-
-      const totalValue = data.reduce((s, h) => s + h.currentValue, 0);
-      const totalPnl = data.reduce((s, h) => s + h.pnl, 0);
-      const totalInv = data.reduce((s, h) => s + h.investment, 0);
-      const totalPnlPct = totalInv > 0 ? (totalPnl / totalInv * 100) : 0;
-
-      const fmtINR = n => "₹" + Math.abs(n).toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      const fmtINRSgn = n => (n >= 0 ? "+₹" : "-₹") + Math.abs(n).toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      const fmtINRInt = n => "₹" + Math.abs(n).toLocaleString("en-IN");
-
-      const pnlColor = totalPnl >= 0 ? "var(--accent-mint)" : "var(--accent-coral)";
-      summary.innerHTML = `${data.length} Holdings · <strong>${fmtINRInt(totalValue)}</strong> Total Value · <span style="color:${pnlColor}">${fmtINRSgn(totalPnl)} (${totalPnlPct >= 0 ? "+" : ""}${totalPnlPct.toFixed(2)}%)</span> P&L`;
-
-      tbody.innerHTML = "";
-      cardsContainer.innerHTML = "";
-
-      const sorted = [...data].sort((a, b) => b.currentValue - a.currentValue);
-
-      sorted.forEach(h => {
-        const plColor = h.pnl >= 0 ? "pill-mint" : "pill-coral";
-        const isCash = h.ticker === 'LIQUIDCASE';
-        const cashBadge = isCash ? ' <span style="background:var(--accent-gold);color:#000;padding:1px 6px;border-radius:8px;font-size:9px;font-weight:700;margin-left:4px">💰 CASH</span>' : '';
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td><span class="table-ticker">${h.ticker}</span>${cashBadge}</td>
-          <td><span style="color:var(--text-mute);font-size:11px">${h.name}</span></td>
-          <td>${h.exchange}</td>
-          <td class="table-value">${h.qty.toLocaleString("en-IN")}</td>
-          <td class="table-value">${fmtINR(h.avgBuy)}</td>
-          <td class="table-value">${fmtINR(h.currentPrice)}</td>
-          <td class="table-value">${fmtINRInt(h.currentValue)}</td>
-          <td class="table-value"><span class="pill ${plColor}">${fmtINRSgn(h.pnl)}</span></td>
-          <td class="table-value"><span class="pill ${plColor}">${h.pnlPct >= 0 ? "+" : ""}${h.pnlPct.toFixed(2)}%</span></td>
-        `;
-        tbody.appendChild(tr);
-
-        const card = document.createElement("div");
-        card.className = "holding-card";
-        card.innerHTML = `
-          <div class="holding-card-top">
-            <div class="holding-card-left">
-              <h4>${h.ticker}</h4>
-              <p>${h.name}</p>
-            </div>
-            <div class="holding-card-right">
-              <div class="holding-card-value">${fmtINRInt(h.currentValue)}</div>
-              <span class="pill ${plColor}" style="font-size:11px">${fmtINRSgn(h.pnl)}</span>
-            </div>
-          </div>
-          <div class="holding-card-return">${h.pnlPct >= 0 ? "+" : ""}${h.pnlPct.toFixed(2)}%</div>
-          <div class="holding-card-tags">
-            <span class="holding-card-tag">${h.exchange}</span>
-            ${isCash ? '<span class="holding-card-tag" style="background:var(--accent-gold);color:#000">💰 Cash</span>' : ''}
-          </div>
-        `;
-        cardsContainer.appendChild(card);
-      });
-    }
-
-    function renderDCA() {
-      const today = new Date();
-      const t4 = new Date(2026, 4, 6);
-      const days = Math.ceil((t4 - today) / (1000 * 60 * 60 * 24));
-      document.getElementById("dcaCountdown").textContent = days > 0 ? `Next tranche in ${days} days` : `Next tranche today`;
-    }
-
-    function renderCurrency(etfTotal, totalPL) {
-      const rates = { usd: 1.0, aed: 3.6725, inr: 85.50 };
-
-      const convert = (val, rate, locale, prefix) => {
-        if (locale === "en-IN") return prefix + Math.abs(val * rate).toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        return prefix + (val * rate).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      };
-
-      const totalCashUSD = LIQUID_BALANCE + (INR_LIQUID_VALUE / INR_USD_RATE);
-
-      // USD
-      document.getElementById("usdEtf").textContent = fmt$(etfTotal);
-      document.getElementById("usdLiquid").textContent = fmt$(totalCashUSD);
-      document.getElementById("usdTotal").textContent = fmt$(etfTotal + totalCashUSD);
-      document.getElementById("usdUPL").textContent = fmtSgn$(totalPL);
-
-      // AED
-      document.getElementById("aedEtf").textContent = convert(etfTotal, rates.aed, "en-US", "د.إ");
-      document.getElementById("aedLiquid").textContent = convert(totalCashUSD, rates.aed, "en-US", "د.إ");
-      document.getElementById("aedTotal").textContent = convert(etfTotal + totalCashUSD, rates.aed, "en-US", "د.إ");
-      document.getElementById("aedUPL").textContent = fmtSgn$(totalPL * rates.aed).replace("$", "د.إ");
-
-      // INR
-      document.getElementById("inrEtf").textContent = convert(etfTotal, rates.inr, "en-IN", "₹");
-      document.getElementById("inrLiquid").textContent = convert(totalCashUSD, rates.inr, "en-IN", "₹");
-      document.getElementById("inrTotal").textContent = convert(etfTotal + totalCashUSD, rates.inr, "en-IN", "₹");
-      document.getElementById("inrUPL").textContent = convert(totalPL, rates.inr, "en-IN", "₹");
-    }
-
-    function renderDeployment(invested) {
-      const pct = (invested / ETF_TARGET) * 100;
-      document.getElementById("deploymentPercent").textContent = pct.toFixed(1) + "%";
-      document.getElementById("deploymentBarFill").style.width = pct + "%";
-      document.getElementById("deploymentCurrent").textContent = fmt$(invested);
-      document.getElementById("deploymentRemaining").textContent = fmt$(Math.max(0, ETF_TARGET - invested));
-    }
-
-    function renderCharts(etfTotal, totalPL) {
-      const sleeveData = { core: 0, sat: 0 };
-      const themeData = {};
-
-      holdings.forEach(h => {
-        sleeveData[h.sleeve] = (sleeveData[h.sleeve] || 0) + h.cur;
-        themeData[h.sub] = (themeData[h.sub] || 0) + h.cur;
-      });
-
-      const colors = ["#3ddc97", "#ff6b6b", "#f6c667", "#4fd1c5", "#8b7cf6", "#5ea3ff", "#ffb84d", "#e8537e", "#47c9a5", "#6b8cff"];
-
-      // Portfolio Composition
-      createChart("chartComposition", "doughnut", ["ETF Portfolio", "USD MMF (SMTC)", "INR Liquid (LIQUIDCASE)"], [etfTotal, LIQUID_BALANCE, INR_LIQUID_VALUE / INR_USD_RATE], colors.slice(0, 3));
-
-      // ETF Allocation
-      const topETFs = holdings.sort((a, b) => b.cur - a.cur).slice(0, 5);
-      const otherVal = holdings.slice(5).reduce((s, h) => s + h.cur, 0);
-      const labels = topETFs.map(h => h.tk);
-      const data = topETFs.map(h => h.cur);
-      if (otherVal > 0) {
-        labels.push("Other");
-        data.push(otherVal);
-      }
-      createChart("chartAllocation", "doughnut", labels, data, colors);
-
-      // Sleeve Performance
-      createChart("chartSleeve", "bar", Object.keys(sleeveData), Object.values(sleeveData), colors.slice(0, 2));
-
-      // Thematic Sub-themes
-      const themes = Object.keys(themeData).sort((a, b) => themeData[b] - themeData[a]).slice(0, 8);
-      const themeVals = themes.map(t => themeData[t]);
-      createChart("chartThemes", "bar", themes, themeVals, colors);
-    }
-
-    function createChart(canvasId, type, labels, data, colors) {
-      const ctx = document.getElementById(canvasId);
+    function renderHeroChart() {
+      const ctx = document.getElementById('heroChart');
       if (!ctx) return;
+      if (charts['heroChart']) charts['heroChart'].destroy();
 
-      if (charts[canvasId]) charts[canvasId].destroy();
+      // Compute portfolio totals
+      const totalCur = holdings.reduce((s, h) => s + h.cur, 0);
+      const totalInv = holdings.reduce((s, h) => s + h.inv, 0);
+      const indiaExCash = indiaHoldings.filter(h => h.ticker !== 'LIQUIDCASE');
+      const indiaValueUSD = indiaExCash.reduce((s, h) => s + h.currentValue, 0) / INR_USD_RATE;
+      const cashUSD = LIQUID_BALANCE + (INR_LIQUID_VALUE / INR_USD_RATE);
+      const currentTotal = totalCur + cashUSD + indiaValueUSD;
+      const startTotal = totalInv + LIQUID_INVESTED + indiaExCash.reduce((s,h) => s + h.investment, 0) / INR_USD_RATE;
 
-      const config = {
-        type: type,
+      // Approximation: straight-line interpolation from total invested to current value
+      // with slight cubic easing. Real historical data is not available.
+      const points = 30;
+      const data = [];
+      const labels = [];
+      for (let i = 0; i < points; i++) {
+        const t = i / (points - 1);
+        // Cubic easing for a smooth curve
+        const eased = t * t * (3 - 2 * t);
+        const val = startTotal + (currentTotal - startTotal) * eased;
+        data.push(val);
+        const d = new Date();
+        d.setDate(d.getDate() - (points - 1 - i));
+        labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+      }
+
+      // Bug 5: Dynamic color based on portfolio direction
+      const isUp = currentTotal >= startTotal;
+      const lineColor = isUp ? '#00C805' : '#FF5000';
+      const fillColor = isUp ? 'rgba(0,200,5,0.06)' : 'rgba(255,80,0,0.06)';
+
+      charts['heroChart'] = new Chart(ctx, {
+        type: 'line',
         data: {
           labels: labels,
           datasets: [{
             data: data,
-            backgroundColor: colors.slice(0, labels.length),
-            borderColor: "rgba(10, 15, 28, 1)",
+            borderColor: lineColor,
             borderWidth: 2,
+            fill: true,
+            backgroundColor: fillColor,
+            pointRadius: 0,
+            tension: 0.3,
           }]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
+          responsive: true, maintainAspectRatio: false,
           plugins: {
-            legend: {
-              display: type === "doughnut",
-              position: "right",
-              labels: { color: "var(--text-dim)", font: { size: 11 }, padding: 12 }
-            },
+            legend: { display: false },
             tooltip: {
-              backgroundColor: "rgba(18, 26, 46, 0.9)",
-              titleColor: "var(--text-primary)",
-              bodyColor: "var(--text-dim)",
-              borderColor: "rgba(229, 236, 246, 0.2)",
-              borderWidth: 1,
-              padding: 10,
-              displayColors: true,
+              backgroundColor: '#1B1B1B', titleColor: '#fff', bodyColor: '#fff',
+              borderWidth: 0, padding: 8, displayColors: false,
               callbacks: {
                 label: function(ctx) {
-                  const val = ctx.parsed.y || ctx.parsed;
-                  return "$" + Math.round(val).toLocaleString("en-US");
+                  const val = ctx.parsed.y;
+                  if (displayCurrency === 'INR') return "₹" + (val * INR_USD_RATE).toLocaleString("en-IN", {maximumFractionDigits:0});
+                  if (displayCurrency === 'AED') return "د.إ" + (val * AED_USD_RATE).toLocaleString("en-US", {maximumFractionDigits:0});
+                  return "$" + val.toLocaleString("en-US", {maximumFractionDigits:0});
                 }
               }
             }
           },
-          scales: type === "bar" ? {
-            y: { beginAtZero: true, grid: { color: "rgba(139, 151, 176, 0.1)" }, ticks: { color: "var(--text-dim)", font: { size: 10 } } },
-            x: { grid: { display: false }, ticks: { color: "var(--text-dim)", font: { size: 10 } } }
-          } : {}
+          scales: {
+            x: { display: false },
+            y: { display: false }
+          },
+          interaction: { mode: 'index', intersect: false },
+          elements: { line: { borderJoinStyle: 'round' } }
         }
-      };
+      });
+    }
 
-      charts[canvasId] = new Chart(ctx, config);
+    function renderHoldings() {
+      const container = document.getElementById('holdingsList');
+      const showAllBtn = document.getElementById('showAllBtn');
+      container.innerHTML = '';
+
+      // Build unified list
+      const indiaExCash = indiaHoldings.filter(h => h.ticker !== 'LIQUIDCASE');
+      const liquidCase = indiaHoldings.find(h => h.ticker === 'LIQUIDCASE');
+      const totalCur = holdings.reduce((s,h) => s + h.cur, 0);
+      const indiaValueUSD = indiaExCash.reduce((s,h) => s + h.currentValue, 0) / INR_USD_RATE;
+      const cashUSD = LIQUID_BALANCE + (INR_LIQUID_VALUE / INR_USD_RATE);
+      const totalWithLiquid = totalCur + cashUSD + indiaValueUSD;
+
+      let items = [];
+
+      // Global ETFs
+      holdings.forEach(h => {
+        items.push({
+          ticker: h.tk, name: h.name || h.sub,
+          valueUSD: h.cur, retPct: h.ret, plUSD: h.pl,
+          invUSD: h.inv,
+          type: 'global', isIndia: false, isCash: false,
+          displayValue: fmtC(h.cur),
+          displayReturn: fmtP(h.ret),
+          sleeve: SLEEVE_MAP[h.tk] || 'sat',
+          sub: SUB_THEME_MAP[h.tk] || '',
+          // For detail view
+          rawInv: h.inv, rawCur: h.cur, rawPL: h.pl,
+        });
+      });
+
+      // India holdings (non-cash)
+      indiaExCash.forEach(h => {
+        const valUSD = h.currentValue / INR_USD_RATE;
+        items.push({
+          ticker: h.ticker, name: h.name,
+          valueUSD: valUSD, retPct: h.pnlPct, plUSD: h.pnl / INR_USD_RATE,
+          invUSD: h.investment / INR_USD_RATE,
+          type: 'india', isIndia: true, isCash: false,
+          displayValue: fmtIndiaC(h.currentValue),
+          displayReturn: fmtP(h.pnlPct),
+          // For detail view
+          rawInvINR: h.investment, rawCurINR: h.currentValue, rawPLINR: h.pnl,
+          qty: h.qty, avgBuy: h.avgBuy,
+        });
+      });
+
+      // Cash positions
+      const smtcPL = LIQUID_BALANCE - LIQUID_INVESTED;
+      const smtcRet = LIQUID_INVESTED > 0 ? (smtcPL / LIQUID_INVESTED * 100) : 0;
+      items.push({
+        ticker: 'SMTC', name: 'iShares USD Money Market UCITS',
+        valueUSD: LIQUID_BALANCE, retPct: smtcRet, plUSD: smtcPL,
+        invUSD: LIQUID_INVESTED,
+        type: 'cash', isIndia: false, isCash: true,
+        displayValue: fmtC(LIQUID_BALANCE),
+        displayReturn: fmtP(smtcRet),
+        rawInv: LIQUID_INVESTED, rawCur: LIQUID_BALANCE, rawPL: smtcPL,
+      });
+
+      if (liquidCase) {
+        const lcValUSD = liquidCase.currentValue / INR_USD_RATE;
+        items.push({
+          ticker: 'LIQUIDCASE', name: 'Zerodha Nifty 1D Rate Liquid ETF',
+          valueUSD: lcValUSD, retPct: liquidCase.pnlPct, plUSD: liquidCase.pnl / INR_USD_RATE,
+          invUSD: liquidCase.investment / INR_USD_RATE,
+          type: 'cash', isIndia: true, isCash: true,
+          displayValue: fmtIndiaC(liquidCase.currentValue),
+          displayReturn: fmtP(liquidCase.pnlPct),
+          rawInvINR: liquidCase.investment, rawCurINR: liquidCase.currentValue, rawPLINR: liquidCase.pnl,
+          qty: liquidCase.qty, avgBuy: liquidCase.avgBuy,
+        });
+      }
+
+      // Filter
+      if (holdingsFilter === 'global') items = items.filter(i => i.type === 'global' || (i.type === 'cash' && !i.isIndia));
+      else if (holdingsFilter === 'india') items = items.filter(i => i.isIndia);
+      else if (holdingsFilter === 'cash') items = items.filter(i => i.isCash);
+
+      // Sort by value descending
+      items.sort((a, b) => b.valueUSD - a.valueUSD);
+
+      // VP 6: Segment summary for filtered views
+      if (holdingsFilter === 'india' || holdingsFilter === 'global' || holdingsFilter === 'cash') {
+        const segTotalValue = items.reduce((s, i) => s + i.valueUSD, 0);
+        const segTotalInv = items.reduce((s, i) => s + i.invUSD, 0);
+        const segTotalPL = items.reduce((s, i) => s + i.plUSD, 0);
+        const segRet = segTotalInv > 0 ? (segTotalPL / segTotalInv * 100) : 0;
+
+        const summaryDiv = document.createElement('div');
+        summaryDiv.className = 'india-summary';
+
+        const valDiv = document.createElement('div');
+        valDiv.className = 'india-summary-value';
+        if (holdingsFilter === 'india') {
+          // Show in INR for India tab
+          const indiaINRValue = items.reduce((s, i) => s + (i.rawCurINR || i.valueUSD * INR_USD_RATE), 0);
+          valDiv.textContent = displayCurrency === 'INR' ? ("₹" + indiaINRValue.toLocaleString("en-IN", {minimumFractionDigits:2, maximumFractionDigits:2})) : fmtC(segTotalValue);
+        } else {
+          valDiv.textContent = fmtC(segTotalValue);
+        }
+        summaryDiv.appendChild(valDiv);
+
+        const retDiv = document.createElement('div');
+        retDiv.className = 'india-summary-return ' + (segRet >= 0 ? 'positive' : 'negative');
+        retDiv.textContent = fmtP(segRet);
+        summaryDiv.appendChild(retDiv);
+
+        container.appendChild(summaryDiv);
+      }
+
+      const INITIAL_SHOW = 8;
+      const displayItems = holdingsShowAll ? items : items.slice(0, INITIAL_SHOW);
+
+      displayItems.forEach(item => {
+        const wrapper = document.createElement('div');
+
+        const row = document.createElement('div');
+        row.className = 'holding-row';
+        const retClass = item.retPct >= 0 ? 'positive' : 'negative';
+
+        // UX 6: Portfolio weight
+        const weight = totalWithLiquid > 0 ? (item.valueUSD / totalWithLiquid * 100).toFixed(1) : '0.0';
+
+        row.innerHTML = '<div class="holding-left">' +
+          '<div class="holding-ticker">' + item.ticker + '</div>' +
+          '<div class="holding-name">' + item.name + '</div>' +
+          '</div>' +
+          '<div class="holding-right">' +
+          '<div class="holding-value">' + item.displayValue + '</div>' +
+          '<div class="holding-return ' + retClass + '">' + item.displayReturn + '</div>' +
+          '<div class="holding-weight">' + weight + '% of portfolio</div>' +
+          '</div>';
+
+        // VP 3: Create detail panel
+        const detail = document.createElement('div');
+        detail.className = 'holding-detail';
+
+        if (item.isIndia && item.rawInvINR !== undefined) {
+          // India holdings detail
+          detail.innerHTML =
+            '<div class="detail-row"><span>Invested</span><span>' + fmtIndiaC(item.rawInvINR) + '</span></div>' +
+            '<div class="detail-row"><span>Current</span><span>' + fmtIndiaC(item.rawCurINR) + '</span></div>' +
+            '<div class="detail-row"><span>P&L</span><span class="' + (item.rawPLINR >= 0 ? 'positive' : 'negative') + '" style="color:' + (item.rawPLINR >= 0 ? 'var(--green)' : 'var(--red)') + '">' + fmtIndiaSgnC(item.rawPLINR) + '</span></div>' +
+            (item.qty ? '<div class="detail-row"><span>Qty</span><span>' + item.qty.toLocaleString() + '</span></div>' : '') +
+            (item.avgBuy ? '<div class="detail-row"><span>Avg Buy Price</span><span>₹' + item.avgBuy.toFixed(2) + '</span></div>' : '');
+        } else {
+          // Global / cash holdings detail
+          const invVal = item.rawInv !== undefined ? item.rawInv : item.invUSD;
+          const curVal = item.rawCur !== undefined ? item.rawCur : item.valueUSD;
+          const plVal = item.rawPL !== undefined ? item.rawPL : item.plUSD;
+          detail.innerHTML =
+            '<div class="detail-row"><span>Invested</span><span>' + fmtC(invVal) + '</span></div>' +
+            '<div class="detail-row"><span>Current</span><span>' + fmtC(curVal) + '</span></div>' +
+            '<div class="detail-row"><span>P&L</span><span style="color:' + (plVal >= 0 ? 'var(--green)' : 'var(--red)') + '">' + fmtSgnC(plVal) + '</span></div>' +
+            '<div class="detail-row"><span>Weight</span><span>' + weight + '%</span></div>' +
+            (item.sleeve ? '<div class="detail-row"><span>Sleeve</span><span>' + (item.sleeve === 'core' ? 'Core' : 'Satellite') + '</span></div>' : '') +
+            (item.sub ? '<div class="detail-row"><span>Theme</span><span>' + item.sub + '</span></div>' : '');
+        }
+
+        // Click to toggle detail
+        row.addEventListener('click', () => {
+          detail.classList.toggle('open');
+        });
+
+        wrapper.appendChild(row);
+        wrapper.appendChild(detail);
+        container.appendChild(wrapper);
+      });
+
+      if (items.length > INITIAL_SHOW && !holdingsShowAll) {
+        showAllBtn.style.display = 'block';
+        showAllBtn.textContent = 'Show all ' + items.length + ' holdings';
+        showAllBtn.onclick = () => { holdingsShowAll = true; renderHoldings(); };
+      } else {
+        showAllBtn.style.display = 'none';
+      }
+    }
+
+    function renderAllocation(etfTotal, indiaEquityUSD) {
+      const segments = [
+        { label: 'Global ETFs', value: etfTotal, color: '#00C805' },
+        { label: 'India Portfolio', value: indiaEquityUSD, color: '#1D9E75' },
+        { label: 'USD MMF', value: LIQUID_BALANCE, color: '#378ADD' },
+        { label: 'INR Liquid', value: INR_LIQUID_VALUE / INR_USD_RATE, color: '#BA7517' },
+      ];
+      const total = segments.reduce((s, seg) => s + seg.value, 0);
+
+      // Chart
+      const ctx = document.getElementById('chartAllocation');
+      if (charts['chartAllocation']) charts['chartAllocation'].destroy();
+      charts['chartAllocation'] = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: segments.map(s => s.label),
+          datasets: [{
+            data: segments.map(s => s.value),
+            backgroundColor: segments.map(s => s.color),
+            borderWidth: 2, borderColor: '#FFFFFF',
+            hoverOffset: 4,
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: true,
+          cutout: '65%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1B1B1B', titleColor: '#fff', bodyColor: '#fff',
+              borderWidth: 0, padding: 8, displayColors: false,
+              callbacks: {
+                label: function(ctx) {
+                  const val = ctx.parsed;
+                  return fmtC(val) + ' (' + (val / total * 100).toFixed(1) + '%)';
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // Legend
+      const legend = document.getElementById('allocationLegend');
+      legend.innerHTML = '';
+      segments.forEach(seg => {
+        const pct = (seg.value / total * 100).toFixed(1);
+        const item = document.createElement('div');
+        item.className = 'legend-item';
+        item.innerHTML = '<div class="legend-dot" style="background:' + seg.color + '"></div>' +
+          '<span class="legend-label">' + seg.label + '</span>' +
+          '<span class="legend-pct">' + pct + '%</span>';
+        legend.appendChild(item);
+      });
+    }
+
+    function renderAlerts() {
+      const alerts = [];
+
+      holdings.forEach(h => {
+        if (h.ret <= -3) {
+          alerts.push({
+            type: h.ret <= -10 ? 'danger' : 'warning',
+            ticker: h.tk,
+            message: 'Down ' + h.ret.toFixed(2) + '% -- ' + (h.ret <= -10 ? 'significant loss, review position' : 'underperforming, monitor closely'),
+            value: fmtSgnC(h.pl),
+            color: 'var(--red)'
+          });
+        }
+        if (Math.abs(h.ret) <= 2 && h.inv > 500) {
+          alerts.push({
+            type: 'info', ticker: h.tk,
+            message: 'Near cost basis (' + fmtP(h.ret) + ') -- watch for break-even cross',
+            value: fmtC(h.cur), color: '#F57F17'
+          });
+        }
+      });
+
+      const indiaExCash = indiaHoldings.filter(h => h.ticker !== 'LIQUIDCASE');
+      indiaExCash.forEach(h => {
+        if (h.pnlPct <= -3) {
+          alerts.push({
+            type: h.pnlPct <= -10 ? 'danger' : 'warning',
+            ticker: h.ticker,
+            message: 'Down ' + h.pnlPct.toFixed(2) + '% -- ' + (h.pnlPct <= -10 ? 'significant loss' : 'underperforming'),
+            value: fmtIndiaSgnC(h.pnl), color: 'var(--red)'
+          });
+        }
+      });
+
+      const today = new Date();
+      const t4 = new Date(2026, 4, 6);
+      const daysToT4 = Math.ceil((t4 - today) / (1000 * 60 * 60 * 24));
+      if (daysToT4 > 0 && daysToT4 <= 7) {
+        alerts.push({
+          type: 'info', ticker: 'DCA',
+          message: 'Tranche T4 due in ' + daysToT4 + ' day' + (daysToT4 > 1 ? 's' : '') + ' -- prepare funding',
+          value: '', color: 'var(--accent)'
+        });
+      }
+
+      const section = document.getElementById('alertsSection');
+      const list = document.getElementById('alertsList');
+      const count = document.getElementById('alertsCount');
+      const chipAlerts = document.getElementById('chipAlerts');
+
+      if (alerts.length === 0) {
+        section.style.display = 'none';
+        chipAlerts.style.display = 'none';
+        return;
+      }
+
+      section.style.display = 'block';
+      chipAlerts.style.display = 'inline-block';
+      chipAlerts.textContent = alerts.length + ' alert' + (alerts.length > 1 ? 's' : '');
+      count.textContent = alerts.length;
+      list.innerHTML = '';
+
+      alerts.sort((a, b) => (a.type === 'danger' ? 0 : a.type === 'warning' ? 1 : 2) - (b.type === 'danger' ? 0 : b.type === 'warning' ? 1 : 2));
+
+      alerts.forEach(a => {
+        const div = document.createElement('div');
+        div.className = 'alert-item';
+        div.innerHTML = '<span class="alert-ticker">' + a.ticker + '</span>' +
+          '<span class="alert-message">' + a.message + '</span>' +
+          '<span class="alert-value" style="color:' + a.color + '">' + a.value + '</span>';
+        list.appendChild(div);
+      });
+    }
+
+    // Bug 2: XSS fix -- use textContent instead of innerHTML for user-supplied data
+    async function renderNews() {
+      const newsList = document.getElementById("newsList");
+      newsList.innerHTML = '';
+      const loadingDiv = document.createElement('div');
+      loadingDiv.style.cssText = 'color:var(--text-tertiary);font-size:13px;padding:16px 0;';
+      loadingDiv.textContent = 'Loading news...';
+      newsList.appendChild(loadingDiv);
+
+      try {
+        const res = await fetch('https://finnhub.io/api/v1/news?category=general&token=demo');
+        const articles = await res.json();
+        if (!articles || articles.length === 0) throw new Error('No articles');
+
+        const allTickers = [...holdings.map(h => h.tk), ...indiaHoldings.map(h => h.ticker)];
+        const keywords = ['ETF', 'emerging market', 'copper', 'uranium', 'nuclear', 'AI', 'cybersecurity', 'gold', 'India', 'Nifty', 'infrastructure', 'robotics', 'healthcare', 'Brazil', 'Vietnam', 'China', 'money market', 'Fed', 'rate', 'tariff'];
+
+        const scored = articles.slice(0, 50).map(a => {
+          const text = (a.headline + ' ' + (a.summary || '')).toLowerCase();
+          let score = 0;
+          allTickers.forEach(t => { if (text.includes(t.toLowerCase())) score += 3; });
+          keywords.forEach(k => { if (text.includes(k.toLowerCase())) score += 1; });
+          return { ...a, score };
+        }).filter(a => a.score > 0).sort((a, b) => b.score - a.score).slice(0, 6);
+
+        const display = scored.length > 0 ? scored : articles.slice(0, 5);
+
+        newsList.innerHTML = '';
+        display.forEach(item => {
+          const date = new Date(item.datetime * 1000);
+          const ago = getTimeAgo(date);
+
+          const div = document.createElement("div");
+          div.className = 'news-item';
+
+          const contentDiv = document.createElement('div');
+          contentDiv.className = 'news-content';
+
+          const headlineDiv = document.createElement('div');
+          headlineDiv.className = 'news-headline';
+          headlineDiv.textContent = item.headline;
+          contentDiv.appendChild(headlineDiv);
+
+          const metaDiv = document.createElement('div');
+          metaDiv.className = 'news-meta';
+          metaDiv.textContent = item.source + ' · ' + ago;
+          contentDiv.appendChild(metaDiv);
+
+          div.appendChild(contentDiv);
+
+          if (item.score > 2) {
+            const tag = document.createElement('span');
+            tag.className = 'news-tag';
+            tag.textContent = 'Relevant';
+            div.appendChild(tag);
+          }
+
+          div.addEventListener('click', () => window.open(item.url, '_blank'));
+          newsList.appendChild(div);
+        });
+      } catch (e) {
+        console.warn('News fetch failed, using fallback:', e);
+        newsList.innerHTML = '';
+        (typeof newsItems !== 'undefined' ? newsItems : []).forEach(item => {
+          const div = document.createElement("div");
+          div.className = 'news-item';
+
+          const contentDiv = document.createElement('div');
+          contentDiv.className = 'news-content';
+
+          const headlineDiv = document.createElement('div');
+          headlineDiv.className = 'news-headline';
+          headlineDiv.textContent = item.headline;
+          contentDiv.appendChild(headlineDiv);
+
+          const metaDiv = document.createElement('div');
+          metaDiv.className = 'news-meta';
+          metaDiv.textContent = item.sentiment;
+          contentDiv.appendChild(metaDiv);
+
+          // Bug 3: Actually create the .news-body element for fallback news
+          if (item.body) {
+            const bodyP = document.createElement('p');
+            bodyP.className = 'news-body';
+            bodyP.textContent = item.body;
+            bodyP.style.display = 'none';
+            contentDiv.appendChild(bodyP);
+          }
+
+          div.appendChild(contentDiv);
+
+          const tag = item.themes && item.themes[0] ? item.themes[0] : '';
+          if (tag) {
+            const tagEl = document.createElement('span');
+            tagEl.className = 'news-tag';
+            tagEl.textContent = tag;
+            div.appendChild(tagEl);
+          }
+
+          div.addEventListener("click", () => {
+            const body = div.querySelector('.news-body');
+            if (body) body.style.display = body.style.display === 'block' ? 'none' : 'block';
+          });
+          newsList.appendChild(div);
+        });
+      }
+    }
+
+    function getTimeAgo(date) {
+      const seconds = Math.floor((new Date() - date) / 1000);
+      if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+      if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+      return Math.floor(seconds / 86400) + 'd ago';
     }
 
     // ========== Utility Functions ==========
-    function animateValue(el, target, prefix = "$", duration = 1500) {
+    function animateValue(el, target, prefix = "$", duration = 1200) {
       const start = performance.now();
-      const format = n => {
-        const val = Math.floor(n);
-        return prefix + val.toLocaleString("en-US");
-      };
-
+      const locale = prefix === "₹" ? "en-IN" : "en-US";
+      const format = n => prefix + Math.floor(n).toLocaleString(locale);
       function step(now) {
         const progress = Math.min((now - start) / duration, 1);
         const eased = 1 - Math.pow(1 - progress, 3);
         el.textContent = format(target * eased);
-
         if (progress < 1) {
           requestAnimationFrame(step);
         } else {
-          el.textContent = fmt$(target);
+          if (prefix === "₹") el.textContent = "₹" + Math.abs(target).toLocaleString("en-IN", {minimumFractionDigits:2, maximumFractionDigits:2});
+          else if (prefix === "د.إ") el.textContent = "د.إ" + Math.abs(target).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+          else el.textContent = fmt$(target);
         }
       }
-
       requestAnimationFrame(step);
-    }
-
-    function updateRefreshTime() {
-      const now = new Date();
-      const h = String(now.getHours()).padStart(2, "0");
-      const m = String(now.getMinutes()).padStart(2, "0");
-      document.getElementById("refreshTime").textContent = h + ":" + m;
     }
   </script>
 </body>

@@ -1972,7 +1972,7 @@
               <span id="heroDailyYield">+$0.00</span> daily yield
             </div>
           </div>
-          <div class="hero-subtitle">ETFs + Liquid Fund · 2 tranches deployed</div>
+          <div class="hero-subtitle">ETFs + Liquid Fund · 3 tranches deployed</div>
         </section>
 
         <!-- KPI Grid -->
@@ -2045,26 +2045,32 @@
           </div>
         </section>
 
-        <!-- Liquid Fund Card -->
+        <!-- Cash & Liquidity Card -->
         <section class="liquid-card">
-          <div class="liquid-title">Liquid Fund (MMF)</div>
+          <div class="liquid-title">Cash & Liquidity</div>
           <div class="liquid-grid">
             <div class="liquid-item">
-              <div class="liquid-item-label">Balance</div>
+              <div class="liquid-item-label">USD MMF (SMTC)</div>
               <div class="liquid-item-value" id="liquidBalance">$0.00</div>
+              <div style="font-size:10px;color:var(--text-dim);margin-top:2px" id="liquidPnlUSD"></div>
             </div>
             <div class="liquid-item">
-              <div class="liquid-item-label">Daily Accrual</div>
-              <div class="liquid-item-value" id="liquidDaily">$0.00</div>
+              <div class="liquid-item-label">INR Liquid (LIQUIDCASE)</div>
+              <div class="liquid-item-value" id="liquidINR">₹0</div>
+              <div style="font-size:10px;color:var(--text-dim);margin-top:2px" id="liquidPnlINR"></div>
+            </div>
+            <div class="liquid-item">
+              <div class="liquid-item-label">Total Cash (USD eq.)</div>
+              <div class="liquid-item-value" id="liquidTotal">$0.00</div>
             </div>
             <div class="liquid-item">
               <div class="liquid-item-label">Dry Powder</div>
               <div class="liquid-item-value" id="liquidDryPowder">$0.00</div>
             </div>
-            <div class="liquid-item">
-              <div class="liquid-item-label">Yield Badge</div>
-              <div class="liquid-yield" id="liquidYield">3.64% p.a.</div>
-            </div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:8px;justify-content:center">
+            <div class="liquid-yield">SMTC 3.64% p.a.</div>
+            <div class="liquid-yield">LIQUIDCASE 6.5% p.a.</div>
           </div>
         </section>
 
@@ -2152,6 +2158,36 @@
           </div>
         </section>
 
+        <!-- India Holdings Section -->
+        <section class="section-header" id="indiaHeader">
+          <h3>India Holdings</h3>
+          <span class="section-chevron" id="indiaChevron">▸</span>
+        </section>
+        <section class="section-content collapsed" id="indiaContent">
+          <div class="section-body">
+            <div class="holdings-summary" id="indiaSummary" style="margin-bottom:12px;color:var(--text-dim);font-size:13px;"></div>
+            <div class="holdings-table-wrap">
+              <table class="holdings-table" id="indiaTable">
+                <thead>
+                  <tr>
+                    <th>Ticker</th>
+                    <th>Name</th>
+                    <th>Exchange</th>
+                    <th style="text-align:right;">Qty</th>
+                    <th style="text-align:right;">Avg Buy (₹)</th>
+                    <th style="text-align:right;">Current (₹)</th>
+                    <th style="text-align:right;">Value (₹)</th>
+                    <th style="text-align:right;">P&L (₹)</th>
+                    <th style="text-align:right;">P&L%</th>
+                  </tr>
+                </thead>
+                <tbody id="indiaBody"></tbody>
+              </table>
+            </div>
+            <div class="holdings-cards" id="indiaCards"></div>
+          </div>
+        </section>
+
         <!-- DCA Section -->
         <section class="section-header" id="dcaHeader">
           <h3>DCA Tranche Tracker</h3>
@@ -2175,11 +2211,11 @@
                   <div class="dca-status">Funded</div>
                 </div>
               </div>
-              <div class="dca-tranche">
+              <div class="dca-tranche funded">
                 <div class="dca-circle">T3</div>
                 <div class="dca-info">
-                  <div class="dca-label">Apr 22</div>
-                  <div class="dca-status">Scheduled</div>
+                  <div class="dca-label">Apr 29</div>
+                  <div class="dca-status">Funded</div>
                 </div>
               </div>
               <div class="dca-tranche">
@@ -2325,7 +2361,7 @@
     <section class="strategy-section" id="strategySection">
       <div class="strategy-hero">
         <h2>Portfolio Construction & Strategy</h2>
-        <p>A disciplined UCITS ETF portfolio targeting ~$100,000 deployed via bi-weekly DCA into core global equity (70%) and thematic satellite (30%) positions. ~30% deployed to date across two tranches. Undeployed capital and dry powder earn daily yield in a liquid money market fund.</p>
+        <p>A disciplined UCITS ETF portfolio targeting ~$100,000 deployed via bi-weekly DCA into core global equity (70%) and thematic satellite (30%) positions. ~43% deployed to date across three tranches. Undeployed capital and dry powder earn daily yield in a liquid money market fund.</p>
       </div>
 
       <!-- Allocation Overview -->
@@ -2333,7 +2369,7 @@
         <div class="strategy-card">
           <h3>ETF Deployment Plan</h3>
           <div class="card-value" style="color:var(--accent-teal)">$100,000</div>
-          <div class="card-desc">Target ETF capital across 5 bi-weekly DCA tranches (Core 70% / Thematic 30%). ~$29K deployed via T1 & T2. ~$71K remaining across T3–T5, currently earning yield in the MMF until deployment. Plan finalised 23 March 2026 with Advisor Daniel Lee, Vault Wealth ADGM.</div>
+          <div class="card-desc">Target ETF capital across 5 bi-weekly DCA tranches (Core 70% / Thematic 30%). ~$43K deployed via T1, T2 & T3. ~$57K remaining across T4–T5, currently earning yield in the MMF until deployment. Plan finalised 23 March 2026 with Advisor Daniel Lee, Vault Wealth ADGM.</div>
         </div>
         <div class="strategy-card gold">
           <h3>Liquid Fund & Dry Powder</h3>
@@ -2443,8 +2479,8 @@
         <div class="strategy-card gold">
           <h3>DCA Deployment & Cash Strategy</h3>
           <div class="card-desc" style="line-height:1.7">
-            <strong style="color:var(--accent-gold)">Bi-weekly Dollar Cost Averaging</strong> — $100K is being deployed across 5 tranches over ~10 weeks to smooth market timing risk. T1 ($21,550) and T2 ($21,550) are funded. T3–T5 deploy the remaining ~$57K over the next 3 tranches. Each tranche invests proportionally across all 16 ETFs per sleeve targets.<br><br>
-            <strong style="color:var(--accent-gold)">Liquid Money Market Fund</strong> — All undeployed capital sits in a UCITS-compliant MMF earning 3.64% p.a., compounded daily (~$12/day). This is not idle cash — it generates yield while awaiting each successive DCA deployment. The MMF currently holds ~$121K covering both remaining tranches and dry powder.<br><br>
+            <strong style="color:var(--accent-gold)">Bi-weekly Dollar Cost Averaging</strong> — $100K is being deployed across 5 tranches over ~10 weeks to smooth market timing risk. T1 ($21,550), T2 ($21,550) and T3 ($13,596) are funded. T4–T5 deploy the remaining ~$43K over the next 2 tranches. Each tranche invests proportionally across all 16 ETFs per sleeve targets.<br><br>
+            <strong style="color:var(--accent-gold)">Cash & Liquidity</strong> — Two liquid positions earning daily yield: <strong>SMTC</strong> (iShares USD MMF, LON) earning 3.64% p.a. (~$12/day) holds the undeployed DCA capital and dry powder (~$108K). <strong>LIQUIDCASE</strong> (Zerodha Nifty 1D Rate Liquid ETF, NSE) earning ~6.5% p.a. holds ₹38.5 lakh in INR liquidity. Combined cash: ~$149K equivalent. Neither position is idle — both generate yield while awaiting deployment.<br><br>
             <strong style="color:var(--accent-gold)">Dry Powder (~$50K)</strong> — Capital beyond the $100K ETF deployment plan is held as a tactical reserve in the same MMF. This dry powder serves two purposes: (1) attack opportunities on significant pullbacks in existing themes (e.g. WCBR's -14.6% cybersecurity dip), and (2) position ahead of anticipated market momentum in the lead-up to the US midterm election cycle, where historical patterns show equity tailwinds.
           </div>
         </div>
@@ -2461,12 +2497,34 @@
   <script>
     // ========== Configuration ==========
     const REFRESH_MS = 120000;
-    const LIQUID_BALANCE = 120825.60;
+    let LIQUID_BALANCE = 108024.50;  // USD MMF (SMTC) — updated from CSV
+    let LIQUID_INVESTED = 107673.82; // USD MMF invested — updated from CSV
     const LIQUID_RATE = 0.0364;
-    const LIQUID_DAILY = LIQUID_BALANCE * LIQUID_RATE / 365;
+    let LIQUID_DAILY = LIQUID_BALANCE * LIQUID_RATE / 365;
     const ETF_TARGET = 100000;
 
+    // India Liquid Fund (LIQUIDCASE) — updated from CSV or India Holdings
+    let INR_LIQUID_INVESTED = 3854920;
+    let INR_LIQUID_VALUE = 3869880;
+    let INR_LIQUID_PNL = 14960;
+    const INR_LIQUID_RATE = 0.065; // ~6.5% p.a.
+    const INR_USD_RATE = 94.87; // INR per USD
+
     const KNOWN_TICKERS = ["VHVE","JREG","JPGL","JREM","AINF","MLPS","BRIJ","RBOT","NCLR","COPX","RARE","HEAL","WCBR","IDBZ","XVTD","KWEB"];
+
+    const FULLY_ALLOCATED = ['RARE', 'IDBZ', 'XVTD', 'MLPS'];
+
+    const INDIA_HOLDINGS = [
+      { ticker: 'GOLDCASE', name: 'Zerodha Gold ETF', exchange: 'NSE', qty: 25963, avgBuy: 21.83, investment: 566772, currentPrice: 23.18, currentValue: 601822, pnl: 35050, pnlPct: 6.18 },
+      { ticker: 'NIFTYBEES', name: 'Nippon India ETF Nifty 50 BeES', exchange: 'NSE', qty: 4409, avgBuy: 274.64, investment: 1210888, currentPrice: 273.00, currentValue: 1203657, pnl: -7231, pnlPct: -0.60 },
+      { ticker: 'LIQUIDCASE', name: 'Zerodha Nifty 1D Rate Liquid ETF', exchange: 'NSE', qty: 34000, avgBuy: 113.38, investment: 3854920, currentPrice: 113.82, currentValue: 3869880, pnl: 14960, pnlPct: 0.39 },
+      { ticker: 'SILVERBEES', name: 'Nippon India Silver ETF', exchange: 'NSE', qty: 5000, avgBuy: 110.25, investment: 551250, currentPrice: 224.25, currentValue: 1121250, pnl: 570000, pnlPct: 103.40 },
+      { ticker: 'GOLDBEES', name: 'Nippon India ETF Gold BeES', exchange: 'NSE', qty: 5000, avgBuy: 85.20, investment: 426000, currentPrice: 121.59, currentValue: 607950, pnl: 181950, pnlPct: 42.71 },
+      { ticker: 'GENUSPOWER', name: 'Genus Power Infrastructure Ltd', exchange: 'NSE', qty: 1000, avgBuy: 267.43, investment: 267430, currentPrice: 311.10, currentValue: 311100, pnl: 43670, pnlPct: 16.33 },
+      { ticker: 'JIOFIN', name: 'Jio Financial Services Ltd', exchange: 'NSE', qty: 400, avgBuy: 309.45, investment: 123780, currentPrice: 250.70, currentValue: 100280, pnl: -23500, pnlPct: -18.99 },
+      { ticker: 'EIHOTEL', name: 'EIH Ltd', exchange: 'NSE', qty: 150, avgBuy: 112.85, investment: 16928, currentPrice: 323.35, currentValue: 48503, pnl: 31575, pnlPct: 186.53 },
+      { ticker: '544080', name: 'Sayaji Hotels Indore Ltd', exchange: 'BOM', qty: 64, avgBuy: 721.24, investment: 46159, currentPrice: 944.00, currentValue: 60416, pnl: 14257, pnlPct: 30.89 }
+    ];
 
     const SUB_THEME_MAP = {
       JREG:"Global Developed", VHVE:"Global Developed", JPGL:"Multi-Factor", JREM:"Emerging Markets",
@@ -2506,12 +2564,20 @@
     ];
 
     const newsItems = [
-      {sentiment:"negative",headline:"Stryker Cyberattack Impacts Q1 — Highlights Cyber Risk",body:"Medical device manufacturer Stryker suffered an Iran-linked cyberattack in March affecting Q1 results. Company now fully operational with no material 2026 guidance impact. Incident highlights cybersecurity vulnerabilities in critical infrastructure sectors.",themes:["WCBR","Cybersecurity"]},
-      {sentiment:"positive",headline:"Copper Demand Surges on AI Data Centre Build-Out",body:"Copper prices reached $6.01/lbs, up 30.6% YoY. Single large AI data centres require up to 50,000 metric tons of copper. COPX benefiting from hyperscale infrastructure expansion and Freeport-McMoRan restoring Grasberg complex.",themes:["COPX","AI Infra"]},
-      {sentiment:"positive",headline:"Rare Earth ETF Gains on Tech Demand Momentum",body:"RARE up ~9% on strong institutional buying in April. VanEck rare earth fund tracking materials vital for AI, EVs, and semiconductors. Institutional investors including Sowell Financial took substantial positions.",themes:["RARE","Tech Demand"]},
-      {sentiment:"neutral",headline:"China Tech Earnings Weak but 2026 Outlook Bullish",body:"Chinese tech reported weakest earnings in 3 years (Q4 2025), but UBS and Goldman Sachs forecast strong 2026 growth driven by AI innovation. MSCI China predicted to rise 20% by year-end.",themes:["KWEB","Earnings Watch"]},
-      {sentiment:"positive",headline:"Brazil Market Rebounds on Commodity Strength",body:"IDBZ up 7.7% as emerging market rotation favours Latin America. Broader EM recovery on copper, rare earth, and infrastructure tailwinds. Rate-cut cycle supporting equity valuations.",themes:["IDBZ","EM Recovery"]},
-      {sentiment:"positive",headline:"Nuclear Momentum: Bipartisan Support & Permit Fast-Track",body:"NCLR benefiting from federal backing including new tax credits and NRC streamlining. Duke Energy filing early site permits signals major new project pipeline for uranium demand.",themes:["NCLR","Energy Policy"]},
+      // === USA / GLOBAL ETF NEWS ===
+      {sentiment:"positive",headline:"Copper Surges to $12,951/mt on AI & Grid Demand",body:"Copper climbed from ~$9,173/mt a year ago to nearly $12,951/mt in early 2026 — driven by EV, data-centre, and grid-electrification demand. COPX benefiting directly; SETM returned ~173% over trailing twelve months.",themes:["COPX","AI Infra"]},
+      {sentiment:"positive",headline:"EM ETFs Pull In $35B+ YTD — Dollar Weakness Fuels Flows",body:"Emerging market ETFs gathered over $35 billion in 2026, already surpassing full-year totals from recent years. Weaker dollar, resilient semiconductor demand (Taiwan, Korea), and renewed flows into China & India driving the trend.",themes:["IDBZ","XVTD","KWEB","EM Rally"]},
+      {sentiment:"positive",headline:"Uranium Outlook: Renewed Contracting & Policy Tailwinds",body:"Sprott highlights potential for renewed uranium contracting and higher prices in 2026. Pivotal US policy decisions — including tax credits and NRC streamlining — are likely to boost demand for nuclear power. NCLR well-positioned.",themes:["NCLR","Energy Policy"]},
+      {sentiment:"negative",headline:"US-Iran Tensions Rattle Markets, Brent Crude at $112",body:"Escalating US-Iran conflict pushing Brent crude to ~$112/barrel. EM flows initially held up but turned to consecutive outflows. Risk-off sentiment across global equities, though commodity-linked positions benefiting.",themes:["Macro","Geopolitical"]},
+      {sentiment:"positive",headline:"Gold & Silver Hit All-Time Highs as Haven Demand Surges",body:"Gold surged to record highs, with 24K gold at ₹15,370/g in India. Silver trading at ~$75/oz globally, rebounding 3% after March correction. Investors seeking safety amid geopolitical uncertainty.",themes:["GOLDBEES","SILVERBEES","Safe Haven"]},
+      {sentiment:"negative",headline:"Stryker Cyberattack Highlights Critical Infra Risk",body:"Medical device manufacturer Stryker suffered an Iran-linked cyberattack in March affecting Q1 results. Now fully operational with no material 2026 guidance impact. Incident underscores cybersecurity investment thesis.",themes:["WCBR","Cybersecurity"]},
+      // === INDIA PORTFOLIO NEWS ===
+      {sentiment:"positive",headline:"🇮🇳 GOLDBEES Delivers 24.8% CAGR Over 5 Years",body:"Nippon India ETF Gold BeES trading at ₹123.42 (52-week high: ₹148.14). AUM crossed ₹54,127 Cr. Gold's safe-haven appeal continues to drive inflows amid global uncertainty and wedding-season demand in India.",themes:["GOLDBEES","India Gold"]},
+      {sentiment:"positive",headline:"🇮🇳 Silver ETF Rebounds — SILVERBEES Up on Industrial Demand",body:"Silver trading at ~₹2,28,515/kg in India, rebounding 3% after a 44% March correction. Industrial demand from solar panels and electronics supporting prices alongside macro-driven relief rally.",themes:["SILVERBEES","India Silver"]},
+      {sentiment:"negative",headline:"🇮🇳 Nifty Below 24,100 — Oil & FII Outflows Weigh",body:"Nifty stays under pressure amid elevated Brent crude ($112/bbl) and continued foreign outflows. Sensex recovering modestly to 77,221 but gains limited. RBI's new ECL framework adds banking sector pressure.",themes:["NIFTYBEES","India Macro"]},
+      {sentiment:"neutral",headline:"🇮🇳 Jio Financial Climbs 3.2% but Profit Falls 14% YoY",body:"JIOFIN rose to ₹253.64 with robust trading activity, but Q1 profit fell 13.88% YoY to ₹272 Cr. P/E ratio at 90-130x vs sector average of 21x — rich valuation limits upside near-term.",themes:["JIOFIN","India Fintech"]},
+      {sentiment:"positive",headline:"🇮🇳 EIH Hotels: 7% Revenue Growth, Occupancy Rising",body:"EIH Ltd (Oberoi Hotels) demonstrated resilience with 7% revenue growth in Q3 FY26 and 14% like-for-like increase. Occupancy improving with 9-11% rise in Average Room Rate. Tourism tailwind intact.",themes:["EIHOTEL","India Tourism"]},
+      {sentiment:"positive",headline:"🇮🇳 Genus Power — Smart Meter Rollout Accelerating",body:"Genus Power Infrastructure benefiting from India's massive smart meter deployment program. Government targeting 250M smart meters by 2028. Power infrastructure capex cycle remains strong with rising rural electrification demand.",themes:["GENUSPOWER","India Infra"]},
     ];
 
     // ========== Formatting Functions ==========
@@ -2613,8 +2679,8 @@
       };
 
       // 1. Capital Structure doughnut
-      // ETF deployed ~$29K, ETF pending ~$71K, Dry powder ~$50K
-      const deployed = holdings.reduce((s,h) => s+h.inv, 0) || 28995;
+      // ETF deployed ~$43K, ETF pending ~$57K, Dry powder ~$50K
+      const deployed = holdings.reduce((s,h) => s+h.inv, 0) || 42591;
       const pending = Math.max(0, ETF_TARGET - deployed);
       const dryPowder = Math.max(0, LIQUID_BALANCE - pending);
 
@@ -2623,7 +2689,7 @@
         strategyCharts.push(new Chart(ctx1, {
           type: "doughnut",
           data: {
-            labels: ["ETF Deployed (~30%)", "Pending Deployment (MMF)", "Dry Powder (MMF)"],
+            labels: ["ETF Deployed (~43%)", "Pending Deployment (MMF)", "Dry Powder (MMF)"],
             datasets: [{
               data: [Math.round(deployed), Math.round(pending), Math.round(dryPowder)],
               backgroundColor: ["rgba(79,209,197,0.85)", "rgba(246,198,103,0.7)", "rgba(139,124,246,0.6)"],
@@ -2648,7 +2714,7 @@
               c.fillStyle = "rgba(139,151,176,0.8)"; c.font = "600 9px Inter";
               c.fillText("TOTAL PORTFOLIO", cx, cy-16);
               c.fillStyle = "#e5ecf6"; c.font = "700 18px 'JetBrains Mono'";
-              c.fillText("$" + Math.round(deployed + LIQUID_BALANCE).toLocaleString("en-US"), cx, cy+4);
+              c.fillText("$" + Math.round(deployed + LIQUID_BALANCE + INR_LIQUID_VALUE / INR_USD_RATE).toLocaleString("en-US"), cx, cy+4);
               c.fillStyle = "rgba(246,198,103,0.9)"; c.font = "500 9px Inter";
               c.fillText("MMF yields 3.64% p.a.", cx, cy+22);
               c.restore();
@@ -2724,10 +2790,10 @@
     }
 
     function setupSections() {
-      const headers = ["chartsHeader", "holdingsHeader", "dcaHeader", "currencyHeader", "deploymentHeader"];
-      const contents = ["chartsContent", "holdingsContent", "dcaContent", "currencyContent", "deploymentContent"];
-      const chevrons = ["chartsChevron", "holdingsChevron", "dcaChevron", "currencyChevron", "deploymentChevron"];
-      const defaultCollapsed = [true, false, false, true, true];
+      const headers = ["chartsHeader", "holdingsHeader", "indiaHeader", "dcaHeader", "currencyHeader", "deploymentHeader"];
+      const contents = ["chartsContent", "holdingsContent", "indiaContent", "dcaContent", "currencyContent", "deploymentContent"];
+      const chevrons = ["chartsChevron", "holdingsChevron", "indiaChevron", "dcaChevron", "currencyChevron", "deploymentChevron"];
+      const defaultCollapsed = [true, false, true, false, true, true];
 
       headers.forEach((headerId, i) => {
         const header = document.getElementById(headerId);
@@ -2842,6 +2908,30 @@
         }
       }
 
+      // Also extract SMTC (USD MMF) from CASH & LIQUIDITY section
+      for (const cols of rows) {
+        const ticker = (cols[0] || "").trim();
+        if (ticker === 'SMTC') {
+          const inv = clean(cols[4]);
+          const cur = clean(cols[5]);
+          if (inv > 0 || cur > 0) {
+            LIQUID_INVESTED = inv;
+            LIQUID_BALANCE = cur;
+            LIQUID_DAILY = LIQUID_BALANCE * LIQUID_RATE / 365;
+          }
+        }
+        if (ticker === 'LIQUIDCASE' && (cols[3] || "").trim() === 'INR') {
+          // This is the LIQUIDCASE in the Cash section (has Currency=INR in col D)
+          const inv = clean(cols[4]);
+          const cur = clean(cols[5]);
+          if (inv > 0 || cur > 0) {
+            INR_LIQUID_INVESTED = inv;
+            INR_LIQUID_VALUE = cur;
+            INR_LIQUID_PNL = cur - inv;
+          }
+        }
+      }
+
       return data.length > 0 ? data : FALLBACK_DATA;
     }
 
@@ -2851,7 +2941,7 @@
       const totalPL = holdings.reduce((s, h) => s + h.pl, 0);
       const totalInv = holdings.reduce((s, h) => s + h.inv, 0);
 
-      const totalWithLiquid = totalCur + LIQUID_BALANCE;
+      const totalWithLiquid = totalCur + LIQUID_BALANCE + (INR_LIQUID_VALUE / INR_USD_RATE);
 
       // Hero
       animateValue(document.getElementById("heroValue"), totalWithLiquid);
@@ -2865,9 +2955,16 @@
       document.getElementById("kpiInvested").textContent = fmt$(totalInv);
       document.getElementById("kpiUPL").textContent = fmtSgn$(totalPL);
 
-      // Liquid
+      // Cash & Liquidity
+      const inrLiquidUSD = INR_LIQUID_VALUE / INR_USD_RATE;
+      const totalCash = LIQUID_BALANCE + inrLiquidUSD;
+      const usdPnl = LIQUID_BALANCE - LIQUID_INVESTED;
+
       document.getElementById("liquidBalance").textContent = fmt$(LIQUID_BALANCE);
-      document.getElementById("liquidDaily").textContent = fmt$(LIQUID_DAILY);
+      document.getElementById("liquidPnlUSD").textContent = "Inv: " + fmt$(LIQUID_INVESTED) + " · P&L: " + fmtSgn$(usdPnl);
+      document.getElementById("liquidINR").textContent = "₹" + INR_LIQUID_VALUE.toLocaleString("en-IN");
+      document.getElementById("liquidPnlINR").textContent = "Inv: ₹" + INR_LIQUID_INVESTED.toLocaleString("en-IN") + " · P&L: " + (INR_LIQUID_PNL >= 0 ? "+₹" : "-₹") + Math.abs(INR_LIQUID_PNL).toLocaleString("en-IN");
+      document.getElementById("liquidTotal").textContent = fmt$(totalCash);
       document.getElementById("liquidDryPowder").textContent = fmt$(LIQUID_BALANCE);
 
       // Sleeve Performance
@@ -2881,6 +2978,9 @@
 
       // News
       renderNews();
+
+      // India Holdings
+      renderIndiaHoldings();
 
       // DCA
       renderDCA();
@@ -2937,9 +3037,10 @@
       });
 
       sorted.forEach(h => {
+        const fullyAllocBadge = FULLY_ALLOCATED.includes(h.tk) ? '<span style="font-size:9px;background:rgba(139,151,176,0.2);color:var(--text-mute);padding:2px 6px;border-radius:3px;margin-left:6px;">Fully Allocated</span>' : '';
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td><span class="table-ticker">${h.tk}</span><br><span style="color:var(--text-mute);font-size:11px">${h.name}</span></td>
+          <td><span class="table-ticker">${h.tk}</span>${fullyAllocBadge}<br><span style="color:var(--text-mute);font-size:11px">${h.name}</span></td>
           <td><span class="pill-tag">${h.sleeve.toUpperCase()}</span></td>
           <td>${h.sub}</td>
           <td class="table-value">${fmt$(h.plan)}</td>
@@ -2956,7 +3057,7 @@
         card.innerHTML = `
           <div class="holding-card-top">
             <div class="holding-card-left">
-              <h4>${h.tk}</h4>
+              <h4>${h.tk}${fullyAllocBadge}</h4>
               <p>${h.name}</p>
             </div>
             <div class="holding-card-right">
@@ -3146,11 +3247,76 @@
       });
     }
 
+    function renderIndiaHoldings() {
+      const data = INDIA_HOLDINGS;
+      const tbody = document.getElementById("indiaBody");
+      const cardsContainer = document.getElementById("indiaCards");
+      const summary = document.getElementById("indiaSummary");
+      if (!tbody || !cardsContainer || !summary) return;
+
+      const totalValue = data.reduce((s, h) => s + h.currentValue, 0);
+      const totalPnl = data.reduce((s, h) => s + h.pnl, 0);
+      const totalInv = data.reduce((s, h) => s + h.investment, 0);
+      const totalPnlPct = totalInv > 0 ? (totalPnl / totalInv * 100) : 0;
+
+      const fmtINR = n => "₹" + Math.abs(n).toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      const fmtINRSgn = n => (n >= 0 ? "+₹" : "-₹") + Math.abs(n).toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      const fmtINRInt = n => "₹" + Math.abs(n).toLocaleString("en-IN");
+
+      const pnlColor = totalPnl >= 0 ? "var(--accent-mint)" : "var(--accent-coral)";
+      summary.innerHTML = `${data.length} Holdings · <strong>${fmtINRInt(totalValue)}</strong> Total Value · <span style="color:${pnlColor}">${fmtINRSgn(totalPnl)} (${totalPnlPct >= 0 ? "+" : ""}${totalPnlPct.toFixed(2)}%)</span> P&L`;
+
+      tbody.innerHTML = "";
+      cardsContainer.innerHTML = "";
+
+      const sorted = [...data].sort((a, b) => b.currentValue - a.currentValue);
+
+      sorted.forEach(h => {
+        const plColor = h.pnl >= 0 ? "pill-mint" : "pill-coral";
+        const isCash = h.ticker === 'LIQUIDCASE';
+        const cashBadge = isCash ? ' <span style="background:var(--accent-gold);color:#000;padding:1px 6px;border-radius:8px;font-size:9px;font-weight:700;margin-left:4px">💰 CASH</span>' : '';
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><span class="table-ticker">${h.ticker}</span>${cashBadge}</td>
+          <td><span style="color:var(--text-mute);font-size:11px">${h.name}</span></td>
+          <td>${h.exchange}</td>
+          <td class="table-value">${h.qty.toLocaleString("en-IN")}</td>
+          <td class="table-value">${fmtINR(h.avgBuy)}</td>
+          <td class="table-value">${fmtINR(h.currentPrice)}</td>
+          <td class="table-value">${fmtINRInt(h.currentValue)}</td>
+          <td class="table-value"><span class="pill ${plColor}">${fmtINRSgn(h.pnl)}</span></td>
+          <td class="table-value"><span class="pill ${plColor}">${h.pnlPct >= 0 ? "+" : ""}${h.pnlPct.toFixed(2)}%</span></td>
+        `;
+        tbody.appendChild(tr);
+
+        const card = document.createElement("div");
+        card.className = "holding-card";
+        card.innerHTML = `
+          <div class="holding-card-top">
+            <div class="holding-card-left">
+              <h4>${h.ticker}</h4>
+              <p>${h.name}</p>
+            </div>
+            <div class="holding-card-right">
+              <div class="holding-card-value">${fmtINRInt(h.currentValue)}</div>
+              <span class="pill ${plColor}" style="font-size:11px">${fmtINRSgn(h.pnl)}</span>
+            </div>
+          </div>
+          <div class="holding-card-return">${h.pnlPct >= 0 ? "+" : ""}${h.pnlPct.toFixed(2)}%</div>
+          <div class="holding-card-tags">
+            <span class="holding-card-tag">${h.exchange}</span>
+            ${isCash ? '<span class="holding-card-tag" style="background:var(--accent-gold);color:#000">💰 Cash</span>' : ''}
+          </div>
+        `;
+        cardsContainer.appendChild(card);
+      });
+    }
+
     function renderDCA() {
-      const today = new Date(2026, 3, 14);
-      const t3 = new Date(2026, 3, 22);
-      const days = Math.ceil((t3 - today) / (1000 * 60 * 60 * 24));
-      document.getElementById("dcaCountdown").textContent = `Next tranche in ${days} days`;
+      const today = new Date();
+      const t4 = new Date(2026, 4, 6);
+      const days = Math.ceil((t4 - today) / (1000 * 60 * 60 * 24));
+      document.getElementById("dcaCountdown").textContent = days > 0 ? `Next tranche in ${days} days` : `Next tranche today`;
     }
 
     function renderCurrency(etfTotal, totalPL) {
@@ -3161,22 +3327,24 @@
         return prefix + (val * rate).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
       };
 
+      const totalCashUSD = LIQUID_BALANCE + (INR_LIQUID_VALUE / INR_USD_RATE);
+
       // USD
       document.getElementById("usdEtf").textContent = fmt$(etfTotal);
-      document.getElementById("usdLiquid").textContent = fmt$(LIQUID_BALANCE);
-      document.getElementById("usdTotal").textContent = fmt$(etfTotal + LIQUID_BALANCE);
+      document.getElementById("usdLiquid").textContent = fmt$(totalCashUSD);
+      document.getElementById("usdTotal").textContent = fmt$(etfTotal + totalCashUSD);
       document.getElementById("usdUPL").textContent = fmtSgn$(totalPL);
 
       // AED
       document.getElementById("aedEtf").textContent = convert(etfTotal, rates.aed, "en-US", "د.إ");
-      document.getElementById("aedLiquid").textContent = convert(LIQUID_BALANCE, rates.aed, "en-US", "د.إ");
-      document.getElementById("aedTotal").textContent = convert(etfTotal + LIQUID_BALANCE, rates.aed, "en-US", "د.إ");
+      document.getElementById("aedLiquid").textContent = convert(totalCashUSD, rates.aed, "en-US", "د.إ");
+      document.getElementById("aedTotal").textContent = convert(etfTotal + totalCashUSD, rates.aed, "en-US", "د.إ");
       document.getElementById("aedUPL").textContent = fmtSgn$(totalPL * rates.aed).replace("$", "د.إ");
 
       // INR
       document.getElementById("inrEtf").textContent = convert(etfTotal, rates.inr, "en-IN", "₹");
-      document.getElementById("inrLiquid").textContent = convert(LIQUID_BALANCE, rates.inr, "en-IN", "₹");
-      document.getElementById("inrTotal").textContent = convert(etfTotal + LIQUID_BALANCE, rates.inr, "en-IN", "₹");
+      document.getElementById("inrLiquid").textContent = convert(totalCashUSD, rates.inr, "en-IN", "₹");
+      document.getElementById("inrTotal").textContent = convert(etfTotal + totalCashUSD, rates.inr, "en-IN", "₹");
       document.getElementById("inrUPL").textContent = convert(totalPL, rates.inr, "en-IN", "₹");
     }
 
@@ -3200,7 +3368,7 @@
       const colors = ["#3ddc97", "#ff6b6b", "#f6c667", "#4fd1c5", "#8b7cf6", "#5ea3ff", "#ffb84d", "#e8537e", "#47c9a5", "#6b8cff"];
 
       // Portfolio Composition
-      createChart("chartComposition", "doughnut", ["ETF Portfolio", "Liquid Fund"], [etfTotal, LIQUID_BALANCE], colors.slice(0, 2));
+      createChart("chartComposition", "doughnut", ["ETF Portfolio", "USD MMF (SMTC)", "INR Liquid (LIQUIDCASE)"], [etfTotal, LIQUID_BALANCE, INR_LIQUID_VALUE / INR_USD_RATE], colors.slice(0, 3));
 
       // ETF Allocation
       const topETFs = holdings.sort((a, b) => b.cur - a.cur).slice(0, 5);
